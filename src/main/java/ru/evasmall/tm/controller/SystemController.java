@@ -1,10 +1,19 @@
 package ru.evasmall.tm.controller;
 
+import ru.evasmall.tm.Application;
+
 public class SystemController {
 
     public void displayWelcome() {
         System.out.println("*** WELCOME TO TASK MANAGER! ***");
         System.out.println("PLEASE ENTER [sign] OR [registration] or [help]:");
+    }
+
+    public int displayHistory() {
+        for (String str: Application.history) {
+            System.out.println(str);
+        }
+        return 0;
     }
 
     public int displayExit() {
@@ -36,11 +45,13 @@ public class SystemController {
         System.out.println("version - Display program version.");
         System.out.println("about - Display developer info.");
         System.out.println("help - Display list of terminal commands.");
+        System.out.println("history - Display history of terminal commands.");
         System.out.println("exit - Terminate console application.");
         System.out.println();
         System.out.println("registration - User registration");
         System.out.println("sign - User sign.");
-        System.out.println("user-list - Display list of users.");
+        System.out.println("user-list - Display list of users sorted by login.");
+        System.out.println("user-list-by-fio - Display list of users sorted by lastname, firstname, middlname.");
         System.out.println("user-remove-by-login - Remove user by login (only for ADMIN!).");
         System.out.println("user-update-role - Update user role (only for ADMIN!)");
         System.out.println("user-profile - Display current user session.");

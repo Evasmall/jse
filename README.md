@@ -9,7 +9,7 @@
 
 - **Developer:** Smolkina Evgeniya
 - **Email:** smolkina_ev@nlmk.com
-- **Backup:** https://github.com/Evasmall/jse-12
+- **Backup:** https://github.com/Evasmall/jse-13
 
 | Build |
 | ------ |
@@ -17,17 +17,19 @@
 
 | Start |
 | ------ |
-| java -jar target/ev-task-manager-1.0.12.jar |
+| java -jar target/ev-task-manager-1.0.13.jar |
 
 | Terminal commands | 
 | ------ | 
 | version - Display program version. | 
 | about - Display developer info. | 
 | help - Display list of terminal commands. | 
+| history - Display history of terminal commands. | 
 | exit - Terminate console application. |
 | registration - User registration |
 | sign - User sign. |
-| user-list - Display list of users. |
+| user-list - Display list of users sorted by login. |
+| user-list-by-fio - Display list of users sorted by lastname, firstname, middlname. |
 | user-remove-by-login - Remove user by login (only for ADMIN!). |
 | user-update-role - Update user role (only for ADMIN!) |
 | user-profile - Display current user session. |

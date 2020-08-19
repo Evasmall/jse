@@ -2,6 +2,7 @@ package ru.evasmall.tm.entity;
 
 import ru.evasmall.tm.enumerated.RoleEnum;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 public class User {
@@ -115,5 +116,29 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password);
     }
+
+    public static Comparator<User> UserSortByLogin = new Comparator<User>() {
+        @Override
+        public int compare(User u1, User u2) {
+            return u1.getLogin().compareTo(u2.getLogin());
+        }
+    };
+
+    public static Comparator<User> UserSortByFIO = new Comparator<User>() {
+        @Override
+        public int compare(User u1, User u2) {
+            if (u1 == null) {
+                return -1;
+            }
+            int fio = u1.getLastname().compareTo(u2.getLastname());
+            if (fio !=0) return fio;
+
+            fio = u1.getFirstname().compareTo(u2.getFirstname());
+            if (fio !=0) return fio;
+
+            fio = u1.getMiddlname().compareTo(u2.getMiddlname());
+            return fio;
+        }
+    };
 
 }

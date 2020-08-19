@@ -4,6 +4,7 @@ import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.repository.ProjectRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ProjectService {
@@ -126,6 +127,12 @@ public class ProjectService {
         if (projectRepository.findByIndex(index) == null) return null;
         if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent)) return projectRepository.removeByIndex(index);
         else return null;
+    }
+
+    //Сортировка задач по наименованию
+    public List<Project> ProjectSortByName(List<Project> projects) {
+        Collections.sort(projects, Project.ProjectSortByName);
+        return projects;
     }
 
 }

@@ -4,6 +4,7 @@ import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.repository.TaskRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TaskService {
@@ -62,7 +63,7 @@ public class TaskService {
         if (id == null) return null;
         if (taskRepository.findById(id) == null) return  null;
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
-            return taskRepository.removeById(id);
+            return taskRepository.findById(id);
         return null;
     }
 
@@ -133,6 +134,12 @@ public class TaskService {
     public Task findByProjectIdAndId(Long projectId, Long id) {
         if (projectId == null || id == null) return null;
         return taskRepository.findByProjectIdAndId(projectId, id);
+    }
+
+    //Сортировка задач по наименованию
+    public List<Task> TaskSortByName(List<Task> tasks) {
+        Collections.sort(tasks, Task.TaskSortByName);
+        return tasks;
     }
 
 }

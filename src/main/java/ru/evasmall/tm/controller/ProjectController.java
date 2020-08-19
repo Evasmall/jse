@@ -6,6 +6,8 @@ import ru.evasmall.tm.Application;
 import ru.evasmall.tm.service.UserService;
 import ru.evasmall.tm.util.Control;
 
+import java.util.List;
+
 public class ProjectController extends AbstractController{
 
     private final ProjectService projectService;
@@ -187,18 +189,26 @@ public class ProjectController extends AbstractController{
         return -1;
     }
 
-    //Просмотр списка проектов
+    //Cписок проектов.
     public int listProject() {
-        System.out.println("LIST PROJECT");
+        System.out.println("LIST PROJECTS");
         int index = 1;
-        for (final Project project: projectService.findAll()) {
-             System.out.println(index + ". PROJECTID: " + project.getId() + "; NAME: " + project.getName() +
-             "; DESCRIPTION: " + project.getDescription() + "; USER ID: " + project.getUserid() +
-             "; USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
-            index++;
-        }
+        viewProjects(projectService.findAll());
         System.out.println("OK");
         return 0;
+    }
+
+    //Просмотр списка проектов.
+    public void viewProjects (final List<Project> projects) {
+        if (projects == null || projects.isEmpty()) return;
+        int index = 1;
+        projectService.ProjectSortByName(projects);
+        for (final Project project: projects) {
+            System.out.println(index + ". PROJECTID: " + project.getId() + "; NAME: " + project.getName() +
+                    "; DESCRIPTION: " + project.getDescription() + "; USER ID: " + project.getUserid() +
+                    "; USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
+            index++;
+        }
     }
 
 }

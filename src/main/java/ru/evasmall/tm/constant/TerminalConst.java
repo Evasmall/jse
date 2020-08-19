@@ -4,6 +4,7 @@ public class TerminalConst {
     public static final String CMD_HELP = "help";
     public static final String CMD_VERSION = "version";
     public static final String CMD_ABOUT = "about";
+    public static final String CMD_HISTORY = "history";
     public static final String CMD_EXIT = "exit";
 
     public static final String CMD_PROJECT_CREATE = "project-create";
@@ -41,6 +42,7 @@ public class TerminalConst {
     public static final String CMD_USER_REGISTRATION = "registration";
     public static final String CMD_USER_SIGN = "sign";
     public static final String CMD_USER_LIST = "user-list";
+    public static final String CMD_USER_LIST_BY_FIO = "user-list-by-fio";
     public static final String CMD_USER_REMOVE_BY_LOGIN = "user-remove-by-login";
     public static final String CMD_USER_UPDATE_ROLE = "user-update-role";
     public static final String CMD_USER_PROFILE_VIEW = "user-profile";

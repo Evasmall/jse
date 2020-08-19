@@ -6,7 +6,7 @@
 
     <groupId>ru.evasmall.tm</groupId>
     <artifactId>ev-task-manager</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
 
     <name>ev-task-manager</name>
     <url>http://www.nlmk.com</url>

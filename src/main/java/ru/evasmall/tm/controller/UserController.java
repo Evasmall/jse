@@ -51,21 +51,25 @@ public class UserController extends AbstractController {
     }
 
     //Просмотр пользователей.
-    public int listUser() {
+    public int listUser (int sort) {
         System.out.println("LIST USER");
         int index = 1;
-        viewUsers(userService.findAll());
+        viewUsers(userService.findAll(), sort);
         System.out.println("OK");
         return 0;
     }
 
     //Просмотр списка пользователей.
-    public void viewUsers (final List<User> users) {
+    public void viewUsers (final List<User> users, int sort) {
         if (users == null || users.isEmpty()) return;
         int index = 1;
+        //Параметр 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
+        if (sort == 1) userService.UserSortByLogin(users);
+        if (sort == 2) userService.UserSortByFIO(users);
         for (final User user: users) {
-            System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " +
-            user.getMiddlname() + "; LASTNAME: " + user.getLastname() + "; EMAIL: " + user.getEmail() + "; ROLE: " + user.getRole().name() +
+            System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; LASTNAME: " + user.getLastname() +
+            "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " + user.getMiddlname() +
+            "; EMAIL: " + user.getEmail() + "; ROLE: " + user.getRole().name() +
             "; PASSWORD: " + user.getPassword() + "; ADMIN: " + user.isAdmin_true());
             index++;
         }
@@ -222,6 +226,7 @@ public class UserController extends AbstractController {
     //Окончание сессии текущего пользователя.
     public int exitUser() {
         Application.userIdCurrent = null;
+        Application.history.clear();
         System.out.println("YOUR SESSION ENDED.");
         return 0;
     }

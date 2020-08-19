@@ -11,6 +11,7 @@ import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.service.*;
 import ru.evasmall.tm.util.HashCode;
 
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import static ru.evasmall.tm.constant.TerminalConst.*;
@@ -37,28 +38,37 @@ public class Application {
     //Текущая сессия пользователя
     public static Long userIdCurrent = null;
 
+    //История команд
+    public static  LinkedList<String> history = new LinkedList();
+
     {
         userService.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
                            "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
         userService.create(System.nanoTime(),"TEST", HashCode.getHash("qwerty"), "Пётр", "Исаев",
                                      "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
+        userService.create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
+                "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
 
-        projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 1", userService.findByLogin("ADMIN").getUserid());
+        projectRepository.create("DEMO_PROJECT_3", "DESC PROJECT 3", userService.findByLogin("ADMIN").getUserid());
         projectRepository.create("DEMO_PROJECT_2", "DESC PROJECT 2", userService.findByLogin("TEST").getUserid());
-        projectRepository.create("DEMO_PROJECT_3", "DESC PROJECT 3", userService.findByLogin("TEST").getUserid());
-        taskRepository.create("TEST_TASK_1", "DESC TASK 1", userService.findByLogin("ADMIN").getUserid() );
+        projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 1", userService.findByLogin("TEST").getUserid());
+
+        taskRepository.create("TEST_TASK_3", "DESC TASK 3", userService.findByLogin("ADMIN").getUserid() );
         taskRepository.create("TEST_TASK_2", "DESC TASK 2", userService.findByLogin("TEST").getUserid());
-        taskRepository.create("TEST_TASK_3", "DESC TASK 3", userService.findByLogin("TEST").getUserid());
+        taskRepository.create("TEST_TASK_1", "DESC TASK 1", userService.findByLogin("TEST").getUserid());
     }
 
     public static void main(final String[] args) {
         final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
+
         application.run(args);
         application.systemController.displayWelcome();
         String command = "";
         while (!CMD_EXIT.equals(command)) {
             command = scanner.nextLine();
+            history.add(command);
+            if (history.size() > 10) history.pollFirst();
             application.run(command);
         }
     }
@@ -76,6 +86,7 @@ public class Application {
         switch (param) {
             case CMD_HELP: return systemController.displayHelp();
             case CMD_ABOUT: return systemController.displayAbout();
+            case CMD_HISTORY: return systemController.displayHistory();
             case CMD_VERSION: return systemController.displayVersion();
             case CMD_EXIT: return systemController.displayExit();
 
@@ -119,7 +130,8 @@ public class Application {
             case CMD_USER_REGISTRATION: return userController.createUser();
             case CMD_USER_SIGN: return userController.signUser();
             case CMD_USER_EXIT: return userController.exitUser();
-            case CMD_USER_LIST: return userController.listUser();
+            case CMD_USER_LIST: return userController.listUser(1);
+            case CMD_USER_LIST_BY_FIO: return userController.listUser(2);
             case CMD_USER_REMOVE_BY_LOGIN: return userController.removeUserByLogin(userIdCurrent);
             case CMD_USER_UPDATE_ROLE: return userController.updateUserRole(userIdCurrent);
             case CMD_USER_PROFILE_VIEW: return userController.userProfile(userIdCurrent);

@@ -200,7 +200,7 @@ public class TaskController extends AbstractController{
         return -1;
     }
 
-    //Просмотр списка задач.
+    //Cписок задач.
     public int listTask() {
         System.out.println("LIST TASK");
         int index = 1;
@@ -209,10 +209,11 @@ public class TaskController extends AbstractController{
         return 0;
     }
 
-    //Просмотр задачи.
+    //Просмотр списка задач.
     public void viewTasks (final List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) return;
         int index = 1;
+        taskService.TaskSortByName(tasks);
         for (final Task task: tasks) {
             System.out.println(index + ". TASKID: " + task.getId() + "; NAME: " + task.getName() + "; DESCRIPTION: "
                     + task.getDescription() + "; PROJECTID: " + task.getProjectId()

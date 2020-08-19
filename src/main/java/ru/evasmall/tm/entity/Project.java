@@ -1,5 +1,7 @@
 package ru.evasmall.tm.entity;
 
+import java.util.Comparator;
+
 public class Project {
 
     private Long id = System.nanoTime();
@@ -53,5 +55,12 @@ public class Project {
     public String toString() {
         return id + ": " + name;
     }
+
+    public static Comparator<Project> ProjectSortByName = new Comparator<Project>() {
+        @Override
+        public int compare(Project p1, Project p2) {
+            return p1.getName().compareTo(p2.getName());
+        }
+    };
 
 }
