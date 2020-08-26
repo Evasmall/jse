@@ -9,7 +9,7 @@
 
 - **Developer:** Smolkina Evgeniya
 - **Email:** smolkina_ev@nlmk.com
-- **Backup:** https://github.com/Evasmall/jse-14
+- **Backup:** https://github.com/Evasmall/jse
 
 | Build |
 | ------ |
