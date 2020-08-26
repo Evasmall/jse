@@ -66,8 +66,6 @@ public class SystemController {
         System.out.println("project-view-by-index - View project by index.");
         System.out.println("project-view-by-id - View project by id.");
         System.out.println();
-        System.out.println("project-remove-by-name - Remove project by name.");
-        System.out.println("project-remove-by-name-with-tasks - Remove project by name with tasks.");
         System.out.println("project-remove-by-id - Remove project by id.");
         System.out.println("project-remove-by-id-with-tasks - Remove project by id with tasks.");
         System.out.println("project-remove-by-index - Remove project by index.");
@@ -82,7 +80,6 @@ public class SystemController {
         System.out.println("task-view-by-index - View task by index.");
         System.out.println("task-view-by-id - View task by id.");
         System.out.println();
-        System.out.println("task-remove-by-name - Remove task by name.");
         System.out.println("task-remove-by-id - Remove task by id.");
         System.out.println("task-remove-by-index - Remove task by index.");
         System.out.println("task-update-by-id - Update task by id.");

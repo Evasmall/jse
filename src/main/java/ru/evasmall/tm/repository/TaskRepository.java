@@ -3,6 +3,7 @@ package ru.evasmall.tm.repository;
 import ru.evasmall.tm.entity.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TaskRepository {
@@ -13,6 +14,8 @@ public class TaskRepository {
         return tasks;
     }
 
+    private final HashMap<String, List<Task>> tasksName = new HashMap<>();
+
     public List<Task> findAllByProjectId(final Long projectId) {
         final List<Task> result = new ArrayList<>();
         for (final Task task: findAll()) {
@@ -22,18 +25,16 @@ public class TaskRepository {
         return result;
     }
 
-    public Task create(final String name) {
-        final Task task = new Task(name);
-        tasks.add(task);
-        return task;
-    }
-
     public Task create(final String name, final String description, final Long userId) {
         final Task task = new Task(name);
         task.setName(name);
         task.setDescription(description);
         task.setUserid(userId);
         tasks.add(task);
+        List<Task> tasksHashMap = tasksName.get(task.getName());
+        if (tasksHashMap == null) tasksHashMap = new ArrayList<>();
+        tasksHashMap.add(task);
+        tasksName.put(task.getName(), tasksHashMap);
         return task;
     }
 
@@ -60,11 +61,13 @@ public class TaskRepository {
         tasks.clear();
     }
 
-    public Task findByName(final String name) {
-        for (final Task task: tasks) {
-            if(task.getName().equals(name)) return task;
+    public List<Task> findByName(final String name) {
+        final List<Task> tasks = new ArrayList<>();
+        if (tasksName.get(name) == null) return null;
+        for (final Task task: tasksName.get(name)) {
+            tasks.add(task);
         }
-        return null;
+        return tasks;
     }
 
     public Task findById(final Long id) {
@@ -97,13 +100,6 @@ public class TaskRepository {
 
     public Task removeByIndex (final int index) {
         final Task task = findByIndex(index);
-        if (task == null) return null;
-        tasks.remove(task);
-        return task;
-    }
-
-    public Task removeByName (final String name) {
-        final Task task = findByName(name);
         if (task == null) return null;
         tasks.remove(task);
         return task;

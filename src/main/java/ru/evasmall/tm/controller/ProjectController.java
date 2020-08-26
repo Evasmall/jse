@@ -93,17 +93,6 @@ public class ProjectController extends AbstractController{
         else return -1;
     }
 
-    //Удаление проекта по наименованию с учетом принадлежности проекта
-    public int removeProjectByName() {
-        System.out.println("REMOVE PROJECT BY NAME");
-        System.out.println("PLEASE ENTER PROJECT NAME:");
-        final String name = scanner.nextLine();
-        final Project project = projectService.removeByNameUserId(name);
-        if (project == null) systemController.displayForeign("PROJECT");
-        else System.out.println("OK");
-        return 0;
-    }
-
     //Удаление проекта по идентификатору с учетом принадлежности проекта
     public int removeProjectById() {
         System.out.println("REMOVE PROJECT BY ID");
@@ -145,15 +134,21 @@ public class ProjectController extends AbstractController{
         System.out.println("DESCRIPTION: " + project.getDescription());
         System.out.println("USER ID: " + project.getUserid());
         System.out.println("USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
-        System.out.println("OK");
+        System.out.println("______");
     }
 
     //Просмотр списка проектов по наименованию
     public int viewProjectByName() {
         System.out.print("ENTER PROJECT NAME:");
         String name = scanner.nextLine();
-        Project project = projectService.findByName(name);
-        viewProject(project);
+        final List <Project> projects = projectService.findByName(name);
+        if (projects == null) {
+            systemController.displayForeign("PROJECT");
+            return -1;
+        }
+        for (Project project: projects) {
+            viewProject(project);
+        }
         return 0;
     }
 

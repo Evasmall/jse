@@ -21,11 +21,6 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project create(String name) {
-        if (name == null || name.isEmpty()) return null;
-        return projectRepository.create(name);
-    }
-
     public Project create(String name, String description, Long userid) {
         if (name == null || name.isEmpty()) return null;
         if (description == null || description.isEmpty()) return null;
@@ -58,17 +53,19 @@ public class ProjectService {
     }
 
     //Поиск проекта по наименованию
-    public Project findByName(String name) {
+    public List<Project> findByName(String name) {
         if (name == null || name.isEmpty()) return null;
         return projectRepository.findByName(name);
     }
 
     //Поиск проекта по наименованию с учетом принадлежности пользователю текущей сессии
-    public Project findByNameUserId(String name) {
+    public List<Project> findByNameUserId(String name) {
         if (name == null || name.isEmpty()) return null;
         if (projectRepository.findByName(name) == null) return null;
-        if (projectRepository.findByName(name).getUserid().equals(Application.userIdCurrent)) return projectRepository.findByName(name);
-        else return null;
+        for (Project project: projectRepository.findByName(name)) {
+            if (project.getUserid().equals(Application.userIdCurrent)) return projectRepository.findByName(name);
+        }
+        return null;
     }
 
     //Поиск проекта по идентификатору
@@ -84,20 +81,6 @@ public class ProjectService {
         if (projectRepository.findById(id) == null) return  null;
         if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent)) return projectRepository.findById(id);
         return null;
-    }
-
-    //Удаление проекта по наименованию
-    public Project removeByName(String name) {
-        if (name == null || name.isEmpty()) return null;
-        return projectRepository.removeByName(name);
-    }
-
-    //Удаление проекта по наименованию с учетом принадлежности пользователю текущей сессии
-    public Project removeByNameUserId(String name) {
-        if (name == null || name.isEmpty()) return null;
-        if (projectRepository.findByName(name) == null) return null;
-        if (projectRepository.findByName(name).getUserid().equals(Application.userIdCurrent)) return projectRepository.removeByName(name);
-        else return null;
     }
 
     //Удаление проекта по идентификатору

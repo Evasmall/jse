@@ -19,12 +19,6 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    //Создание задачи.
-    public Task create(String name) {
-        if (name == null || name.isEmpty()) return null;
-        return taskRepository.create(name);
-    }
-
     //Создание задачи по параметрам.
     public Task create(String name, String description, Long userid) {
         if (name == null || name.isEmpty()) return null;
@@ -45,8 +39,8 @@ public class TaskService {
         taskRepository.clear();
     }
 
-    //Поиск задачи по наименованию.
-    public Task findByName(String name) {
+    //Поиск задачи по наименованию
+    public List<Task> findByName(String name) {
         if (name == null || name.isEmpty()) return null;
         return taskRepository.findByName(name);
     }
@@ -107,20 +101,6 @@ public class TaskService {
         if (index < 0 || index > taskRepository.size() -1) return null;
         if (taskRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return taskRepository.removeByIndex(index);
-        else return null;
-    }
-
-    //Удаление задачи по наименованию.
-    public Task removeByName(String name) {
-        if (name == null || name.isEmpty()) return null;
-        return taskRepository.removeByName(name);
-    }
-
-    //Удаление задачи по наименованию с учетом принадлежности пользователю текущей сессии.
-    public Task removeByNameUserId(String name) {
-        if (name == null || name.isEmpty()) return null;
-        if (taskRepository.findByName(name).getUserid().equals(Application.userIdCurrent))
-            return taskRepository.removeByName(name);
         else return null;
     }
 

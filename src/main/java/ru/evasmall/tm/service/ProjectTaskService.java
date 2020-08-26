@@ -70,18 +70,4 @@ public class ProjectTaskService {
         return project;
     }
 
-    //Удаление проекта со связанными задачами по наименованию.
-    public Project removeProjectByNameWithTask(final String name) {
-        if (name == null || name.isEmpty()) return null;
-        final Project project = projectRepository.findByName(name);
-        if (project == null) return null;
-        final List<Task> tasks = findAllByProjectId(project.getId());
-        if (tasks == null) return project;
-        for (Task task: tasks) {
-            taskRepository.removeById(task.getId());
-        }
-        projectRepository.removeById(project.getId());
-        return project;
-    }
-
 }

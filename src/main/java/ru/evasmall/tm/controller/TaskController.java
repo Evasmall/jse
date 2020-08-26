@@ -34,7 +34,7 @@ public class TaskController extends AbstractController{
 
     //Создание задачи.
     public int createTask() {
-        System.out.println("CREATE TASK]");
+        System.out.println("CREATE TASK");
         System.out.println("PLEASE ENTER TASK NAME:");
         final String name = scanner.nextLine();
         System.out.println("PLEASE ENTER TASK DESCRIPTION:");
@@ -108,17 +108,6 @@ public class TaskController extends AbstractController{
         else return -1;
     }
 
-    //Удаление задачи по наименованию с учетом принадлежности задачи пользователю.
-    public int removeTaskByName() {
-        System.out.println("REMOVE TASK BY NAME");
-        System.out.println("PLEASE ENTER TASK NAME:");
-        final String name = scanner.nextLine();
-        final Task task = taskService.removeByNameUserId(name);
-        if (task == null) System.out.println("FAIL");
-        else System.out.println("OK");
-        return 0;
-    }
-
     //Удаление задачи по идентификатору с учетом принадлежности задачи пользователю.
     public int removeTaskById() {
         System.out.println("REMOVE TASK BY ID");
@@ -156,7 +145,7 @@ public class TaskController extends AbstractController{
         System.out.println("DESCRIPTION: " + task.getDescription());
         System.out.println("PROJECT ID: " + task.getProjectId());
         System.out.println("USER LOGIN: " + userService.findByUserId(task.getUserid()).getLogin());
-        System.out.println("OK");
+        System.out.println("_____");
     }
 
     //Просмотр задачи по индексу.
@@ -175,12 +164,18 @@ public class TaskController extends AbstractController{
         else return -1;
     }
 
-    //Просмотр задачи по наименованию.
+    //Просмотр списка задач по наименованию
     public int viewTaskByName() {
-        System.out.print("ENTER TASK NAME: ");
+        System.out.print("ENTER TASK NAME:");
         String name = scanner.nextLine();
-        Task task = taskService.findByName(name);
-        viewTask(task);
+        final List <Task> tasks = taskService.findByName(name);
+        if (tasks == null) {
+            systemController.displayForeign("TASK");
+            return -1;
+        }
+        for (Task task: tasks) {
+            viewTask(task);
+        }
         return 0;
     }
 
@@ -334,22 +329,6 @@ public class TaskController extends AbstractController{
             return 0;
         }
         else return  -1;
-    }
-
-    //Удаление проекта со принадлежащими ему задачами по наименованию.
-    public int removeProjectByNameWithTasks() {
-        System.out.println("REMOVE PROJECT WITH BY NAME");
-        System.out.println("PLEASE ENTER PROJECT NAME:");
-        final String name = scanner.nextLine();
-        final Project project = projectService.findByNameUserId(name);
-        if (project == null) {
-            systemController.displayForeign("PROJECT");
-            return -1;
-        }
-        Project projectRemove = projectTaskService.removeProjectByNameWithTask(name);
-        if (projectRemove == null) System.out.println("FAIL");
-        else System.out.println("OK");
-        return 0;
     }
 
 }

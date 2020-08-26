@@ -45,7 +45,6 @@
 | project-view-by-name - View project by name. | task-view-by-name - View task by name. |
 | project-view-by-index - View project by index. | task-view-by-index - View task by index. |
 | project-view-by-id - View project by id. | task-view-by-id - View task by id. |
-| project-remove-by-name - Remove project by name (for current user). | task-remove-by-name - Remove task by name (for current user). |
 | project-remove-by-id - Remove project by id (for current user). | task-remove-by-id - Remove task by id (for current user). |
 | project-remove-by-index - Remove project by index (for current user). | task-remove-by-index - Remove task by index (for current user). |
 | project-update-by-id - Update project by id (for current user). | task-update-by-id - Update task by id (for current user). |
@@ -54,4 +53,3 @@
 | | task-add-to_project-by-ids - Add task to project by ids (for current user). | task-remove-from-project-by-ids - Remove task from project by ids (for current user). | 
 | project-remove-by-id-with-tasks - Remove project by id with tasks (for project of current user). |
 | project-remove-by-index-with-tasks - Remove project by index with tasks (for project of current user). | |
-| project-remove-by-name-with-tasks - Remove project by name with tasks (for project of current user). | |

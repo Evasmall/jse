@@ -2,8 +2,7 @@ package ru.evasmall.tm.repository;
 
 import ru.evasmall.tm.entity.Project;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ProjectRepository {
 
@@ -13,11 +12,7 @@ public class ProjectRepository {
         return projects;
     }
 
-    public Project create(final String name) {
-        final Project project = new Project(name);
-        projects.add(project);
-        return project;
-    }
+    private final HashMap<String, List<Project>> projectsName = new HashMap<>();
 
     public Project create(final String name, String description, Long userid) {
         final Project project = new Project(name);
@@ -25,6 +20,10 @@ public class ProjectRepository {
         project.setDescription(description);
         project.setUserid(userid);
         projects.add(project);
+        List<Project> projectsHashMap = projectsName.get(project.getName());
+        if (projectsHashMap == null) projectsHashMap = new ArrayList<>();
+        projectsHashMap.add(project);
+        projectsName.put(project.getName(), projectsHashMap);
         return project;
     }
 
@@ -39,17 +38,20 @@ public class ProjectRepository {
 
     public void clear() {
         projects.clear();
+        projectsName.clear();
     }
 
     public Project findByIndex(int index) {
         return projects.get(index);
     }
 
-    public Project findByName(final String name) {
-        for (final Project project: projects) {
-            if(project.getName().equals(name)) return project;
+    public List<Project> findByName(final String name) {
+        final List<Project> projects = new ArrayList<>();
+        if (projectsName.get(name) == null) return null;
+        for (final Project project: projectsName.get(name)) {
+            projects.add(project);
         }
-        return null;
+        return projects;
     }
 
     public Project findById(final Long id) {
@@ -59,17 +61,11 @@ public class ProjectRepository {
         return null;
     }
 
-    public Project removeByName (final String name) {
-        final Project project = findByName(name);
-        if (project == null) return null;
-        projects.remove(project);
-        return project;
-    }
-
     public Project removeById (final Long id) {
         final Project project = findById(id);
         if (project == null) return null;
         projects.remove(project);
+        projectsName.remove(project.getName());
         return project;
     }
 
@@ -77,6 +73,7 @@ public class ProjectRepository {
         final Project project = findByIndex(index);
         if (project == null) return null;
         projects.remove(project);
+        projectsName.remove(index);
         return project;
     }
 

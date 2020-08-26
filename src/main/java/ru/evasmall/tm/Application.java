@@ -11,8 +11,7 @@ import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.service.*;
 import ru.evasmall.tm.util.HashCode;
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
 import static ru.evasmall.tm.constant.TerminalConst.*;
 
@@ -98,10 +97,8 @@ public class Application {
             case CMD_PROJECT_VIEW_BY_INDEX: return projectController.viewProjectByIndex();
             case CMD_PROJECT_VIEW_BY_ID: return projectController.viewProjectById();
 
-            case CMD_PROJECT_REMOVE_BY_NAME: return projectController.removeProjectByName();
             case CMD_PROJECT_REMOVE_BY_ID: return projectController.removeProjectById();
             case CMD_PROJECT_REMOVE_BY_INDEX: return projectController.removeProjectByIndex();
-            case CMD_PROJECT_REMOVE_BY_NAME_WITH_TASKS: return taskController.removeProjectByNameWithTasks();
             case CMD_PROJECT_REMOVE_BY_ID_WITH_TASKS: return taskController.removeProjectByIdWithTasks();
             case CMD_PROJECT_REMOVE_BY_INDEX_WITH_TASKS: return taskController.removeProjectByIndexWithTasks();
 
@@ -116,7 +113,6 @@ public class Application {
             case CMD_TASK_VIEW_BY_INDEX: return taskController.viewTaskByIndex();
             case CMD_TASK_VIEW_BY_ID: return taskController.viewTaskById();
 
-            case CMD_TASK_REMOVE_BY_NAME: return taskController.removeTaskByName();
             case CMD_TASK_REMOVE_BY_ID: return taskController.removeTaskById();
             case CMD_TASK_REMOVE_BY_INDEX: return taskController.removeTaskByIndex();
 
