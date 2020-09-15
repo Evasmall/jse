@@ -17,6 +17,8 @@ public class TerminalConst {
     public static final String CMD_PROJECT_REMOVE_BY_INDEX = "project-remove-by-index";
     public static final String CMD_PROJECT_UPDATE_BY_INDEX = "project-update-by-index";
     public static final String CMD_PROJECT_UPDATE_BY_ID = "project-update-by-id";
+    public static final String CMD_PROJECT_ADD_USER = "project-add-user";
+    public static final String CMD_PROJECT_REMOVE_USER = "project-remove-user";
 
     public static final String CMD_PROJECT_REMOVE_BY_ID_WITH_TASKS = "project-remove-by-id-with-tasks";
     public static final String CMD_PROJECT_REMOVE_BY_INDEX_WITH_TASKS = "project-remove-by-index-with-tasks";
@@ -31,6 +33,8 @@ public class TerminalConst {
     public static final String CMD_TASK_REMOVE_BY_INDEX = "task-remove-by-index";
     public static final String CMD_TASK_UPDATE_BY_INDEX = "task-update-by-index";
     public static final String CMD_TASK_UPDATE_BY_ID = "task-update-by-id";
+    public static final String CMD_TASK_ADD_USER = "task-add-user";
+    public static final String CMD_TASK_REMOVE_USER = "task-remove-user";
 
     public static final String CMD_TASK_LIST_BY_PROJECT_ID = "task-list-by-project-id";
     public static final String CMD_TASK_ADD_TO_PROJECT_BY_IDS = "task-add-to_project-by-ids";

@@ -49,8 +49,9 @@ public class Application {
                 "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
 
         projectRepository.create("DEMO_PROJECT_3", "DESC PROJECT 3", userService.findByLogin("ADMIN").getUserid());
-        projectRepository.create("DEMO_PROJECT_2", "DESC PROJECT 2", userService.findByLogin("TEST").getUserid());
+        projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 4", userService.findByLogin("TEST").getUserid());
         projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 1", userService.findByLogin("TEST").getUserid());
+        projectRepository.create("DEMO_PROJECT_2", "DESC PROJECT 2", userService.findByLogin("TEST").getUserid());
 
         taskRepository.create("TEST_TASK_3", "DESC TASK 3", userService.findByLogin("ADMIN").getUserid() );
         taskRepository.create("TEST_TASK_2", "DESC TASK 2", userService.findByLogin("TEST").getUserid());
@@ -104,6 +105,8 @@ public class Application {
 
             case CMD_PROJECT_UPDATE_BY_INDEX: return projectController.updateProjectByIndex();
             case CMD_PROJECT_UPDATE_BY_ID: return projectController.updateProjectById();
+            case CMD_PROJECT_ADD_USER: return projectController.addProjectToUser();
+            case CMD_PROJECT_REMOVE_USER: return projectController.removeProjectFromUser();
 
             case CMD_TASK_CREATE: return taskController.createTask();
             case CMD_TASK_CLEAR: return taskController.clearTask();
@@ -118,6 +121,8 @@ public class Application {
 
             case CMD_TASK_UPDATE_BY_INDEX: return taskController.updateTaskByIndex();
             case CMD_TASK_UPDATE_BY_ID: return taskController.updateTaskById();
+            case CMD_TASK_ADD_USER: return taskController.addTaskToUser();
+            case CMD_TASK_REMOVE_USER: return taskController.removeTaskFromUser();
 
             case CMD_TASK_ADD_TO_PROJECT_BY_IDS: return taskController.addTaskToProjectByIds();
             case CMD_TASK_REMOVE_FROM_PROJECT_BY_IDS: return taskController.removeTaskFromProjectByIds();

@@ -11,8 +11,6 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-
-
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
@@ -79,7 +77,10 @@ public class ProjectService {
     public Project findByIdUserId(Long id) {
         if (id == 0) return null;
         if (projectRepository.findById(id) == null) return  null;
-        if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent)) return projectRepository.findById(id);
+        if (projectRepository.findById(id).getUserid() == null)
+            return projectRepository.findById(id);
+        if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
+            return projectRepository.findById(id);
         return null;
     }
 
@@ -112,10 +113,18 @@ public class ProjectService {
         else return null;
     }
 
-    //Сортировка задач по наименованию
+    //Сортировка проектов по наименованию
     public List<Project> ProjectSortByName(List<Project> projects) {
         Collections.sort(projects, Project.ProjectSortByName);
         return projects;
+    }
+
+    //Добавление проекта пользователю.
+    public Project addProjectToUser(final Long userId, final Long projectId) {
+        final Project project = projectRepository.findById(projectId);
+        if (project == null) return null;
+        project.setUserid(userId);
+        return project;
     }
 
 }

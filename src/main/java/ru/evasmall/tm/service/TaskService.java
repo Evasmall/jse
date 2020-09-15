@@ -56,6 +56,8 @@ public class TaskService {
     public Task findByIdUserId(Long id) {
         if (id == null) return null;
         if (taskRepository.findById(id) == null) return  null;
+        if (taskRepository.findById(id).getUserid() == null)
+            return taskRepository.findById(id);
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return taskRepository.findById(id);
         return null;
@@ -120,6 +122,14 @@ public class TaskService {
     public List<Task> TaskSortByName(List<Task> tasks) {
         Collections.sort(tasks, Task.TaskSortByName);
         return tasks;
+    }
+
+    //Добавление задачи пользователю.
+    public Task addTaskToUser(final Long userId, final Long taskId) {
+        final Task task = taskRepository.findById(taskId);
+        if (task == null) return null;
+        task.setUserid(userId);
+        return task;
     }
 
 }

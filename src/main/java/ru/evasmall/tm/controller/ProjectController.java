@@ -1,6 +1,7 @@
 package ru.evasmall.tm.controller;
 
 import ru.evasmall.tm.entity.Project;
+import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.service.ProjectService;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.service.UserService;
@@ -128,13 +129,20 @@ public class ProjectController extends AbstractController{
     //Просмотр проекта
     public void viewProject(final Project project) {
         if (project == null) return;
-        System.out.println("VIEW PROJECT");
-        System.out.println("ID: " + project.getId());
-        System.out.println("NAME: " + project.getName());
-        System.out.println("DESCRIPTION: " + project.getDescription());
-        System.out.println("USER ID: " + project.getUserid());
-        System.out.println("USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
-        System.out.println("______");
+        //Проверка на авторизацию польователя
+        if (Application.userIdCurrent == null) {
+            System.out.println("PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
+            return;
+        }
+        else {
+            System.out.println("VIEW PROJECT");
+            System.out.println("ID: " + project.getId());
+            System.out.println("NAME: " + project.getName());
+            System.out.println("DESCRIPTION: " + project.getDescription());
+            System.out.println("USER ID: " + project.getUserid());
+            System.out.println("USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
+            System.out.println("______");
+        }
     }
 
     //Просмотр списка проектов по наименованию
@@ -186,11 +194,17 @@ public class ProjectController extends AbstractController{
 
     //Cписок проектов.
     public int listProject() {
-        System.out.println("LIST PROJECTS");
-        int index = 1;
-        viewProjects(projectService.findAll());
-        System.out.println("OK");
-        return 0;
+        //Проверка на авторизацию польователя
+        if (Application.userIdCurrent == null) {
+            System.out.println("LIST PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
+            return -1;
+        }
+        else {
+            System.out.println("LIST PROJECTS");
+            viewProjects(projectService.findAll());
+            System.out.println("OK");
+            return 0;
+        }
     }
 
     //Просмотр списка проектов.
@@ -199,11 +213,71 @@ public class ProjectController extends AbstractController{
         int index = 1;
         projectService.ProjectSortByName(projects);
         for (final Project project: projects) {
+            final String login1;
+            if (userService.findByUserId(project.getUserid()) == null) {
+                login1 = null;
+            }
+            else {
+                login1 = userService.findByUserId(project.getUserid()).getLogin();
+            }
             System.out.println(index + ". PROJECTID: " + project.getId() + "; NAME: " + project.getName() +
                     "; DESCRIPTION: " + project.getDescription() + "; USER ID: " + project.getUserid() +
-                    "; USER LOGIN: " + userService.findByUserId(project.getUserid()).getLogin());
+                    "; USER LOGIN: " + login1);
             index++;
         }
+    }
+
+    //Добавление принадлежности проекта пользователю по идентификатору проекта и логину пользователя.
+    public int addProjectToUser() {
+        System.out.println("ADD PROJECT TO USER");
+        System.out.println("PLEASE ENTER LOGIN:");
+        final User user1 = userService.findByLogin(scanner.nextLine());
+        if (user1 == null) {
+            System.out.println("LOGIN NOT EXIST!");
+        }
+        else {
+            final Long userId = user1.getUserid();
+            if (userId != null) {
+                System.out.println("PLEASE ENTER PROJECT ID:");
+                final Long projectId = control.scannerIdIsLong();
+                if (projectId != null) {
+                    final Project project = projectService.findByIdUserId(projectId);
+                    if (project == null) {
+                        systemController.displayForeign("PROJECT");
+                        return -1;
+                    }
+                    projectService.addProjectToUser(userId, projectId);
+                    System.out.println("OK");
+                    return 0;
+                }
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    //Удаление принадлежности проекта пользователю по идентификатору задачи.
+    public int removeProjectFromUser() {
+        System.out.println("REMOVE PROJECT FROM USER");
+        System.out.println("PLEASE ENTER PROJECT ID:");
+        final Long projectId = control.scannerIdIsLong();
+        if (projectId != null) {
+            final Project project = projectService.findByIdUserId(projectId);
+            if (project == null) {
+                systemController.displayForeign("PROJECT");
+                return -1;
+            }
+            if (project.getUserid() == null) {
+                System.out.println("PROJECT NOT HAVE USER.");
+                return -1;
+            }
+            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin_true()) {
+                project.setUserid(null);
+                System.out.println("ОК");
+                return 0;
+            }
+        }
+        return -1;
     }
 
 }

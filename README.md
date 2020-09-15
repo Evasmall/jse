@@ -34,7 +34,7 @@
 | user-update-role - Update user role (only for ADMIN!) |
 | user-profile - Display current user session. |
 | user-profile-update - Update current user profile. |
-| password-change - Change current user password. |
+| password-change - Change user password. |
 | user-exit - Terminate current session. |
 
 | Terminal commands for projects | Terminal commands for tasks | 
@@ -48,7 +48,9 @@
 | project-remove-by-id - Remove project by id (for current user). | task-remove-by-id - Remove task by id (for current user). |
 | project-remove-by-index - Remove project by index (for current user). | task-remove-by-index - Remove task by index (for current user). |
 | project-update-by-id - Update project by id (for current user). | task-update-by-id - Update task by id (for current user). |
-| project-update-by-index - Update project by index (for current user). | task-update-by-index - Update task by index (for current user). | 
+| project-update-by-index - Update project by index (for current user). | task-update-by-index - Update task by index (for current user). |
+| project-add-user - Add project for user by login. | task-add-user - Add task for user by login. |
+| project-remove-user - Remove project from user. | task-remove-user - Remove task from user. | 
 | | task-list-by-project-id - Display task list by project id. | 
 | | task-add-to_project-by-ids - Add task to project by ids (for current user). | task-remove-from-project-by-ids - Remove task from project by ids (for current user). | 
 | project-remove-by-id-with-tasks - Remove project by id with tasks (for project of current user). |

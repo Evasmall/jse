@@ -3,6 +3,7 @@ package ru.evasmall.tm.controller;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.entity.Task;
+import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.service.ProjectService;
 import ru.evasmall.tm.service.ProjectTaskService;
 import ru.evasmall.tm.service.TaskService;
@@ -139,13 +140,19 @@ public class TaskController extends AbstractController{
     //Просмотр задачи.
     public void viewTask(final Task task) {
         if (task == null) return;
-        System.out.println("VIEW TASK");
-        System.out.println("ID: " + task.getId());
-        System.out.println("NAME: " + task.getName());
-        System.out.println("DESCRIPTION: " + task.getDescription());
-        System.out.println("PROJECT ID: " + task.getProjectId());
-        System.out.println("USER LOGIN: " + userService.findByUserId(task.getUserid()).getLogin());
-        System.out.println("_____");
+        if (Application.userIdCurrent == null) {
+            System.out.println("TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
+            return;
+        }
+        else {
+            System.out.println("VIEW TASK");
+            System.out.println("ID: " + task.getId());
+            System.out.println("NAME: " + task.getName());
+            System.out.println("DESCRIPTION: " + task.getDescription());
+            System.out.println("PROJECT ID: " + task.getProjectId());
+            System.out.println("USER LOGIN: " + userService.findByUserId(task.getUserid()).getLogin());
+            System.out.println("_____");
+        }
     }
 
     //Просмотр задачи по индексу.
@@ -197,11 +204,17 @@ public class TaskController extends AbstractController{
 
     //Cписок задач.
     public int listTask() {
-        System.out.println("LIST TASK");
-        int index = 1;
-        viewTasks(taskService.findAll());
-        System.out.println("OK");
-        return 0;
+        //Проверка на авторизацию польователя
+        if (Application.userIdCurrent == null) {
+            System.out.println("LIST TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
+            return -1;
+        }
+        else {
+            System.out.println("LIST TASK");
+            viewTasks(taskService.findAll());
+            System.out.println("OK");
+            return 0;
+        }
     }
 
     //Просмотр списка задач.
@@ -210,30 +223,43 @@ public class TaskController extends AbstractController{
         int index = 1;
         taskService.TaskSortByName(tasks);
         for (final Task task: tasks) {
+            final String login1;
+            if (userService.findByUserId(task.getUserid()) == null) {
+                login1 = null;
+            }
+            else {
+                login1 = userService.findByUserId(task.getUserid()).getLogin();
+            }
             System.out.println(index + ". TASKID: " + task.getId() + "; NAME: " + task.getName() + "; DESCRIPTION: "
                     + task.getDescription() + "; PROJECTID: " + task.getProjectId()
-                    + "; USER LOGIN: " + userService.findByUserId(task.getUserid()).getLogin());
+                    + "; USER LOGIN: " + login1);
             index++;
         }
     }
 
     //Просмотр списка задач, принадлежащих проекту по идентификатору.
     public int listTaskByProjectId() {
-        System.out.println("LIST TASK BY PROJECT");
-        System.out.println("PLEASE ENTER PROJECT ID:");
-        final Long projectId = control.scannerIdIsLong();
-        if (projectId != null) {
-            final Project project = projectService.findById(projectId);
-            if (project == null) {
-                System.out.println("PROJECT NOT FOUND.");
-                return -1;
-            }
-            final List<Task> tasks = taskService.findAllByProjectId(projectId);
-            viewTasks(tasks);
-            System.out.println("OK");
-            return 0;
+        if (Application.userIdCurrent == null) {
+            System.out.println("LIST TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
+            return -1;
         }
-        return -1;
+        else {
+            System.out.println("LIST TASK BY PROJECT");
+            System.out.println("PLEASE ENTER PROJECT ID:");
+            final Long projectId = control.scannerIdIsLong();
+            if (projectId != null) {
+                final Project project = projectService.findById(projectId);
+                if (project == null) {
+                    System.out.println("PROJECT NOT FOUND.");
+                    return -1;
+                }
+                final List<Task> tasks = taskService.findAllByProjectId(projectId);
+                viewTasks(tasks);
+                System.out.println("OK");
+                return 0;
+            }
+            return -1;
+        }
     }
 
     //Добавление задачи к проекту по идентификаторам с учетом принадлежности проекта пользователю.
@@ -245,7 +271,6 @@ public class TaskController extends AbstractController{
             final Project project = projectService.findByIdUserId(projectId);
             if (project == null) {
                 systemController.displayForeign("PROJECT");
-                //System.out.println("PROJECT NOT FOUND.");
                 return -1;
             }
             System.out.println("PLEASE ENTER TASK ID:");
@@ -329,6 +354,59 @@ public class TaskController extends AbstractController{
             return 0;
         }
         else return  -1;
+    }
+
+    //Добавление принадлежности задачи пользователю по идентификатору задачи и логину пользователя.
+    public int addTaskToUser() {
+        System.out.println("ADD TASK TO USER");
+        System.out.println("PLEASE ENTER LOGIN:");
+        final User user1 = userService.findByLogin(scanner.nextLine());
+        if (user1 == null) {
+            System.out.println("LOGIN NOT EXIST!");
+        }
+        else {
+            final Long userId = user1.getUserid();
+            if (userId != null) {
+                System.out.println("PLEASE ENTER TASK ID:");
+                final Long taskId = control.scannerIdIsLong();
+                if (taskId != null) {
+                    final Task task = taskService.findByIdUserId(taskId);
+                    if (task == null) {
+                        systemController.displayForeign("TASK");
+                        return -1;
+                    }
+                    taskService.addTaskToUser(userId, taskId);
+                    System.out.println("OK");
+                    return 0;
+                }
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    //Удаление принадлежности задачи пользователю по идентификатору задачи.
+    public int removeTaskFromUser() {
+        System.out.println("REMOVE TASK FROM USER");
+        System.out.println("PLEASE ENTER TASK ID:");
+        final Long taskId = control.scannerIdIsLong();
+        if (taskId != null) {
+            final Task task = taskService.findByIdUserId(taskId);
+            if (task == null) {
+                systemController.displayForeign("TASK");
+                return -1;
+            }
+            if (task.getUserid() == null) {
+                System.out.println("TASK NOT HAVE USER.");
+                return -1;
+            }
+            if (task.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin_true()) {
+                task.setUserid(null);
+                System.out.println("ОК");
+                return 0;
+            }
+        }
+        return -1;
     }
 
 }

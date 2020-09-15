@@ -180,29 +180,40 @@ public class UserController extends AbstractController {
         }
     }
 
-    //Изменение пароля текущего пользователя.
+    //Изменение пароля пользователя.
     public int changePassword(Long userIdCurrent) {
-        System.out.println("PLEASE ENTER YOUR NEW PASSWORD:");
-        System.out.println("PLEASE ENTER PASSWORD:");
-        final String password1 = scanner.nextLine();
-        //Проверка на пустой пароль
-        if (password1 == null || password1.isEmpty()) {
-            System.out.println("PASSWORD MAST NOT BE EMPTY!");
-            System.out.println("FAIL]");
-            return -1;
-        };
-        //Проверка на подтверждение пароля
-        System.out.println("CONFIRM PASSWORD:");
-        final String password2 = scanner.nextLine();
-        if (password1.equals(password2)) {
-            userService.changePassword(userIdCurrent, password1);
-            System.out.println("PASSWORD CHANGE OK.");
-            return 0;
-        }
-        else {
-            System.out.println("PASSWORD INCORRECT!:");
+        System.out.println("PLEASE ENTER LOGIN:");
+        final String login1 = scanner.nextLine();
+        final User user1 = userService.findByLogin(login1);
+        if (user1 == null) {
+            System.out.println("LOGIN NOT EXIST!");
             return -1;
         }
+        //Проверка логина текущего пользователя или на права администратора
+        if (user1.getUserid().equals(userIdCurrent) || userService.findByUserId(userIdCurrent).isAdmin_true()) {
+            System.out.println("PLEASE ENTER NEW PASSWORD:");
+            final String password1 = scanner.nextLine();
+            //Проверка на пустой пароль
+            if (password1 == null || password1.isEmpty()) {
+                System.out.println("PASSWORD NOT BE EMPTY!");
+                System.out.println("FAIL");
+                return -1;
+            };
+            //Проверка на подтверждение пароля
+            System.out.println("CONFIRM PASSWORD:");
+            final String password2 = scanner.nextLine();
+            if (password1.equals(password2)) {
+                userService.changePassword(user1.getUserid(), password1);
+                System.out.println("PASSWORD CHANGE OK.");
+                return 0;
+            }
+            else {
+                System.out.println("CONFIRM PASSWORD INCORRECT!");
+                return -1;
+            }
+        }
+        else System.out.println("NO ACCESS FOR PASSWORD CHANGE! ERROR!.");
+        return -1;
     }
 
     //Проверка на существование логина.

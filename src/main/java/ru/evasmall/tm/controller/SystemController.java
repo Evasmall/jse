@@ -56,7 +56,7 @@ public class SystemController {
         System.out.println("user-update-role - Update user role (only for ADMIN!)");
         System.out.println("user-profile - Display current user session.");
         System.out.println("user-profile-update - Update current user profile.");
-        System.out.println("password-change - Change current user password.");
+        System.out.println("password-change - Change user password.");
         System.out.println("user-exit - Terminate current session.");
         System.out.println();
         System.out.println("project-list - Display list of projects.");
@@ -72,6 +72,8 @@ public class SystemController {
         System.out.println("project-remove-by-index-with-tasks - Remove project by index with tasks.");
         System.out.println("project-update-by-id - Update project by id.");
         System.out.println("project-update-by-index - Update project by index.");
+        System.out.println("project-add-user - Add project for user by login.");
+        System.out.println("project-remove-user - Remove project from user.");
         System.out.println();
         System.out.println("task-list - Display list of tasks.");
         System.out.println("task-create - Create new task by name.");
@@ -84,6 +86,8 @@ public class SystemController {
         System.out.println("task-remove-by-index - Remove task by index.");
         System.out.println("task-update-by-id - Update task by id.");
         System.out.println("task-update-by-index - Update task by index.");
+        System.out.println("task-add-user - Add task for user by login.");
+        System.out.println("task-remove-user - Remove task from user.");
         System.out.println();
         System.out.println("task-list-by-project-id - Display task list by project id.");
         System.out.println("task-add-to_project-by-ids - Add task to project by ids.");

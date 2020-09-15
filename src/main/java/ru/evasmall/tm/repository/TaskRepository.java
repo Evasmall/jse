@@ -44,6 +44,10 @@ public class TaskRepository {
         task.setId(id);
         task.setName(name);
         task.setDescription(description);
+        List<Task> taskList = findByName(task.getName());
+        if (taskList == null) return null;
+        tasksName.remove(task.getName());
+        tasksName.put(name, taskList);
         return task;
     }
 
@@ -59,6 +63,7 @@ public class TaskRepository {
 
     public void clear() {
         tasks.clear();
+        tasksName.clear();
     }
 
     public List<Task> findByName(final String name) {
@@ -95,6 +100,7 @@ public class TaskRepository {
         final Task task = findById(id);
         if (task == null) return null;
         tasks.remove(task);
+        tasksName.remove(task.getName());
         return task;
     }
 
@@ -102,6 +108,7 @@ public class TaskRepository {
         final Task task = findByIndex(index);
         if (task == null) return null;
         tasks.remove(task);
+        tasksName.remove(task.getName());
         return task;
     }
 
