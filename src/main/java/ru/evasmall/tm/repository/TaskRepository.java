@@ -4,6 +4,7 @@ import ru.evasmall.tm.entity.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class TaskRepository {
@@ -11,10 +12,11 @@ public class TaskRepository {
     private final List<Task> tasks = new ArrayList<>();
 
     public List<Task> findAll() {
+        System.out.println(tasksName);
         return tasks;
     }
 
-    private final HashMap<String, List<Task>> tasksName = new HashMap<>();
+    private final HashMap<String, HashSet<Task>> tasksName = new HashMap<>();
 
     public List<Task> findAllByProjectId(final Long projectId) {
         final List<Task> result = new ArrayList<>();
@@ -31,23 +33,18 @@ public class TaskRepository {
         task.setDescription(description);
         task.setUserid(userId);
         tasks.add(task);
-        List<Task> tasksHashMap = tasksName.get(task.getName());
-        if (tasksHashMap == null) tasksHashMap = new ArrayList<>();
-        tasksHashMap.add(task);
-        tasksName.put(task.getName(), tasksHashMap);
+        addTaskToMap(task);
         return task;
     }
 
     public Task update(final Long id, final String name, String description) {
         final Task task = findById(id);
         if (task == null) return null;
+        removeTaskFromMap(task);
         task.setId(id);
         task.setName(name);
         task.setDescription(description);
-        List<Task> taskList = findByName(task.getName());
-        if (taskList == null) return null;
-        tasksName.remove(task.getName());
-        tasksName.put(name, taskList);
+        addTaskToMap(task);
         return task;
     }
 
@@ -99,21 +96,48 @@ public class TaskRepository {
     public Task removeById (final Long id) {
         final Task task = findById(id);
         if (task == null) return null;
+        removeTaskFromMap(task);
         tasks.remove(task);
-        tasksName.remove(task.getName());
         return task;
     }
 
     public Task removeByIndex (final int index) {
         final Task task = findByIndex(index);
         if (task == null) return null;
+        removeTaskFromMap(task);
         tasks.remove(task);
-        tasksName.remove(task.getName());
         return task;
     }
 
     public int size() {
         return tasks.size();
+    }
+
+    public void removeTaskFromMap(final Task task) {
+        final String name = task.getName();
+        HashSet<Task> tasksHashMap = tasksName.get(name);
+        if (tasksHashMap != null) {
+            tasksHashMap.remove(task);
+        }
+        final List <Task> tasksHashMap1 = findByName(name);
+        if (tasksHashMap1.isEmpty()) {
+            {
+                tasksName.remove(name);
+            }
+        }
+    }
+
+    private void addTaskToMap(final Task task) {
+        final String name = task.getName();
+        HashSet<Task> tasksHashMap = tasksName.get(name);
+        if (tasksHashMap != null) {
+            tasksHashMap.add(task);
+        }
+        else {
+            tasksHashMap = new HashSet<>();
+            tasksHashMap.add(task);
+            tasksName.put(name, tasksHashMap);
+        }
     }
 
 }

@@ -75,7 +75,6 @@ public class ProjectRepository {
         if (project == null) return null;
         removeProjectFromMap(project);
         projects.remove(project);
-        System.out.println(projectsName);
         return project;
     }
 
@@ -85,12 +84,12 @@ public class ProjectRepository {
 
     public void removeProjectFromMap(final Project project) {
         final String name = project.getName();
-        HashSet<Project> projects = projectsName.get(name);
-        if (projects != null) {
-            projects.remove(project);
+        HashSet<Project> projectsHashMap = projectsName.get(name);
+        if (projectsHashMap != null) {
+            projectsHashMap.remove(project);
         }
-        final List <Project> projects1 = findByName(name);
-        if (projects1.isEmpty()) {
+        final List <Project> projectsHashMap1 = findByName(name);
+        if (projectsHashMap1.isEmpty()) {
             {
                 projectsName.remove(name);
             }
@@ -98,14 +97,15 @@ public class ProjectRepository {
     }
 
     private void addProjectToMap(final Project project) {
-        HashSet<Project> projectsHashMap = projectsName.get(project.getName());
-        if (projectsHashMap == null) {
-            projectsHashMap = new HashSet<>();
+        final String name = project.getName();
+        HashSet<Project> projectsHashMap = projectsName.get(name);
+        if (projectsHashMap != null) {
             projectsHashMap.add(project);
-            projectsName.put(project.getName(), projectsHashMap);
         }
         else {
+            projectsHashMap = new HashSet<>();
             projectsHashMap.add(project);
+            projectsName.put(name, projectsHashMap);
         }
     }
 
