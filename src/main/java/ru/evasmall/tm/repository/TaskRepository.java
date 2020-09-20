@@ -119,8 +119,7 @@ public class TaskRepository {
         if (tasksHashMap != null) {
             tasksHashMap.remove(task);
         }
-        final List <Task> tasksHashMap1 = findByName(name);
-        if (tasksHashMap1.isEmpty()) {
+        if (tasksHashMap.isEmpty()) {
             {
                 tasksName.remove(name);
             }

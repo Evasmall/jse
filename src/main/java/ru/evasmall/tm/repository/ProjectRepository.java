@@ -88,8 +88,7 @@ public class ProjectRepository {
         if (projectsHashMap != null) {
             projectsHashMap.remove(project);
         }
-        final List <Project> projectsHashMap1 = findByName(name);
-        if (projectsHashMap1.isEmpty()) {
+        if (projectsHashMap.isEmpty()) {
             {
                 projectsName.remove(name);
             }
