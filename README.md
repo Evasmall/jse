@@ -17,7 +17,7 @@
 
 | Start |
 | ------ |
-| java -jar target/ev-task-manager-1.0.14.jar |
+| java -jar target/ev-task-manager-1.0.15.jar |
 
 | Terminal commands | 
 | ------ | 
