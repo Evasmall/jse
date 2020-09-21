@@ -1,7 +1,6 @@
 package ru.evasmall.tm.entity;
 
 import java.util.Comparator;
-
 public class Project {
 
     private Long id = System.nanoTime();

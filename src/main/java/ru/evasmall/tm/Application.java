@@ -5,7 +5,7 @@ import ru.evasmall.tm.controller.SystemController;
 import ru.evasmall.tm.controller.TaskController;
 import ru.evasmall.tm.controller.UserController;
 import ru.evasmall.tm.enumerated.RoleEnum;
-import ru.evasmall.tm.exeption.ObjectNotFound;
+import ru.evasmall.tm.exeption.ObjectNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.repository.UserRepository;
@@ -65,7 +65,7 @@ public class Application {
         try {
             application.run(args);
         }
-        catch (ObjectNotFound e) {
+        catch (ObjectNotFoundException e) {
             e.printStackTrace();
         }
         application.systemController.displayWelcome();
@@ -77,13 +77,13 @@ public class Application {
             try {
                 application.run(command);
             }
-            catch (ObjectNotFound e) {
+            catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void run(final String[] args) throws ObjectNotFound {
+    public void run(final String[] args) throws ObjectNotFoundException {
         if (args == null) return;
         if (args.length < 1) return;
         final String param = args[0];
@@ -91,7 +91,7 @@ public class Application {
         System.exit(result);
     }
 
-    public int run(final String param) throws ObjectNotFound {
+    public int run(final String param) throws ObjectNotFoundException {
         if (param == null || param.isEmpty()) return -1;
         switch (param) {
             case CMD_HELP: return systemController.displayHelp();
