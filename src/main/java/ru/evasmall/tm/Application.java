@@ -5,6 +5,7 @@ import ru.evasmall.tm.controller.SystemController;
 import ru.evasmall.tm.controller.TaskController;
 import ru.evasmall.tm.controller.UserController;
 import ru.evasmall.tm.enumerated.RoleEnum;
+import ru.evasmall.tm.exeption.ObjectNotFound;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.repository.UserRepository;
@@ -61,19 +62,28 @@ public class Application {
     public static void main(final String[] args) {
         final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
-
-        application.run(args);
+        try {
+            application.run(args);
+        }
+        catch (ObjectNotFound e) {
+            e.printStackTrace();
+        }
         application.systemController.displayWelcome();
         String command = "";
         while (!CMD_EXIT.equals(command)) {
             command = scanner.nextLine();
             history.add(command);
             if (history.size() > 10) history.pollFirst();
-            application.run(command);
+            try {
+                application.run(command);
+            }
+            catch (ObjectNotFound e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void run(final String[] args) {
+    public void run(final String[] args) throws ObjectNotFound {
         if (args == null) return;
         if (args.length < 1) return;
         final String param = args[0];
@@ -81,7 +91,7 @@ public class Application {
         System.exit(result);
     }
 
-    public int run(final String param) {
+    public int run(final String param) throws ObjectNotFound {
         if (param == null || param.isEmpty()) return -1;
         switch (param) {
             case CMD_HELP: return systemController.displayHelp();

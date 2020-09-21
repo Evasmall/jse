@@ -4,6 +4,7 @@ import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.entity.User;
+import ru.evasmall.tm.exeption.ObjectNotFound;
 import ru.evasmall.tm.service.ProjectService;
 import ru.evasmall.tm.service.ProjectTaskService;
 import ru.evasmall.tm.service.TaskService;
@@ -34,20 +35,32 @@ public class TaskController extends AbstractController{
     }
 
     //Создание задачи.
-    public int createTask() {
+    public int createTask() throws ObjectNotFound {
         System.out.println("CREATE TASK");
         System.out.println("PLEASE ENTER TASK NAME:");
         final String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println("TASK NAME EMPTY. FAIL.");
+            return -1;
+        }
         System.out.println("PLEASE ENTER TASK DESCRIPTION:");
         final String description = scanner.nextLine();
+        if (description.isEmpty())
+        {
+            System.out.println("TASK DESCRIPTION EMPTY. FAIL.");
+            return -1;
+        }
         final Long userId = Application.userIdCurrent;
-        taskService.create(name, description, userId);
+        Task taskNew = taskService.create(name, description, userId);
+        if (taskNew == null) {
+            throw new ObjectNotFound("TASK NOT CREATE. FAIL.");
+        }
         System.out.println("OK");
         return 0;
     }
 
     //Изменение задачи по индексу с учетом принадлежности задачи пользователю.
-    public int updateTaskByIndex() {
+    public int updateTaskByIndex() throws ObjectNotFound {
         System.out.println("UPDATE TASK");
         System.out.println("ENTER TASK INDEX:");
         final Integer index = control.scannerIndexIsInteger();
@@ -59,9 +72,21 @@ public class TaskController extends AbstractController{
             }
             System.out.println("PLEASE ENTER TASK NAME:");
             final String name = scanner.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("TASK NAME EMPTY. FAIL.");
+                return -1;
+            }
             System.out.println("PLEASE ENTER TASK DESCRIPTION:");
             final String description = scanner.nextLine();
-            taskService.update(task.getId(), name, description);
+            if (description.isEmpty())
+            {
+                System.out.println("TASK DESCRIPTION EMPTY. FAIL.");
+                return -1;
+            }
+            Task taskNew = taskService.update(task.getId(), name, description);
+            if (taskNew == null) {
+                throw new ObjectNotFound("TASK NOT UPDATE. FAIL.");
+            }
             System.out.println("OK");
             return 0;
         }
@@ -69,7 +94,7 @@ public class TaskController extends AbstractController{
     }
 
     //Изменение задачи по идентификатору с учетом принадлежности задачи пользователю.
-    public int updateTaskById() {
+    public int updateTaskById() throws ObjectNotFound {
         System.out.println("UPDATE TASK");
         System.out.println("ENTER TASK ID:");
         final Long id = control.scannerIdIsLong();
@@ -81,9 +106,21 @@ public class TaskController extends AbstractController{
             }
             System.out.println("PLEASE ENTER TASK NAME:");
             final String name = scanner.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("TASK NAME EMPTY. FAIL.");
+                return -1;
+            }
             System.out.println("PLEASE ENTER TASK DESCRIPTION:");
             final String description = scanner.nextLine();
-            taskService.update(task.getId(), name, description);
+            if (description.isEmpty())
+            {
+                System.out.println("TASK DESCRIPTION EMPTY. FAIL.");
+                return -1;
+            }
+            Task taskNew = taskService.update(task.getId(), name, description);
+            if (taskNew == null) {
+                throw new ObjectNotFound("TASK NOT UPDATE. FAIL.");
+            }
             System.out.println("OK");
             return 0;
         }
@@ -91,18 +128,16 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи по индексу с учетом принадлежности задачи пользователю.
-    public int removeTaskByIndex() {
+    public int removeTaskByIndex() throws ObjectNotFound {
         System.out.println("REMOVE TASK BY INDEX");
         System.out.println("PLEASE ENTER TASK INDEX:");
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
-            final Task task = taskService.findByIndexUserId(index);
+            final Task task = taskService.removeByIndexUserId(index);
             if (task == null) {
                 systemController.displayForeign("TASK");
-                return 0;
+                throw new ObjectNotFound("TASK NOT FOUND BY INDEX.");
             }
-            final Task taskRemove = taskService.removeByIndexUserId(index);
-            if (task == null) System.out.println("FAIL");
             else System.out.println("OK");
             return 0;
         }
@@ -110,13 +145,16 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи по идентификатору с учетом принадлежности задачи пользователю.
-    public int removeTaskById() {
+    public int removeTaskById() throws ObjectNotFound {
         System.out.println("REMOVE TASK BY ID");
         System.out.println("PLEASE ENTER TASK ID:");
         final Long id = control.scannerIdIsLong();
         if (id != null) {
             final Task task = taskService.removeByIdUserId(id);
-            if (task == null) systemController.displayForeign("TASK");
+            if (task == null) {
+                systemController.displayForeign("TASK");
+                throw new ObjectNotFound("TASK NOT FOUND BY ID.");
+            }
             else System.out.println("OK");
             return 0;
         }
@@ -156,14 +194,13 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр задачи по индексу.
-    public int viewTaskByIndex() {
+    public int viewTaskByIndex() throws ObjectNotFound {
         System.out.println("ENTER TASK INDEX:");
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
             final Task task = taskService.findByIndex(index);
             if (task == null) {
-                System.out.println("TASK NOT FOUND");
-                return 0;
+                throw new ObjectNotFound("TASK NOT FOUND BY INDEX.");
             }
             viewTask(task);
             return 0;
@@ -172,13 +209,12 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр списка задач по наименованию
-    public int viewTaskByName() {
+    public int viewTaskByName() throws ObjectNotFound {
         System.out.print("ENTER TASK NAME:");
         String name = scanner.nextLine();
         final List <Task> tasks = taskService.findByName(name);
         if (tasks == null) {
-            systemController.displayForeign("TASK");
-            return -1;
+            throw new ObjectNotFound("TASK NOT FOUND BY NAME.");
         }
         for (Task task: tasks) {
             viewTask(task);
@@ -187,14 +223,13 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр задачи по идентификатору.
-    public int viewTaskById() {
+    public int viewTaskById() throws ObjectNotFound {
         System.out.println("ENTER TASK ID:");
         final Long id = control.scannerIdIsLong();
         if (id != null) {
             final Task task = taskService.findById(id);
             if (task == null) {
-                System.out.println("TASK NOT FOUND.");
-                return -1;
+                throw new ObjectNotFound("TASK NOT FOUND BY ID.");
             }
             viewTask(task);
             return 0;
@@ -238,7 +273,7 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр списка задач, принадлежащих проекту по идентификатору.
-    public int listTaskByProjectId() {
+    public int listTaskByProjectId() throws ObjectNotFound {
         if (Application.userIdCurrent == null) {
             System.out.println("LIST TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
             return -1;
@@ -250,8 +285,8 @@ public class TaskController extends AbstractController{
             if (projectId != null) {
                 final Project project = projectService.findById(projectId);
                 if (project == null) {
-                    System.out.println("PROJECT NOT FOUND.");
-                    return -1;
+                    systemController.displayForeign("PROJECT");
+                    throw new ObjectNotFound("PROJECT NOT FOUND BY ID.");
                 }
                 final List<Task> tasks = taskService.findAllByProjectId(projectId);
                 viewTasks(tasks);
@@ -263,7 +298,7 @@ public class TaskController extends AbstractController{
     }
 
     //Добавление задачи к проекту по идентификаторам с учетом принадлежности проекта пользователю.
-    public int addTaskToProjectByIds() {
+    public int addTaskToProjectByIds() throws ObjectNotFound {
         System.out.println("ADD TASK TO PROJECT BY IDS");
         System.out.println("PLEASE ENTER PROJECT ID:");
         final Long projectId = control.scannerIdIsLong();
@@ -271,15 +306,15 @@ public class TaskController extends AbstractController{
             final Project project = projectService.findByIdUserId(projectId);
             if (project == null) {
                 systemController.displayForeign("PROJECT");
-                return -1;
+                throw new ObjectNotFound("PROJECT NOT FOUND BY ID.");
             }
             System.out.println("PLEASE ENTER TASK ID:");
             final Long taskId = control.scannerIdIsLong();
             if (taskId != null) {
                 final Task task = taskService.findByIdUserId(taskId);
                 if (task == null) {
-                    System.out.println("TASK NOT FOUND.");
-                    return -1;
+                    systemController.displayForeign("TASK");
+                    throw new ObjectNotFound("TASK NOT FOUND BY ID.");
                 }
                 projectTaskService.addTaskToProject(projectId, taskId, Application.userIdCurrent);
                 System.out.println("OK");
@@ -291,23 +326,23 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи из проекта по идентификаторам.
-    public int removeTaskFromProjectByIds() {
+    public int removeTaskFromProjectByIds() throws ObjectNotFound {
         System.out.println("REMOVE TASK FROM PROJECT BY IDS");
         System.out.println("PLEASE ENTER PROJECT ID:");
         final Long projectId = control.scannerIdIsLong();
         if (projectId != null) {
             final Project project = projectService.findByIdUserId(projectId);
             if (project == null) {
-                System.out.println("PROJECT NOT FOUND.");
-                return -1;
+                systemController.displayForeign("PROJECT");
+                throw new ObjectNotFound("PROJECT NOT FOUND BY ID.");
             }
             System.out.println("PLEASE ENTER TASK ID:");
             final Long taskId = control.scannerIdIsLong();
             if (taskId != null) {
                 final Task task = taskService.findById(taskId);
                 if (task == null) {
-                    System.out.println("TASK NOT FOUND.");
-                    return -1;
+                    systemController.displayForeign("TASK");
+                    throw new ObjectNotFound("TASK NOT FOUND BY ID.");
                 }
                 projectTaskService.removeTaskFromProject(projectId, taskId);
                 System.out.println("OK");
@@ -319,15 +354,15 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление проекта со принадлежащими ему задачами по идентификатору.
-    public int removeProjectByIdWithTasks() {
+    public int removeProjectByIdWithTasks() throws ObjectNotFound {
         System.out.println("REMOVE PROJECT WITH BY ID");
         System.out.println("PLEASE ENTER PROJECT ID:");
         final Long projectId = control.scannerIdIsLong();
         if (projectId != null) {
             final Project project = projectService.findByIdUserId(projectId);
             if (project == null) {
-                System.out.println("PROJECT NOT FOUND.");
-                return -1;
+                systemController.displayForeign("PROJECT");
+                throw new ObjectNotFound("PROJECT NOT FOUND BY ID.");
             }
             Project projectTask = projectTaskService.removeProjectByIdWithTask(projectId);
             if (projectTask == null) System.out.println("FAIL");
@@ -338,7 +373,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление проекта со принадлежащими ему задачами по индексу.
-    public int removeProjectByIndexWithTasks() {
+    public int removeProjectByIndexWithTasks() throws ObjectNotFound {
         System.out.println("REMOVE PROJECT WITH BY INDEX");
         System.out.println("PLEASE ENTER PROJECT INDEX:");
         final Integer index = control.scannerIndexIsInteger();
@@ -346,7 +381,7 @@ public class TaskController extends AbstractController{
             final Project project = projectService.findByIndexUserId(index);
             if (project == null) {
                 systemController.displayForeign("PROJECT");
-                return -1;
+                throw new ObjectNotFound("PROJECT NOT FOUND BY ID.");
             }
             Project projectRemove = projectTaskService.removeProjectByIndexWithTask(index);
             if (projectRemove == null) System.out.println("FAIL.");
@@ -357,7 +392,7 @@ public class TaskController extends AbstractController{
     }
 
     //Добавление принадлежности задачи пользователю по идентификатору задачи и логину пользователя.
-    public int addTaskToUser() {
+    public int addTaskToUser() throws ObjectNotFound {
         System.out.println("ADD TASK TO USER");
         System.out.println("PLEASE ENTER LOGIN:");
         final User user1 = userService.findByLogin(scanner.nextLine());
@@ -373,7 +408,7 @@ public class TaskController extends AbstractController{
                     final Task task = taskService.findByIdUserId(taskId);
                     if (task == null) {
                         systemController.displayForeign("TASK");
-                        return -1;
+                        throw new ObjectNotFound("TASK NOT FOUND BY ID.");
                     }
                     taskService.addTaskToUser(userId, taskId);
                     System.out.println("OK");
@@ -386,7 +421,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление принадлежности задачи пользователю по идентификатору задачи.
-    public int removeTaskFromUser() {
+    public int removeTaskFromUser() throws ObjectNotFound {
         System.out.println("REMOVE TASK FROM USER");
         System.out.println("PLEASE ENTER TASK ID:");
         final Long taskId = control.scannerIdIsLong();
@@ -394,7 +429,7 @@ public class TaskController extends AbstractController{
             final Task task = taskService.findByIdUserId(taskId);
             if (task == null) {
                 systemController.displayForeign("TASK");
-                return -1;
+                throw new ObjectNotFound("TASK NOT FOUND BY ID.");
             }
             if (task.getUserid() == null) {
                 System.out.println("TASK NOT HAVE USER.");
