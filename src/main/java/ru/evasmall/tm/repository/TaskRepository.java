@@ -1,6 +1,8 @@
 package ru.evasmall.tm.repository;
 
 import ru.evasmall.tm.entity.Task;
+import ru.evasmall.tm.exeption.IncorrectFormatException;
+import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +39,8 @@ public class TaskRepository {
         return task;
     }
 
-    public Task update(final Long id, final String name, String description) {
+    public Task update(final Long id, final String name, String description) throws TaskNotFoundException{
         final Task task = findById(id);
-        if (task == null) return null;
         removeTaskFromMap(task);
         task.setId(id);
         task.setName(name);
@@ -63,23 +64,31 @@ public class TaskRepository {
         tasksName.clear();
     }
 
-    public List<Task> findByName(final String name) {
+    public List<Task> findByName(final String name) throws TaskNotFoundException, IncorrectFormatException {
         final List<Task> tasks = new ArrayList<>();
-        if (tasksName.get(name) == null) return null;
+        if (name.isEmpty())
+            throw new IncorrectFormatException("TASK NAME IS EMPTY. FAIL.");
+        if (tasksName.get(name) == null || tasksName.get(name).isEmpty())
+            throw new TaskNotFoundException("TASK NOT FOUND BY NAME: " + name + ". FAIL.");
+        if (tasksName.get(name) == null)
+            return null;
         for (final Task task: tasksName.get(name)) {
             tasks.add(task);
         }
         return tasks;
     }
 
-    public Task findById(final Long id) {
+    public Task findById(final Long id) throws TaskNotFoundException {
+        if (id == null)
+            throw new TaskNotFoundException("TASK ID IS EMPTY. FAIL.");
         for (final Task task: tasks) {
-            if(task.getId().equals(id)) return task;
+            if(task.getId().equals(id))
+                return task;
         }
-        return null;
+        throw new TaskNotFoundException("TASK NOT FOUND BY ID: " + id + ". FAIL.");
     }
 
-    public Task findByProjectIdAndId(final Long projectId, final Long id) {
+    public Task findByProjectIdAndId(final Long projectId, final Long id) throws TaskNotFoundException {
         for (final Task task: tasks) {
             final Long idProject = task.getProjectId();
             if (idProject == null) continue;
@@ -89,21 +98,22 @@ public class TaskRepository {
         return null;
     }
 
-    public Task findByIndex(final int index) {
+    public Task findByIndex(final int index) throws TaskNotFoundException {
+        if (index < 0 || index > tasks.size() - 1) {
+            throw new TaskNotFoundException("TASK NOT FOUND BY INDEX: " + (index + 1) +".");
+        }
         return tasks.get(index);
     }
 
-    public Task removeById (final Long id) {
+    public Task removeById (final Long id) throws TaskNotFoundException {
         final Task task = findById(id);
-        if (task == null) return null;
         removeTaskFromMap(task);
         tasks.remove(task);
         return task;
     }
 
-    public Task removeByIndex (final int index) {
+    public Task removeByIndex (final int index) throws TaskNotFoundException{
         final Task task = findByIndex(index);
-        if (task == null) return null;
         removeTaskFromMap(task);
         tasks.remove(task);
         return task;
@@ -116,22 +126,17 @@ public class TaskRepository {
     public void removeTaskFromMap(final Task task) {
         final String name = task.getName();
         HashSet<Task> tasksHashMap = tasksName.get(name);
-        if (tasksHashMap != null) {
+        if (tasksHashMap != null)
             tasksHashMap.remove(task);
-        }
-        if (tasksHashMap.isEmpty()) {
-            {
-                tasksName.remove(name);
-            }
-        }
+        if (tasksHashMap.isEmpty())
+            tasksName.remove(name);
     }
 
     private void addTaskToMap(final Task task) {
         final String name = task.getName();
         HashSet<Task> tasksHashMap = tasksName.get(name);
-        if (tasksHashMap != null) {
+        if (tasksHashMap != null)
             tasksHashMap.add(task);
-        }
         else {
             tasksHashMap = new HashSet<>();
             tasksHashMap.add(task);

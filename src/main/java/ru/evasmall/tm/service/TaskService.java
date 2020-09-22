@@ -2,6 +2,8 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Task;
+import ru.evasmall.tm.exeption.IncorrectFormatException;
+import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 
 import java.util.Collections;
@@ -20,17 +22,20 @@ public class TaskService {
     }
 
     //Создание задачи по параметрам.
-    public Task create(String name, String description, Long userid) {
-        if (name == null || name.isEmpty()) return null;
-        if (description == null || description.isEmpty()) return null;
+    public Task create(String name, String description, Long userid) throws IncorrectFormatException {
+        if (name == null || name.isEmpty())
+            throw new IncorrectFormatException("TASK NAME IS EMPTY. TASK NOT CREATED. FAIL.");
+        if (description == null || description.isEmpty())
+            throw new IncorrectFormatException("TASK DESCRIPTION IS EMPTY. TASK NOT CREATED. FAIL.");
         return taskRepository.create(name, description, userid);
     }
 
     //Изменение задачи.
-    public Task update(Long id, String name, String description) {
-        if (id == null) return null;
-        if (name == null || name.isEmpty()) return null;
-        if (description == null || description.isEmpty()) return null;
+    public Task update(Long id, String name, String description) throws TaskNotFoundException, IncorrectFormatException {
+        if (name == null || name.isEmpty())
+            throw new IncorrectFormatException("TASK NAME IS EMPTY. TASK NOT UPDATED. FAIL.");
+        if (description == null || description.isEmpty())
+            throw new IncorrectFormatException("TASK DESCRIPTION IS EMPTY. TASK NOT UPDATED. FAIL.");
         return taskRepository.update(id, name, description);
     }
 
@@ -40,70 +45,58 @@ public class TaskService {
     }
 
     //Поиск задачи по наименованию
-    public List<Task> findByName(String name) {
-        if (name == null || name.isEmpty()) return null;
+    public List<Task> findByName(String name) throws TaskNotFoundException, IncorrectFormatException {
         return taskRepository.findByName(name);
     }
 
     //Поиск задачи по идентификатору.
-    public Task findById(Long id) {
-        if (id == null) return null;
-        if (taskRepository.findById(id) == null) return  null;
+    public Task findById(Long id) throws TaskNotFoundException {
         return taskRepository.findById(id);
     }
 
     //Поиск задачи по идентификатору с учетом принадлежности пользователю текущей сессии.
-    public Task findByIdUserId(Long id) {
-        if (id == null) return null;
-        if (taskRepository.findById(id) == null) return  null;
+    public Task findByIdUserId(Long id) throws TaskNotFoundException {
         if (taskRepository.findById(id).getUserid() == null)
             return taskRepository.findById(id);
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return taskRepository.findById(id);
-        return null;
+        throw new TaskNotFoundException("TASK IS FOREIGN. FAIL.");
     }
 
     //Поиск задачи по индексу.
-    public Task findByIndex(int index) {
-        if (index < 0 || index > taskRepository.size() - 1) return null;
+    public Task findByIndex(int index) throws TaskNotFoundException {
         return taskRepository.findByIndex(index);
     }
 
     //Поиск задачи по индексу с учетом принадлежности пользователю текущей сессии.
-    public Task findByIndexUserId(int index) {
-        if (index < 0 || index > taskRepository.size() - 1) return null;
+    public Task findByIndexUserId(int index) throws TaskNotFoundException {
         if (taskRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return taskRepository.findByIndex(index);
-        else return null;
+        throw new TaskNotFoundException("TASK IS FOREIGN. FAIL.");
     }
 
     //Удаление задачи по идентификатору.
-    public Task removeById(Long id) {
-        if (id == null ) return null;
+    public Task removeById(Long id) throws TaskNotFoundException {
         return taskRepository.removeById(id);
     }
 
     //Удаление задачи по идентификатору с учетом принадлежности пользователю текущей сессии.
-    public Task removeByIdUserId(Long id) {
-        if (id == null ) return null;
-        if (taskRepository.findById(id) == null) return  null;
+    public Task removeByIdUserId(Long id) throws TaskNotFoundException {
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return taskRepository.removeById(id);
-        else return null;
+        throw new TaskNotFoundException("TASK IS FOREIGN. TASK NOT REMOVED. FAIL.");
     }
 
     //Удаление задачи по индексу.
-    public Task removeByIndex(int index) {
-        if (index < 0 || index > taskRepository.size() -1) return null;
+    public Task removeByIndex(int index) throws TaskNotFoundException {
         return taskRepository.removeByIndex(index);
     }
 
     //Удаление задачи по индексу с учетом принадлежности пользователю текущей сессии.
-    public Task removeByIndexUserId(int index) {
-        if (index < 0 || index > taskRepository.size() -1) return null;
+    public Task removeByIndexUserId(int index) throws TaskNotFoundException{
         if (taskRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return taskRepository.removeByIndex(index);
-        else return null;
+        throw new TaskNotFoundException("TASK IS FOREIGN. TASK NOT REMOVED. FAIL.");
     }
 
     //Найти все проекты по идентификатору.
@@ -113,7 +106,7 @@ public class TaskService {
     }
 
     //Найти проект по идентификаторам.
-    public Task findByProjectIdAndId(Long projectId, Long id) {
+    public Task findByProjectIdAndId(Long projectId, Long id) throws TaskNotFoundException {
         if (projectId == null || id == null) return null;
         return taskRepository.findByProjectIdAndId(projectId, id);
     }
@@ -125,9 +118,8 @@ public class TaskService {
     }
 
     //Добавление задачи пользователю.
-    public Task addTaskToUser(final Long userId, final Long taskId) {
+    public Task addTaskToUser(final Long userId, final Long taskId) throws TaskNotFoundException {
         final Task task = taskRepository.findById(taskId);
-        if (task == null) return null;
         task.setUserid(userId);
         return task;
     }

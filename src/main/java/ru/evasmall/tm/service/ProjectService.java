@@ -2,10 +2,11 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Project;
+import ru.evasmall.tm.exeption.IncorrectFormatException;
+import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ProjectService {
@@ -20,16 +21,19 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project create(String name, String description, Long userid) {
-        if (name == null || name.isEmpty()) return null;
-        if (description == null || description.isEmpty()) return null;
+    public Project create(String name, String description, Long userid) throws IncorrectFormatException {
+        if (name == null || name.isEmpty())
+            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. PROJECT NOT CREATED. FAIL.");
+        if (description == null || description.isEmpty())
+            throw new IncorrectFormatException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT CREATED. FAIL.");
         return projectRepository.create(name, description, userid);
     }
 
-    public Project update(Long id, String name, String description) {
-        if (id == null) return null;
-        if (name == null || name.isEmpty()) return null;
-        if (description == null || description.isEmpty()) return null;
+    public Project update(Long id, String name, String description) throws ProjectNotFoundException, IncorrectFormatException {
+        if (name == null || name.isEmpty())
+            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. PROJECT NOT UPDATED. FAIL.");
+        if (description == null || description.isEmpty())
+            throw new IncorrectFormatException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT UPDATED. FAIL.");
         return projectRepository.update(id, name, description);
     }
 
@@ -38,92 +42,78 @@ public class ProjectService {
     }
 
     //Поиск проекта по индексу
-    public Project findByIndex(int index) {
-        if (index < 0 || index > projectRepository.size() - 1) return null;
+    public Project findByIndex(int index) throws ProjectNotFoundException {
         return projectRepository.findByIndex(index);
     }
 
     //Поиск проекта по индексу с учетом принадлежности пользователю текущей сессии
-    public Project findByIndexUserId(int index) {
-        if (index < 0 || index > projectRepository.size() - 1) return null;
-        if (projectRepository.findByIndex(index) == null) return null;
-        if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent)) return projectRepository.findByIndex(index);
-        else return null;
+    public Project findByIndexUserId(int index) throws ProjectNotFoundException {
+        if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
+            return projectRepository.findByIndex(index);
+        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
     }
 
     //Поиск проекта по наименованию
-    public List<Project> findByName(String name) {
-        if (name == null || name.isEmpty()) return null;
+    public List<Project> findByName(String name) throws ProjectNotFoundException, IncorrectFormatException {
         return projectRepository.findByName(name);
     }
 
     //Поиск проекта по наименованию с учетом принадлежности пользователю текущей сессии
-    public List<Project> findByNameUserId(String name) {
-        if (name == null || name.isEmpty()) return null;
-        if (projectRepository.findByName(name) == null) return null;
+    public List<Project> findByNameUserId(String name) throws ProjectNotFoundException, IncorrectFormatException {
         for (Project project: projectRepository.findByName(name)) {
-            if (project.getUserid().equals(Application.userIdCurrent)) return projectRepository.findByName(name);
+            return projectRepository.findByName(name);
         }
-        return null;
+        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
     }
 
     //Поиск проекта по идентификатору
-    public Project findById(Long id) {
-        if (id == 0) return null;
-        if (projectRepository.findById(id) == null) return  null;
+    public Project findById(Long id) throws ProjectNotFoundException {
         return projectRepository.findById(id);
     }
 
     //Поиск проекта по идентификатору с учетом принадлежности пользователю текущей сессии
-    public Project findByIdUserId(Long id) {
-        if (id == 0) return null;
-        if (projectRepository.findById(id) == null) return  null;
+    public Project findByIdUserId(Long id) throws ProjectNotFoundException {
         if (projectRepository.findById(id).getUserid() == null)
             return projectRepository.findById(id);
         if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return projectRepository.findById(id);
-        return null;
+        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
     }
 
     //Удаление проекта по идентификатору
-    public Project removeById(Long id) {
-        if (id == null ) return null;
-        if (projectRepository.findById(id) == null) return  null;
+    public Project removeById(Long id) throws ProjectNotFoundException {
         return projectRepository.removeById(id);
     }
 
     //Удаление проекта по идентификатору с учетом принадлежности пользователю текущей сессии
-    public Project removeByIdUserId(Long id) {
-        if (id == null ) return null;
-        if (projectRepository.findById(id) == null) return  null;
-        if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent)) return projectRepository.removeById(id);
-        return null;
+    public Project removeByIdUserId(Long id) throws ProjectNotFoundException {
+        if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
+            return projectRepository.removeById(id);
+        throw new ProjectNotFoundException("PROJECT IS FOREIGN. PROJECT NOT REMOVED. FAIL.");
     }
 
     //Удаление проекта по индексу
-    public Project removeByIndex(int index) {
-        if (index < 0 || index > projectRepository.size() -1) return null;
+    public Project removeByIndex(int index) throws ProjectNotFoundException {
         return projectRepository.removeByIndex(index);
     }
 
     //Удаление проекта по индексу с учетом принадлежности пользователю текущей сессии
-    public Project removeByIndexUserId(int index) {
-        if (index < 0 || index > projectRepository.size() -1) return null;
-        if (projectRepository.findByIndex(index) == null) return null;
-        if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent)) return projectRepository.removeByIndex(index);
-        else return null;
+    public Project removeByIndexUserId(int index) throws ProjectNotFoundException {
+        if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
+            return projectRepository.removeByIndex(index);
+        throw new ProjectNotFoundException("PROJECT IS FOREIGN. PROJECT NOT REMOVED. FAIL.");
     }
 
     //Сортировка проектов по наименованию
-    public List<Project> ProjectSortByName(List<Project> projects) {
+    public List<Project> ProjectSortByName(List<Project> projects) throws ProjectNotFoundException {
         Collections.sort(projects, Project.ProjectSortByName);
         return projects;
     }
 
     //Добавление проекта пользователю.
-    public Project addProjectToUser(final Long userId, final Long projectId) {
+    public Project addProjectToUser(final Long userId, final Long projectId) throws ProjectNotFoundException {
         final Project project = projectRepository.findById(projectId);
-        if (project == null) return null;
+       // if (project == null) return null;
         project.setUserid(userId);
         return project;
     }

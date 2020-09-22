@@ -1,6 +1,8 @@
 package ru.evasmall.tm.repository;
 
 import ru.evasmall.tm.entity.Project;
+import ru.evasmall.tm.exeption.IncorrectFormatException;
+import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
 import java.util.*;
 
@@ -25,9 +27,8 @@ public class ProjectRepository {
         return project;
     }
 
-    public Project update(final Long id, final String name, String description) {
+    public Project update(final Long id, final String name, String description) throws ProjectNotFoundException {
         final Project project = findById(id);
-        if (project == null) return null;
         removeProjectFromMap(project);
         project.setId(id);
         project.setName(name);
@@ -41,38 +42,44 @@ public class ProjectRepository {
         projectsName.clear();
     }
 
-    public Project findByIndex(int index) {
+    public Project findByIndex(int index) throws ProjectNotFoundException {
+        if (index < 0 || index > projects.size() - 1)
+            throw new ProjectNotFoundException("PROJECT NOT FOUND BY INDEX: " + (index + 1) +". FAIL.");
         return projects.get(index);
     }
 
-    public List<Project> findByName(final String name) {
+    public List<Project> findByName(final String name) throws ProjectNotFoundException, IncorrectFormatException {
         final List<Project> projects = new ArrayList<>();
-        if (projectsName.get(name) == null) return null;
+        if (name.isEmpty())
+            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. FAIL.");
+        if (projectsName.get(name) == null || projectsName.get(name).isEmpty())
+            throw new ProjectNotFoundException("PROJECT NOT FOUND BY NAME: " + name + ". FAIL.");
         for (final Project project: projectsName.get(name)) {
             projects.add(project);
         }
         return projects;
     }
 
-    public Project findById(final Long id) {
+    public Project findById(final Long id) throws ProjectNotFoundException {
+        if (id == null)
+            throw new ProjectNotFoundException("PROJECT ID IS EMPTY. FAIL.");
         for (final Project project: projects) {
-            if(project.getId().equals(id)) return project;
+            if (project.getId().equals(id))
+                return project;
         }
-        return null;
+        throw new ProjectNotFoundException("PROJECT NOT FOUND BY ID: " + id + ". FAIL.");
     }
 
-    public Project removeById (final Long id) {
+    public Project removeById (final Long id) throws ProjectNotFoundException {
         final Project project = findById(id);
-        if (project == null) return null;
         removeProjectFromMap(project);
         projects.remove(project);
         System.out.println(projectsName);
         return project;
     }
 
-    public Project removeByIndex (final int index) {
+    public Project removeByIndex (final int index) throws ProjectNotFoundException {
         final Project project = findByIndex(index);
-        if (project == null) return null;
         removeProjectFromMap(project);
         projects.remove(project);
         return project;
@@ -82,25 +89,20 @@ public class ProjectRepository {
         return projects.size();
     }
 
-    public void removeProjectFromMap(final Project project) {
+    public void removeProjectFromMap(final Project project) throws ProjectNotFoundException {
         final String name = project.getName();
         HashSet<Project> projectsHashMap = projectsName.get(name);
-        if (projectsHashMap != null) {
+        if (projectsHashMap != null)
             projectsHashMap.remove(project);
-        }
-        if (projectsHashMap.isEmpty()) {
-            {
-                projectsName.remove(name);
-            }
-        }
+        if (projectsHashMap.isEmpty())
+            projectsName.remove(name);
     }
 
     private void addProjectToMap(final Project project) {
         final String name = project.getName();
         HashSet<Project> projectsHashMap = projectsName.get(name);
-        if (projectsHashMap != null) {
+        if (projectsHashMap != null)
             projectsHashMap.add(project);
-        }
         else {
             projectsHashMap = new HashSet<>();
             projectsHashMap.add(project);

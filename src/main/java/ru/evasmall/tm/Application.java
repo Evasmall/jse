@@ -5,7 +5,9 @@ import ru.evasmall.tm.controller.SystemController;
 import ru.evasmall.tm.controller.TaskController;
 import ru.evasmall.tm.controller.UserController;
 import ru.evasmall.tm.enumerated.RoleEnum;
-import ru.evasmall.tm.exeption.ObjectNotFoundException;
+import ru.evasmall.tm.exeption.IncorrectFormatException;
+import ru.evasmall.tm.exeption.ProjectNotFoundException;
+import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.repository.UserRepository;
@@ -13,6 +15,7 @@ import ru.evasmall.tm.service.*;
 import ru.evasmall.tm.util.HashCode;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 import static ru.evasmall.tm.constant.TerminalConst.*;
 
@@ -20,6 +23,8 @@ import static ru.evasmall.tm.constant.TerminalConst.*;
  * Приложение для обучения JAVA.
  */
 public class Application {
+
+    private static final Logger logger = Logger.getLogger(Application.class.getName());
 
     private final ProjectRepository projectRepository = new ProjectRepository();
     private final TaskRepository taskRepository = new TaskRepository();
@@ -42,9 +47,10 @@ public class Application {
     public static  LinkedList<String> history = new LinkedList();
 
     {
+        logger.info("Begin program.");
         userService.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
                            "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
-        userService.create(System.nanoTime(),"TEST", HashCode.getHash("qwerty"), "Пётр", "Исаев",
+        userService.create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
                                      "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
         userService.create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
                 "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
@@ -59,13 +65,13 @@ public class Application {
         taskRepository.create("TEST_TASK_1", "DESC TASK 1", userService.findByLogin("TEST").getUserid());
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
         final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
         try {
             application.run(args);
         }
-        catch (ObjectNotFoundException e) {
+        catch (ProjectNotFoundException e) {
             e.printStackTrace();
         }
         application.systemController.displayWelcome();
@@ -77,13 +83,19 @@ public class Application {
             try {
                 application.run(command);
             }
-            catch (ObjectNotFoundException e) {
-                e.printStackTrace();
+            catch (ProjectNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (TaskNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (IncorrectFormatException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
 
-    public void run(final String[] args) throws ObjectNotFoundException {
+    public void run(final String[] args) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
         if (args == null) return;
         if (args.length < 1) return;
         final String param = args[0];
@@ -91,7 +103,7 @@ public class Application {
         System.exit(result);
     }
 
-    public int run(final String param) throws ObjectNotFoundException {
+    public int run(final String param) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
         if (param == null || param.isEmpty()) return -1;
         switch (param) {
             case CMD_HELP: return systemController.displayHelp();

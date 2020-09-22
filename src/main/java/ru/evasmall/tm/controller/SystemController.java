@@ -26,18 +26,8 @@ public class SystemController {
         return -1;
     }
 
-    public int displayForeign(String name) {
-        System.out.println(name + " NOT FOUND OR FOREIGN " + name + ". FAIL.");
-        return -1;
-    }
-
     public int displayForAdminOnly() {
         System.out.println("THIS FUNCTIONALITY IS FOR ADMINS ONLY! FAIL.");
-        return -1;
-    }
-
-    public int displayNotInt() {
-        System.out.println("THIS IS NOT NUMBER. FAIL.");
         return -1;
     }
 

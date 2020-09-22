@@ -2,6 +2,8 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.entity.Task;
+import ru.evasmall.tm.exeption.ProjectNotFoundException;
+import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.repository.TaskRepository;
 
@@ -26,28 +28,24 @@ public class ProjectTaskService {
     }
 
     //Удаление задачи из проекта.
-    public Task removeTaskFromProject(final Long projectId, final Long taskId) {
+    public Task removeTaskFromProject(final Long projectId, final Long taskId) throws TaskNotFoundException {
         final Task task = taskRepository.findByProjectIdAndId(projectId, taskId);
-        if (task == null) return null;
         task.setProjectId(null);
         return task;
     }
 
     //Добавление задачи в проект.
-    public Task addTaskToProject(final Long projectId, final Long taskId, final Long userId) {
+    public Task addTaskToProject(final Long projectId, final Long taskId, final Long userId) throws ProjectNotFoundException, TaskNotFoundException  {
         final Project project = projectRepository.findById(projectId);
-        if (project == null) return null;
         final Task task = taskRepository.findById(taskId);
-        if (task == null) return null;
         task.setProjectId(projectId);
         task.setUserid(userId);
         return task;
     }
 
     //Удаление проекта со связанными задачами по идентификатору.
-    public Project removeProjectByIdWithTask(final Long projectId) {
+    public Project removeProjectByIdWithTask(final Long projectId) throws ProjectNotFoundException, TaskNotFoundException  {
         final Project project = projectRepository.findById(projectId);
-        if (project == null) return null;
         final List<Task> tasks = findAllByProjectId(projectId);
         if (tasks == null) return project;
         for (Task task: tasks) {
@@ -58,9 +56,8 @@ public class ProjectTaskService {
     }
 
     //Удаление проекта со связанными задачами по индексу.
-    public Project removeProjectByIndexWithTask(final int index) {
+    public Project removeProjectByIndexWithTask(final int index) throws ProjectNotFoundException, TaskNotFoundException {
         final Project project = projectRepository.findByIndex(index);
-        if (project == null) return null;
         final List<Task> tasks = findAllByProjectId(project.getId());
         if (tasks == null) return project;
         for (Task task: tasks) {
