@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="filename">log/rollingtest.log</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <RollingFile name="Rolling" fileName="${filename}" filePattern="log/rollingtest.%i.log.gz">
+            <PatternLayout>
+                <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+            <SizeBasedTriggeringPolicy size="1Mb"/>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="ru.evasmall.tm.repository.ProjectRepository" level="INFO" additivity="false">
+            <AppenderRef ref="Rolling"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="ru.evasmall.tm.repository.TaskRepository" level="INFO" additivity="false">
+            <AppenderRef ref="Rolling"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="ru.evasmall.tm.controller.UserController" level="TRACE" additivity="false">
+            <AppenderRef ref="Rolling"/>
+        </Logger>
+        <Logger name="ru.evasmall.tm.Application" level="TRACE" additivity="false">
+            <AppenderRef ref="Rolling"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="TRACE">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Rolling"/>
+        </Root>
+
+    </Loggers>
+</Configuration>

@@ -15,7 +15,8 @@ import ru.evasmall.tm.service.*;
 import ru.evasmall.tm.util.HashCode;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static ru.evasmall.tm.constant.TerminalConst.*;
 
@@ -24,7 +25,7 @@ import static ru.evasmall.tm.constant.TerminalConst.*;
  */
 public class Application {
 
-    private static final Logger logger = Logger.getLogger(Application.class.getName());
+    private static final Logger logger = LogManager.getLogger(Application.class);
 
     private final ProjectRepository projectRepository = new ProjectRepository();
     private final TaskRepository taskRepository = new TaskRepository();
@@ -44,7 +45,7 @@ public class Application {
     public static Long userIdCurrent = null;
 
     //История команд
-    public static  LinkedList<String> history = new LinkedList();
+    public final static LinkedList<String> history = new LinkedList();
 
     {
         logger.info("Begin program.");
@@ -68,13 +69,8 @@ public class Application {
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
         final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
-        try {
-            application.run(args);
-        }
-        catch (ProjectNotFoundException e) {
-            e.printStackTrace();
-        }
         application.systemController.displayWelcome();
+        application.run(args);
         String command = "";
         while (!CMD_EXIT.equals(command)) {
             command = scanner.nextLine();
@@ -84,13 +80,13 @@ public class Application {
                 application.run(command);
             }
             catch (ProjectNotFoundException e) {
-                System.out.println(e.getMessage());
+                logger.error(e);
             }
             catch (TaskNotFoundException e) {
-                System.out.println(e.getMessage());
+                logger.error(e);
             }
             catch (IncorrectFormatException e) {
-                System.out.println(e.getMessage());
+                logger.error(e);
             }
         }
     }
@@ -110,7 +106,11 @@ public class Application {
             case CMD_ABOUT: return systemController.displayAbout();
             case CMD_HISTORY: return systemController.displayHistory();
             case CMD_VERSION: return systemController.displayVersion();
-            case CMD_EXIT: return systemController.displayExit();
+            case CMD_EXIT: {
+                logger.info("Exit.");
+                return systemController.displayExit();
+            }
+
 
             case CMD_PROJECT_CREATE: return projectController.createProject();
             case CMD_PROJECT_CLEAR: return projectController.clearProject();
@@ -161,7 +161,10 @@ public class Application {
             case CMD_USER_PROFILE_UPDATE: return userController.updateProfile(userIdCurrent);
             case CMD_PASSWORD_CHANGE: return userController.changePassword(userIdCurrent);
 
-            default: return systemController.displayError();
+            default: {
+                logger.error("ERROR! Unknown program argument.");
+                return -1;
+            }
         }
     }
 

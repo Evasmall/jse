@@ -40,10 +40,10 @@ public class UserService {
 
     //Создание пользователя.
     public User create(final Long userid, String login, String password, String firstname, String lastname,
-                       String middlname, String email, RoleEnum role, boolean admin_true) {
+                       String middlname, String email, RoleEnum role, boolean adminTrue) {
         if (login == null || login.isEmpty()) return null;
         if (password == null || password.isEmpty()) return null;
-        return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, admin_true);
+        return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
     }
 
     //Создание пользователя по логину.

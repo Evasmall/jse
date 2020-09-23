@@ -36,7 +36,7 @@ public class UserRepository {
     }
 
     public User create(final Long userid, String login, String password, String firstname, String lastname,
-                       String middlname, String email, RoleEnum role, boolean admin_true) {
+                       String middlname, String email, RoleEnum role, boolean adminTrue) {
         final User user = new User(login);
         user.setUserid(userid);
         user.setLogin(login);
@@ -46,7 +46,7 @@ public class UserRepository {
         user.setMiddlname(middlname);
         user.setEmail(email);
         user.setRole(role);
-        user.setAdmin_true(admin_true);
+        user.setAdminTrue(adminTrue);
         users.add(user);
         return user;
     }
@@ -66,6 +66,8 @@ public class UserRepository {
                 user.setRole(RoleEnum.ADMIN); break;
             case "USER":
                 user.setRole(RoleEnum.USER); break;
+            default: user.setRole(RoleEnum.USER); break;
+
         }
         return user;
     }

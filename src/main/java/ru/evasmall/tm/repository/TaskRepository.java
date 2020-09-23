@@ -1,5 +1,7 @@
 package ru.evasmall.tm.repository;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
@@ -10,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class TaskRepository {
+
+    private static final Logger logger = LogManager.getLogger(TaskRepository.class);
 
     private final List<Task> tasks = new ArrayList<>();
 
@@ -36,6 +40,7 @@ public class TaskRepository {
         task.setUserid(userId);
         tasks.add(task);
         addTaskToMap(task);
+        logger.trace("TASK CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return task;
     }
 
@@ -46,6 +51,7 @@ public class TaskRepository {
         task.setName(name);
         task.setDescription(description);
         addTaskToMap(task);
+        logger.trace("TASK UPDATE. ID: {} NEW NAME: {} NEW DESCRIPTION: {}", id, name, description);
         return task;
     }
 
@@ -62,18 +68,17 @@ public class TaskRepository {
     public void clear() {
         tasks.clear();
         tasksName.clear();
+        logger.info("CLEAR ALL TASKS.");
     }
 
     public List<Task> findByName(final String name) throws TaskNotFoundException, IncorrectFormatException {
-        final List<Task> tasks = new ArrayList<>();
+        final List<Task> tasksNew = new ArrayList<>();
         if (name.isEmpty())
             throw new IncorrectFormatException("TASK NAME IS EMPTY. FAIL.");
         if (tasksName.get(name) == null || tasksName.get(name).isEmpty())
             throw new TaskNotFoundException("TASK NOT FOUND BY NAME: " + name + ". FAIL.");
-        if (tasksName.get(name) == null)
-            return null;
         for (final Task task: tasksName.get(name)) {
-            tasks.add(task);
+            tasksNew.add(task);
         }
         return tasks;
     }
@@ -88,11 +93,10 @@ public class TaskRepository {
         throw new TaskNotFoundException("TASK NOT FOUND BY ID: " + id + ". FAIL.");
     }
 
-    public Task findByProjectIdAndId(final Long projectId, final Long id) throws TaskNotFoundException {
+    public Task findByProjectIdAndId(final Long projectId, final Long id) {
         for (final Task task: tasks) {
             final Long idProject = task.getProjectId();
-            if (idProject == null) continue;
-            if (!idProject.equals(projectId)) continue;
+            if (idProject == null || !idProject.equals(projectId)) continue;
             if(task.getId().equals(id)) return task;
         }
         return null;
@@ -109,6 +113,7 @@ public class TaskRepository {
         final Task task = findById(id);
         removeTaskFromMap(task);
         tasks.remove(task);
+        logger.info("TASK ID: {} DELETE", id);
         return task;
     }
 
@@ -116,6 +121,7 @@ public class TaskRepository {
         final Task task = findByIndex(index);
         removeTaskFromMap(task);
         tasks.remove(task);
+        logger.info("TASK INDEX: {} DELETE", index);
         return task;
     }
 

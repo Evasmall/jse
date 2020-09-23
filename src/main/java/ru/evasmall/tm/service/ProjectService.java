@@ -113,7 +113,6 @@ public class ProjectService {
     //Добавление проекта пользователю.
     public Project addProjectToUser(final Long userId, final Long projectId) throws ProjectNotFoundException {
         final Project project = projectRepository.findById(projectId);
-       // if (project == null) return null;
         project.setUserid(userId);
         return project;
     }

@@ -28,7 +28,7 @@ public class ProjectTaskService {
     }
 
     //Удаление задачи из проекта.
-    public Task removeTaskFromProject(final Long projectId, final Long taskId) throws TaskNotFoundException {
+    public Task removeTaskFromProject(final Long projectId, final Long taskId) {
         final Task task = taskRepository.findByProjectIdAndId(projectId, taskId);
         task.setProjectId(null);
         return task;
@@ -36,7 +36,7 @@ public class ProjectTaskService {
 
     //Добавление задачи в проект.
     public Task addTaskToProject(final Long projectId, final Long taskId, final Long userId) throws ProjectNotFoundException, TaskNotFoundException  {
-        final Project project = projectRepository.findById(projectId);
+        projectRepository.findById(projectId);
         final Task task = taskRepository.findById(taskId);
         task.setProjectId(projectId);
         task.setUserid(userId);

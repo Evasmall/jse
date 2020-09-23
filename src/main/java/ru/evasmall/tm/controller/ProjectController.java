@@ -11,6 +11,8 @@ import ru.evasmall.tm.util.Control;
 
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalMassage.*;
+
 public class ProjectController extends AbstractController{
 
     private final ProjectService projectService;
@@ -21,17 +23,19 @@ public class ProjectController extends AbstractController{
 
     private final Control control = new Control();
 
+ //   private static final Logger logger = LogManager.getLogger(ProjectController.class);
+
     public ProjectController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
         this.userService = userService;
     }
 
     //Создание проекта
-    public int createProject() throws ProjectNotFoundException, IncorrectFormatException{
+    public int createProject() throws IncorrectFormatException{
         System.out.println("CREATE PROJECT");
-        System.out.println("PLEASE ENTER PROJECT NAME:");
+        System.out.println(PROJECT_NAME_ENTER);
         final String name = scanner.nextLine();
-        System.out.println("PLEASE ENTER PROJECT DESCRIPTION:");
+        System.out.println(PROJECT_DESCRIPTION_ENTER);
         final String description = scanner.nextLine();
         projectService.create(name, description, Application.userIdCurrent);
         System.out.println("OK");
@@ -41,13 +45,13 @@ public class ProjectController extends AbstractController{
     //Изменение проекта по индексу с учетом принадлежности проекта
     public int updateProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
         System.out.println("UPDATE PROJECT");
-        System.out.println("ENTER PROJECT INDEX:");
+        System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
             final Project project = projectService.findByIndexUserId(index);
-            System.out.println("PLEASE ENTER PROJECT NAME:");
+            System.out.println(PROJECT_NAME_ENTER);
             final String name = scanner.nextLine();
-            System.out.println("PLEASE ENTER PROJECT DESCRIPTION:");
+            System.out.println(PROJECT_DESCRIPTION_ENTER);
             final String description = scanner.nextLine();
             projectService.update(project.getId(), name, description);
             System.out.println("OK");
@@ -59,13 +63,13 @@ public class ProjectController extends AbstractController{
     //Изменение проекта по идентификатору с учетом принадлежности проекта
     public int updateProjectById() throws ProjectNotFoundException, IncorrectFormatException {
         System.out.println("UPDATE PROJECT");
-        System.out.println("ENTER PROJECT ID:");
+        System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
             final Project project = projectService.findByIdUserId(id);
-            System.out.println("PLEASE ENTER PROJECT NAME:");
+            System.out.println(PROJECT_NAME_ENTER);
             final String name = scanner.nextLine();
-            System.out.println("PLEASE ENTER PROJECT DESCRIPTION:");
+            System.out.println(PROJECT_DESCRIPTION_ENTER);
             final String description = scanner.nextLine();
             projectService.update(project.getId(), name, description);
             System.out.println("OK");
@@ -77,10 +81,10 @@ public class ProjectController extends AbstractController{
     //Удаление проекта по индексу с учетом принадлежности проекта
     public int removeProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
         System.out.println("REMOVE PROJECT BY INDEX");
-        System.out.println("PLEASE ENTER PROJECT INDEX:");
+        System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
-            final Project project = projectService.removeByIndexUserId(index);
+            projectService.removeByIndexUserId(index);
             System.out.println("OK");
             return 0;
         }
@@ -90,10 +94,10 @@ public class ProjectController extends AbstractController{
     //Удаление проекта по идентификатору с учетом принадлежности проекта
     public int removeProjectById() throws ProjectNotFoundException, IncorrectFormatException {
         System.out.println("REMOVE PROJECT BY ID");
-        System.out.println("PLEASE ENTER PROJECT ID:");
+        System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
-            final Project project = projectService.removeByIdUserId(id);
+            projectService.removeByIdUserId(id);
             System.out.println("OK");
             return 0;
         }
@@ -106,7 +110,7 @@ public class ProjectController extends AbstractController{
             systemController.displayForAdminOnly();
             return -1;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdmin_true() == true) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
             System.out.println("CLEAR PROJECT");
             projectService.clear();
             System.out.println("OK");
@@ -119,12 +123,10 @@ public class ProjectController extends AbstractController{
     }
 
     //Просмотр проекта
-    public void viewProject(final Project project) throws ProjectNotFoundException{
-        //if (project == null) return;
+    public void viewProject(final Project project) {
         //Проверка на авторизацию польователя
         if (Application.userIdCurrent == null) {
             System.out.println("PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
-            return;
         }
         else {
             System.out.println("VIEW PROJECT");
@@ -139,7 +141,7 @@ public class ProjectController extends AbstractController{
 
     //Просмотр списка проектов по наименованию
     public int viewProjectByName() throws ProjectNotFoundException, IncorrectFormatException {
-        System.out.println("ENTER PROJECT NAME:");
+        System.out.println(PROJECT_NAME_ENTER);
         String name = scanner.nextLine();
         final List <Project> projects = projectService.findByName(name);
         for (Project project: projects) {
@@ -150,7 +152,7 @@ public class ProjectController extends AbstractController{
 
     //Просмотр списка проектов по индексу
     public int viewProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
-        System.out.println("ENTER PROJECT INDEX:");
+        System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
             final Project project = projectService.findByIndex(index);
@@ -162,7 +164,7 @@ public class ProjectController extends AbstractController{
 
     //Просмотр проекта по идентификатору
     public int viewProjectById() throws ProjectNotFoundException, IncorrectFormatException {
-        System.out.println("ENTER PROJECT ID:");
+        System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
             final Project project = projectService.findById(id);
@@ -218,7 +220,7 @@ public class ProjectController extends AbstractController{
         else {
             final Long userId = user1.getUserid();
             if (userId != null) {
-                System.out.println("PLEASE ENTER PROJECT ID:");
+                System.out.println(PROJECT_ID_ENTER);
                 final Long projectId = control.scannerIdIsLong();
                 if (projectId != null) {
                     projectService.findByIdUserId(projectId);
@@ -235,7 +237,7 @@ public class ProjectController extends AbstractController{
     //Удаление принадлежности проекта пользователю по идентификатору задачи.
     public int removeProjectFromUser() throws ProjectNotFoundException, IncorrectFormatException {
         System.out.println("REMOVE PROJECT FROM USER");
-        System.out.println("PLEASE ENTER PROJECT ID:");
+        System.out.println(PROJECT_ID_ENTER);
         final Long projectId = control.scannerIdIsLong();
         if (projectId != null) {
             final Project project = projectService.findByIdUserId(projectId);
@@ -243,7 +245,7 @@ public class ProjectController extends AbstractController{
                 System.out.println("PROJECT NOT HAVE USER.");
                 return -1;
             }
-            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin_true()) {
+            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
                 project.setUserid(null);
                 System.out.println("ОК");
                 return 0;

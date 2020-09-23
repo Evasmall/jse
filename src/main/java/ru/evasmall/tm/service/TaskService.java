@@ -106,7 +106,7 @@ public class TaskService {
     }
 
     //Найти проект по идентификаторам.
-    public Task findByProjectIdAndId(Long projectId, Long id) throws TaskNotFoundException {
+    public Task findByProjectIdAndId(Long projectId, Long id) {
         if (projectId == null || id == null) return null;
         return taskRepository.findByProjectIdAndId(projectId, id);
     }

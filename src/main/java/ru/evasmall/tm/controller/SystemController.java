@@ -21,11 +21,6 @@ public class SystemController {
         return 0;
     }
 
-    public int displayError() {
-        System.out.println("ERROR! Unknown program argument.");
-        return -1;
-    }
-
     public int displayForAdminOnly() {
         System.out.println("THIS FUNCTIONALITY IS FOR ADMINS ONLY! FAIL.");
         return -1;

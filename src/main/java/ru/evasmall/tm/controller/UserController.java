@@ -1,5 +1,7 @@
 package ru.evasmall.tm.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.util.HashCode;
@@ -11,6 +13,8 @@ import java.util.List;
 public class UserController extends AbstractController {
 
     private final UserService userService;
+
+    private static final Logger logger = LogManager.getLogger(UserController.class);
 
     private final SystemController systemController = new SystemController();
 
@@ -36,16 +40,17 @@ public class UserController extends AbstractController {
             final String password = HashCode.getHash(scanner.nextLine());
             //Проверка на пустой пароль
             if (password == null || password.isEmpty()) {
-                System.out.println("PASSWORD MAST NOT BE EMPTY!");
-                System.out.println("FAIL");
+                logger.info("PASSWORD MAST NOT BE EMPTY!");
+                logger.info("FAIL");
                 return -1;
-            };
+            }
             //По умолчанию при регистрации присваивается роль USER. Изменить роль может только администратор.
             final RoleEnum role = RoleEnum.USER;
             Long userid = System.nanoTime();
-            boolean admin_true = false;
-            userService.create(userid, login, password, firstname, lastname, middlname, email, role, admin_true);
-            System.out.println("OK");
+            boolean adminTrue = false;
+            userService.create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
+            logger.trace("USER REGISTRATION: USERID = {} LOGIN = {} FIRSTNAME = {} LASTNAME = {} MIDDLNAME = {} EMAIL = {}", userid, login, firstname, lastname, middlname, email );
+            System.out.println("REGISTRATION COMPLETED SUCCESSFULLY.");
             return 0;
         }
     }
@@ -53,7 +58,6 @@ public class UserController extends AbstractController {
     //Просмотр пользователей.
     public int listUser (int sort) {
         System.out.println("LIST USER");
-        int index = 1;
         viewUsers(userService.findAll(), sort);
         System.out.println("OK");
         return 0;
@@ -70,7 +74,7 @@ public class UserController extends AbstractController {
             System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; LASTNAME: " + user.getLastname() +
             "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " + user.getMiddlname() +
             "; EMAIL: " + user.getEmail() + "; ROLE: " + user.getRole().name() +
-            "; PASSWORD: " + user.getPassword() + "; ADMIN: " + user.isAdmin_true());
+            "; PASSWORD: " + user.getPassword() + "; ADMIN: " + user.isAdminTrue());
             index++;
         }
     }
@@ -78,13 +82,14 @@ public class UserController extends AbstractController {
     //Удаление пользователя по логину (доступно только администраторам).
     public int removeUserByLogin(Long userId) {
         System.out.println("REMOVE USER BY LOGIN");
-        if (userService.findByUserId(userId).isAdmin_true() == true) {
-            System.out.println(userService.findByUserId(userId).isAdmin_true());
+        if (userService.findByUserId(userId).isAdminTrue()) {
+            System.out.println(userService.findByUserId(userId).isAdminTrue());
             System.out.println("PLEASE ENTER LOGIN OF REMOVE USER:");
             final String login = scanner.nextLine();
-            final User user = userService.removeByLogin(login);
+            userService.removeByLogin(login);
             if (login == null) System.out.println("FAIL");
-            else System.out.println("OK");
+            logger.trace("USER DELETED: LOGIN = {}", login);
+            System.out.println("USER DELETED.");
             return 0;
         }
         else {
@@ -96,7 +101,7 @@ public class UserController extends AbstractController {
     //Изменение ролей пользователя по логину (доступно только администраторам).
     public int updateUserRole(Long userId) {
         System.out.println("[UPDATE USER DATA]");
-        if (userService.findByUserId(userId).isAdmin_true() == true) {
+        if (userService.findByUserId(userId).isAdminTrue()) {
             System.out.println("ENTER UPDATE USER LOGIN:");
             final String login = scanner.nextLine();
             final User user = userService.findByLogin(login);
@@ -108,6 +113,7 @@ public class UserController extends AbstractController {
             final String role = scanner.nextLine();
             if (role.equals("ADMIN") || role.equals("USER")) {
                 userService.updateRole(login, role);
+                logger.trace("USER ROLE: LOGIN = {} ROLE = {}", login, " - ", role);
                 System.out.println("OK");
                 return 0;
             }
@@ -174,7 +180,8 @@ public class UserController extends AbstractController {
             System.out.println("PLEASE ENTER YOUR NEW EMAIL:");
             final String email = scanner.nextLine();
             userService.updateProfile(userId, login, firstname, middlname, lastname, email);
-            System.out.println("PROFILE UPDATED:");
+            logger.trace("PROFILE UPDATED. LOGIN = {}", login);
+            System.out.println("PROFILE UPDATED.");
             userProfile(userId);
             return 0;
         }
@@ -190,7 +197,7 @@ public class UserController extends AbstractController {
             return -1;
         }
         //Проверка логина текущего пользователя или на права администратора
-        if (user1.getUserid().equals(userIdCurrent) || userService.findByUserId(userIdCurrent).isAdmin_true()) {
+        if (user1.getUserid().equals(userIdCurrent) || userService.findByUserId(userIdCurrent).isAdminTrue()) {
             System.out.println("PLEASE ENTER NEW PASSWORD:");
             final String password1 = scanner.nextLine();
             //Проверка на пустой пароль
@@ -198,12 +205,13 @@ public class UserController extends AbstractController {
                 System.out.println("PASSWORD NOT BE EMPTY!");
                 System.out.println("FAIL");
                 return -1;
-            };
+            }
             //Проверка на подтверждение пароля
             System.out.println("CONFIRM PASSWORD:");
             final String password2 = scanner.nextLine();
             if (password1.equals(password2)) {
                 userService.changePassword(user1.getUserid(), password1);
+                logger.trace("PASSWORD CHANGE. LOGIN: {} ", user1.getLogin());
                 System.out.println("PASSWORD CHANGE OK.");
                 return 0;
             }
@@ -224,18 +232,19 @@ public class UserController extends AbstractController {
             System.out.println("LOGIN MAST NOT BE EMPTY!");
             System.out.println("FAIL");
             return null;
-        };
+        }
         //Проверка на существующие идентичные логины.
         if (userService.findByLogin(login) != null) {
             System.out.println("THIS LOGIN EXISTS!");
             System.out.println("FAIL");
             return null;
-        };
+        }
         return login;
     }
 
     //Окончание сессии текущего пользователя.
     public int exitUser() {
+        logger.trace("SESSION ENDED. LOGIN: {}", userService.findByUserId(Application.userIdCurrent).getLogin());
         Application.userIdCurrent = null;
         Application.history.clear();
         System.out.println("YOUR SESSION ENDED.");
@@ -246,6 +255,7 @@ public class UserController extends AbstractController {
     public int signUser() {
         Application.userIdCurrent = authentication();
         userProfile(Application.userIdCurrent);
+        logger.trace("SESSION BEGIN. LOGIN: {}", userService.findByUserId(Application.userIdCurrent).getLogin());
         return 0;
     }
 
