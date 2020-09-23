@@ -3,7 +3,6 @@ package ru.evasmall.tm.repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.Task;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.ArrayList;
@@ -71,10 +70,10 @@ public class TaskRepository {
         logger.info("CLEAR ALL TASKS.");
     }
 
-    public List<Task> findByName(final String name) throws TaskNotFoundException, IncorrectFormatException {
+    public List<Task> findByName(final String name) throws TaskNotFoundException {
         final List<Task> tasksNew = new ArrayList<>();
         if (name.isEmpty())
-            throw new IncorrectFormatException("TASK NAME IS EMPTY. FAIL.");
+            throw new IllegalArgumentException("TASK NAME IS EMPTY. FAIL.");
         if (tasksName.get(name) == null || tasksName.get(name).isEmpty())
             throw new TaskNotFoundException("TASK NOT FOUND BY NAME: " + name + ". FAIL.");
         for (final Task task: tasksName.get(name)) {

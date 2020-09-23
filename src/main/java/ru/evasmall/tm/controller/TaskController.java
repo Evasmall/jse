@@ -3,7 +3,6 @@ package ru.evasmall.tm.controller;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.entity.User;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.service.ProjectService;
@@ -38,7 +37,7 @@ public class TaskController extends AbstractController{
     }
 
     //Создание задачи.
-    public int createTask() throws IncorrectFormatException {
+    public int createTask() {
         System.out.println("CREATE TASK");
         System.out.println(TASK_NAME_ENTER);
         final String name = scanner.nextLine();
@@ -50,7 +49,7 @@ public class TaskController extends AbstractController{
     }
 
     //Изменение задачи по индексу с учетом принадлежности задачи пользователю.
-    public int updateTaskByIndex() throws TaskNotFoundException, IncorrectFormatException {
+    public int updateTaskByIndex() throws TaskNotFoundException {
         System.out.println("UPDATE TASK");
         System.out.println(TASK_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
@@ -68,7 +67,7 @@ public class TaskController extends AbstractController{
     }
 
     //Изменение задачи по идентификатору с учетом принадлежности задачи пользователю.
-    public int updateTaskById() throws TaskNotFoundException, IncorrectFormatException {
+    public int updateTaskById() throws TaskNotFoundException {
         System.out.println("UPDATE TASK");
         System.out.println(TASK_ID_ENTER);
         final Long id = control.scannerIdIsLong();
@@ -86,7 +85,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи по индексу с учетом принадлежности задачи пользователю.
-    public int removeTaskByIndex() throws TaskNotFoundException, IncorrectFormatException {
+    public int removeTaskByIndex() throws TaskNotFoundException {
         System.out.println("REMOVE TASK BY INDEX");
         System.out.println(TASK_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
@@ -99,7 +98,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи по идентификатору с учетом принадлежности задачи пользователю.
-    public int removeTaskById() throws TaskNotFoundException, IncorrectFormatException {
+    public int removeTaskById() throws TaskNotFoundException {
         System.out.println("REMOVE TASK BY ID");
         System.out.println(TASK_ID_ENTER);
         final Long id = control.scannerIdIsLong();
@@ -143,7 +142,7 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр задачи по индексу.
-    public int viewTaskByIndex() throws TaskNotFoundException, IncorrectFormatException {
+    public int viewTaskByIndex() throws TaskNotFoundException {
         System.out.println(TASK_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
@@ -155,7 +154,7 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр списка задач по наименованию
-    public int viewTaskByName() throws TaskNotFoundException, IncorrectFormatException {
+    public int viewTaskByName() throws TaskNotFoundException {
         System.out.println(TASK_NAME_ENTER);
         String name = scanner.nextLine();
         final List <Task> tasks = taskService.findByName(name);
@@ -166,7 +165,7 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр задачи по идентификатору.
-    public int viewTaskById() throws TaskNotFoundException, IncorrectFormatException {
+    public int viewTaskById() throws TaskNotFoundException {
         System.out.println(TASK_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
@@ -213,7 +212,7 @@ public class TaskController extends AbstractController{
     }
 
     //Просмотр списка задач, принадлежащих проекту по идентификатору.
-    public int listTaskByProjectId() throws ProjectNotFoundException, IncorrectFormatException {
+    public int listTaskByProjectId() throws ProjectNotFoundException {
         if (Application.userIdCurrent == null) {
             System.out.println("LIST TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
             return -1;
@@ -234,7 +233,7 @@ public class TaskController extends AbstractController{
     }
 
     //Добавление задачи к проекту по идентификаторам с учетом принадлежности проекта пользователю.
-    public int addTaskToProjectByIds() throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public int addTaskToProjectByIds() throws ProjectNotFoundException, TaskNotFoundException {
         System.out.println("ADD TASK TO PROJECT BY IDS");
         System.out.println(PROJECT_ID_ENTER);
         final Long projectId = control.scannerIdIsLong();
@@ -254,7 +253,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление задачи из проекта по идентификаторам.
-    public int removeTaskFromProjectByIds() throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public int removeTaskFromProjectByIds() throws ProjectNotFoundException, TaskNotFoundException {
         System.out.println("REMOVE TASK FROM PROJECT BY IDS");
         System.out.println(PROJECT_ID_ENTER);
         final Long projectId = control.scannerIdIsLong();
@@ -274,7 +273,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление проекта со принадлежащими ему задачами по идентификатору.
-    public int removeProjectByIdWithTasks() throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public int removeProjectByIdWithTasks() throws ProjectNotFoundException, TaskNotFoundException {
         System.out.println("REMOVE PROJECT WITH BY ID");
         System.out.println(PROJECT_ID_ENTER);
         final Long projectId = control.scannerIdIsLong();
@@ -287,7 +286,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление проекта со принадлежащими ему задачами по индексу.
-    public int removeProjectByIndexWithTasks() throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public int removeProjectByIndexWithTasks() throws ProjectNotFoundException, TaskNotFoundException {
         System.out.println("REMOVE PROJECT WITH BY INDEX");
         System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
@@ -300,7 +299,7 @@ public class TaskController extends AbstractController{
     }
 
     //Добавление принадлежности задачи пользователю по идентификатору задачи и логину пользователя.
-    public int addTaskToUser() throws TaskNotFoundException, IncorrectFormatException {
+    public int addTaskToUser() throws TaskNotFoundException {
         System.out.println("ADD TASK TO USER");
         System.out.println("PLEASE ENTER LOGIN:");
         final User user1 = userService.findByLogin(scanner.nextLine());
@@ -325,7 +324,7 @@ public class TaskController extends AbstractController{
     }
 
     //Удаление принадлежности задачи пользователю по идентификатору задачи.
-    public int removeTaskFromUser() throws TaskNotFoundException, IncorrectFormatException {
+    public int removeTaskFromUser() throws TaskNotFoundException {
         System.out.println("REMOVE TASK FROM USER");
         System.out.println(TASK_ID_ENTER);
         final Long taskId = control.scannerIdIsLong();

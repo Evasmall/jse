@@ -2,7 +2,6 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Task;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 
@@ -22,20 +21,20 @@ public class TaskService {
     }
 
     //Создание задачи по параметрам.
-    public Task create(String name, String description, Long userid) throws IncorrectFormatException {
+    public Task create(String name, String description, Long userid) {
         if (name == null || name.isEmpty())
-            throw new IncorrectFormatException("TASK NAME IS EMPTY. TASK NOT CREATED. FAIL.");
+            throw new IllegalArgumentException("TASK NAME IS EMPTY. TASK NOT CREATED. FAIL.");
         if (description == null || description.isEmpty())
-            throw new IncorrectFormatException("TASK DESCRIPTION IS EMPTY. TASK NOT CREATED. FAIL.");
+            throw new IllegalArgumentException("TASK DESCRIPTION IS EMPTY. TASK NOT CREATED. FAIL.");
         return taskRepository.create(name, description, userid);
     }
 
     //Изменение задачи.
-    public Task update(Long id, String name, String description) throws TaskNotFoundException, IncorrectFormatException {
+    public Task update(Long id, String name, String description) throws TaskNotFoundException {
         if (name == null || name.isEmpty())
-            throw new IncorrectFormatException("TASK NAME IS EMPTY. TASK NOT UPDATED. FAIL.");
+            throw new IllegalArgumentException("TASK NAME IS EMPTY. TASK NOT UPDATED. FAIL.");
         if (description == null || description.isEmpty())
-            throw new IncorrectFormatException("TASK DESCRIPTION IS EMPTY. TASK NOT UPDATED. FAIL.");
+            throw new IllegalArgumentException("TASK DESCRIPTION IS EMPTY. TASK NOT UPDATED. FAIL.");
         return taskRepository.update(id, name, description);
     }
 
@@ -45,7 +44,7 @@ public class TaskService {
     }
 
     //Поиск задачи по наименованию
-    public List<Task> findByName(String name) throws TaskNotFoundException, IncorrectFormatException {
+    public List<Task> findByName(String name) throws TaskNotFoundException {
         return taskRepository.findByName(name);
     }
 

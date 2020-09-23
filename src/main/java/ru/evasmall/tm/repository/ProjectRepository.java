@@ -3,7 +3,6 @@ package ru.evasmall.tm.repository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.Project;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
 import java.util.*;
@@ -55,10 +54,10 @@ public class ProjectRepository {
         return projects.get(index);
     }
 
-    public List<Project> findByName(final String name) throws ProjectNotFoundException, IncorrectFormatException {
+    public List<Project> findByName(final String name) throws ProjectNotFoundException {
         final List<Project> projectsNew = new ArrayList<>();
         if (name.isEmpty())
-            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. FAIL.");
+            throw new IllegalArgumentException("PROJECT NAME IS EMPTY. FAIL.");
         if (projectsName.get(name) == null || projectsName.get(name).isEmpty())
             throw new ProjectNotFoundException("PROJECT NOT FOUND BY NAME: " + name + ". FAIL.");
         for (final Project project: projectsName.get(name)) {

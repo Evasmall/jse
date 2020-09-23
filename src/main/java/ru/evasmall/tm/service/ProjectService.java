@@ -2,7 +2,6 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.entity.Project;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 
@@ -21,19 +20,19 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project create(String name, String description, Long userid) throws IncorrectFormatException {
+    public Project create(String name, String description, Long userid) {
         if (name == null || name.isEmpty())
-            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. PROJECT NOT CREATED. FAIL.");
+            throw new IllegalArgumentException("PROJECT NAME IS EMPTY. PROJECT NOT CREATED. FAIL.");
         if (description == null || description.isEmpty())
-            throw new IncorrectFormatException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT CREATED. FAIL.");
+            throw new IllegalArgumentException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT CREATED. FAIL.");
         return projectRepository.create(name, description, userid);
     }
 
-    public Project update(Long id, String name, String description) throws ProjectNotFoundException, IncorrectFormatException {
+    public Project update(Long id, String name, String description) throws ProjectNotFoundException {
         if (name == null || name.isEmpty())
-            throw new IncorrectFormatException("PROJECT NAME IS EMPTY. PROJECT NOT UPDATED. FAIL.");
+            throw new IllegalArgumentException("PROJECT NAME IS EMPTY. PROJECT NOT UPDATED. FAIL.");
         if (description == null || description.isEmpty())
-            throw new IncorrectFormatException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT UPDATED. FAIL.");
+            throw new IllegalArgumentException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT UPDATED. FAIL.");
         return projectRepository.update(id, name, description);
     }
 
@@ -54,12 +53,12 @@ public class ProjectService {
     }
 
     //Поиск проекта по наименованию
-    public List<Project> findByName(String name) throws ProjectNotFoundException, IncorrectFormatException {
+    public List<Project> findByName(String name) throws ProjectNotFoundException {
         return projectRepository.findByName(name);
     }
 
     //Поиск проекта по наименованию с учетом принадлежности пользователю текущей сессии
-    public List<Project> findByNameUserId(String name) throws ProjectNotFoundException, IncorrectFormatException {
+    public List<Project> findByNameUserId(String name) throws ProjectNotFoundException {
         for (Project project: projectRepository.findByName(name)) {
             return projectRepository.findByName(name);
         }
@@ -105,7 +104,7 @@ public class ProjectService {
     }
 
     //Сортировка проектов по наименованию
-    public List<Project> ProjectSortByName(List<Project> projects) throws ProjectNotFoundException {
+    public List<Project> ProjectSortByName(List<Project> projects) {
         Collections.sort(projects, Project.ProjectSortByName);
         return projects;
     }

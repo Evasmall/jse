@@ -5,7 +5,6 @@ import ru.evasmall.tm.controller.SystemController;
 import ru.evasmall.tm.controller.TaskController;
 import ru.evasmall.tm.controller.UserController;
 import ru.evasmall.tm.enumerated.RoleEnum;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
@@ -66,7 +65,7 @@ public class Application {
         taskRepository.create("TEST_TASK_1", "DESC TASK 1", userService.findByLogin("TEST").getUserid());
     }
 
-    public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {
         final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
         application.systemController.displayWelcome();
@@ -79,19 +78,13 @@ public class Application {
             try {
                 application.run(command);
             }
-            catch (ProjectNotFoundException e) {
-                logger.error(e);
-            }
-            catch (TaskNotFoundException e) {
-                logger.error(e);
-            }
-            catch (IncorrectFormatException e) {
+            catch (ProjectNotFoundException | TaskNotFoundException | IllegalArgumentException e) {
                 logger.error(e);
             }
         }
     }
 
-    public void run(final String[] args) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public void run(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {
         if (args == null) return;
         if (args.length < 1) return;
         final String param = args[0];
@@ -99,7 +92,7 @@ public class Application {
         System.exit(result);
     }
 
-    public int run(final String param) throws ProjectNotFoundException, TaskNotFoundException, IncorrectFormatException {
+    public int run(final String param) throws ProjectNotFoundException, TaskNotFoundException {
         if (param == null || param.isEmpty()) return -1;
         switch (param) {
             case CMD_HELP: return systemController.displayHelp();

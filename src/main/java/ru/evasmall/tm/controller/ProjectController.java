@@ -2,7 +2,6 @@ package ru.evasmall.tm.controller;
 
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.entity.User;
-import ru.evasmall.tm.exeption.IncorrectFormatException;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.service.ProjectService;
 import ru.evasmall.tm.Application;
@@ -23,15 +22,13 @@ public class ProjectController extends AbstractController{
 
     private final Control control = new Control();
 
- //   private static final Logger logger = LogManager.getLogger(ProjectController.class);
-
     public ProjectController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
         this.userService = userService;
     }
 
     //Создание проекта
-    public int createProject() throws IncorrectFormatException{
+    public int createProject() {
         System.out.println("CREATE PROJECT");
         System.out.println(PROJECT_NAME_ENTER);
         final String name = scanner.nextLine();
@@ -43,7 +40,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Изменение проекта по индексу с учетом принадлежности проекта
-    public int updateProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
+    public int updateProjectByIndex() throws ProjectNotFoundException {
         System.out.println("UPDATE PROJECT");
         System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
@@ -61,7 +58,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Изменение проекта по идентификатору с учетом принадлежности проекта
-    public int updateProjectById() throws ProjectNotFoundException, IncorrectFormatException {
+    public int updateProjectById() throws ProjectNotFoundException {
         System.out.println("UPDATE PROJECT");
         System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
@@ -79,7 +76,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Удаление проекта по индексу с учетом принадлежности проекта
-    public int removeProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
+    public int removeProjectByIndex() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT BY INDEX");
         System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
@@ -92,7 +89,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Удаление проекта по идентификатору с учетом принадлежности проекта
-    public int removeProjectById() throws ProjectNotFoundException, IncorrectFormatException {
+    public int removeProjectById() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT BY ID");
         System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
@@ -140,7 +137,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Просмотр списка проектов по наименованию
-    public int viewProjectByName() throws ProjectNotFoundException, IncorrectFormatException {
+    public int viewProjectByName() throws ProjectNotFoundException {
         System.out.println(PROJECT_NAME_ENTER);
         String name = scanner.nextLine();
         final List <Project> projects = projectService.findByName(name);
@@ -151,7 +148,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Просмотр списка проектов по индексу
-    public int viewProjectByIndex() throws ProjectNotFoundException, IncorrectFormatException {
+    public int viewProjectByIndex() throws ProjectNotFoundException {
         System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
@@ -163,7 +160,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Просмотр проекта по идентификатору
-    public int viewProjectById() throws ProjectNotFoundException, IncorrectFormatException {
+    public int viewProjectById() throws ProjectNotFoundException {
         System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
@@ -190,7 +187,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Просмотр списка проектов.
-    public void viewProjects (final List<Project> projects) throws ProjectNotFoundException {
+    public void viewProjects (final List<Project> projects) {
         int index = 1;
         projectService.ProjectSortByName(projects);
         for (final Project project: projects) {
@@ -209,7 +206,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Добавление принадлежности проекта пользователю по идентификатору проекта и логину пользователя.
-    public int addProjectToUser() throws ProjectNotFoundException, IncorrectFormatException {
+    public int addProjectToUser() throws ProjectNotFoundException {
         System.out.println("ADD PROJECT TO USER");
         System.out.println("PLEASE ENTER LOGIN:");
         final User user1 = userService.findByLogin(scanner.nextLine());
@@ -235,7 +232,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Удаление принадлежности проекта пользователю по идентификатору задачи.
-    public int removeProjectFromUser() throws ProjectNotFoundException, IncorrectFormatException {
+    public int removeProjectFromUser() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT FROM USER");
         System.out.println(PROJECT_ID_ENTER);
         final Long projectId = control.scannerIdIsLong();
