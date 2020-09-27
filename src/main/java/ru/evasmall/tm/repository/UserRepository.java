@@ -11,6 +11,18 @@ public class UserRepository {
 
     private final List<User> users = new ArrayList<>();
 
+    private static UserRepository instance = null;
+
+    public static UserRepository getInstance() {
+        if (instance == null) {
+            synchronized(UserRepository.class) {
+                if (instance == null)
+                    instance = new UserRepository();
+            }
+        }
+        return instance;
+    }
+
     public List<User> findAll() {
         return users;
     }

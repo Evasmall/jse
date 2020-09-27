@@ -22,9 +22,9 @@ public class ProjectController extends AbstractController{
 
     private final Control control = new Control();
 
-    public ProjectController(ProjectService projectService, UserService userService) {
-        this.projectService = projectService;
-        this.userService = userService;
+    public ProjectController() {
+        this.projectService = ProjectService.getInstance();
+        this.userService = UserService.getInstance();
     }
 
     //Создание проекта
@@ -172,7 +172,7 @@ public class ProjectController extends AbstractController{
     }
 
     //Cписок проектов.
-    public int listProject() throws ProjectNotFoundException {
+    public int listProject() {
         //Проверка на авторизацию пользователя
         if (Application.userIdCurrent == null) {
             System.out.println("LIST PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
@@ -189,7 +189,7 @@ public class ProjectController extends AbstractController{
     //Просмотр списка проектов.
     public void viewProjects (final List<Project> projects) {
         int index = 1;
-        projectService.ProjectSortByName(projects);
+        projectService.projectSortByName(projects);
         for (final Project project: projects) {
             final String login1;
             if (userService.findByUserId(project.getUserid()) == null) {

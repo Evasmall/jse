@@ -11,8 +11,17 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private static UserService instance = null;
+
+    public UserService() {
+        this.userRepository = UserRepository.getInstance();
+    }
+
+    public static UserService getInstance() {
+        if (instance == null) {
+            instance = new UserService();
+        }
+        return instance;
     }
 
     //Поиск всех пользователей.
@@ -73,13 +82,13 @@ public class UserService {
     }
 
     //Сортировка пользователей по логину.
-    public List<User> UserSortByLogin(List<User> users) {
+    public List<User> userSortByLogin(List<User> users) {
         Collections.sort(users, User.UserSortByLogin);
         return users;
     }
 
     //Сортировка пользователей по фамилии, имени, отчеству.
-    public List<User> UserSortByFIO(List<User> users) {
+    public List<User> userSortByFIO(List<User> users) {
         Collections.sort(users, User.UserSortByFIO);
         return users;
     }

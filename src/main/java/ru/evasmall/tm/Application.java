@@ -7,9 +7,6 @@ import ru.evasmall.tm.controller.UserController;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
-import ru.evasmall.tm.repository.ProjectRepository;
-import ru.evasmall.tm.repository.TaskRepository;
-import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.service.*;
 import ru.evasmall.tm.util.HashCode;
 
@@ -26,19 +23,10 @@ public class Application {
 
     private static final Logger logger = LogManager.getLogger(Application.class);
 
-    private final ProjectRepository projectRepository = new ProjectRepository();
-    private final TaskRepository taskRepository = new TaskRepository();
-    private final UserRepository userRepository = new UserRepository();
-
-    private final ProjectService projectService = new ProjectService(projectRepository);
-    private final TaskService taskService = new TaskService(taskRepository);
-    private final ProjectTaskService projectTaskService = new ProjectTaskService(projectRepository, taskRepository);
-    private final UserService userService = new UserService(userRepository);
-
-    private final ProjectController projectController = new ProjectController(projectService, userService);
-    private final TaskController taskController = new TaskController(taskService, projectTaskService, userService, projectService);
+    private final ProjectController projectController = new ProjectController();
+    private final TaskController taskController = new TaskController();
+    private final UserController userController = new UserController();
     private final SystemController systemController = new SystemController();
-    private final UserController userController = new UserController(userService);
 
     //Текущая сессия пользователя
     public static Long userIdCurrent = null;
@@ -48,21 +36,21 @@ public class Application {
 
     {
         logger.info("Begin program.");
-        userService.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
+        UserService.getInstance().create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
                            "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
-        userService.create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
+        UserService.getInstance().create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
                                      "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
-        userService.create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
+        UserService.getInstance().create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
                 "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
 
-        projectRepository.create("DEMO_PROJECT_3", "DESC PROJECT 3", userService.findByLogin("ADMIN").getUserid());
-        projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 4", userService.findByLogin("TEST").getUserid());
-        projectRepository.create("DEMO_PROJECT_1", "DESC PROJECT 1", userService.findByLogin("TEST").getUserid());
-        projectRepository.create("DEMO_PROJECT_2", "DESC PROJECT 2", userService.findByLogin("TEST").getUserid());
+        ProjectService.getInstance().create("DEMO_PROJECT_3", "DESC PROJECT 3", UserService.getInstance().findByLogin("ADMIN").getUserid());
+        ProjectService.getInstance().create("DEMO_PROJECT_1", "DESC PROJECT 4", UserService.getInstance().findByLogin("TEST").getUserid());
+        ProjectService.getInstance().create("DEMO_PROJECT_1", "DESC PROJECT 1", UserService.getInstance().findByLogin("TEST").getUserid());
+        ProjectService.getInstance().create("DEMO_PROJECT_2", "DESC PROJECT 2", UserService.getInstance().findByLogin("TEST").getUserid());
 
-        taskRepository.create("TEST_TASK_3", "DESC TASK 3", userService.findByLogin("ADMIN").getUserid() );
-        taskRepository.create("TEST_TASK_2", "DESC TASK 2", userService.findByLogin("TEST").getUserid());
-        taskRepository.create("TEST_TASK_1", "DESC TASK 1", userService.findByLogin("TEST").getUserid());
+        TaskService.getInstance().create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
+        TaskService.getInstance().create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
+        TaskService.getInstance().create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
     }
 
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {

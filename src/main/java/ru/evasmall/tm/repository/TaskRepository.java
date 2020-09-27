@@ -16,6 +16,18 @@ public class TaskRepository {
 
     private final List<Task> tasks = new ArrayList<>();
 
+    private static TaskRepository instance = null;
+
+    public static TaskRepository getInstance() {
+        if (instance == null) {
+            synchronized(TaskRepository.class) {
+                if (instance == null)
+                    instance = new TaskRepository();
+            }
+        }
+        return instance;
+    }
+
     public List<Task> findAll() {
         System.out.println(tasksName);
         return tasks;

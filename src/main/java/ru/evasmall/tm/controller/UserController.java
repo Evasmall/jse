@@ -18,8 +18,8 @@ public class UserController extends AbstractController {
 
     private final SystemController systemController = new SystemController();
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController() {
+        this.userService = UserService.getInstance();
     }
 
     //Регистрация пользователя.
@@ -68,8 +68,8 @@ public class UserController extends AbstractController {
         if (users == null || users.isEmpty()) return;
         int index = 1;
         //Параметр 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
-        if (sort == 1) userService.UserSortByLogin(users);
-        if (sort == 2) userService.UserSortByFIO(users);
+        if (sort == 1) userService.userSortByLogin(users);
+        if (sort == 2) userService.userSortByFIO(users);
         for (final User user: users) {
             System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; LASTNAME: " + user.getLastname() +
             "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " + user.getMiddlname() +

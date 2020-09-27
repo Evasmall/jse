@@ -13,6 +13,18 @@ public class ProjectRepository {
 
     private final List<Project> projects = new ArrayList<>();
 
+    private static ProjectRepository instance = null;
+
+    public static ProjectRepository getInstance() {
+        if (instance == null) {
+            synchronized(ProjectRepository.class) {
+                if (instance == null)
+                    instance = new ProjectRepository();
+            }
+        }
+        return instance;
+    }
+
     public List<Project> findAll() {
         System.out.println(projectsName);
         return projects;

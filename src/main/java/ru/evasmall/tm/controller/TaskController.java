@@ -29,11 +29,11 @@ public class TaskController extends AbstractController{
 
     private final Control control = new Control();
 
-    public TaskController(TaskService taskService, ProjectTaskService projectTaskService, UserService userService, ProjectService projectService) {
-        this.taskService = taskService;
-        this.projectTaskService = projectTaskService;
-        this.userService = userService;
-        this.projectService = projectService;
+    public TaskController() {
+        this.taskService = TaskService.getInstance();
+        this.projectTaskService = ProjectTaskService.getInstance();
+        this.userService = UserService.getInstance();
+        this.projectService = ProjectService.getInstance();
     }
 
     //Создание задачи.
@@ -195,7 +195,7 @@ public class TaskController extends AbstractController{
     public void viewTasks (final List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) return;
         int index = 1;
-        taskService.TaskSortByName(tasks);
+        taskService.taskSortByName(tasks);
         for (final Task task: tasks) {
             final String login1;
             if (userService.findByUserId(task.getUserid()) == null) {

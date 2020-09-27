@@ -8,12 +8,23 @@ import ru.evasmall.tm.repository.ProjectRepository;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalMassage.PROJECT_FOREIGN;
+
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
+    private static ProjectService instance = null;
+
+    public ProjectService() {
+        this.projectRepository = ProjectRepository.getInstance();
+    }
+
+    public static ProjectService getInstance() {
+        if (instance == null) {
+            instance = new ProjectService();
+        }
+        return instance;
     }
 
     public List<Project> findAll() {
@@ -49,7 +60,7 @@ public class ProjectService {
     public Project findByIndexUserId(int index) throws ProjectNotFoundException {
         if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return projectRepository.findByIndex(index);
-        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
+        throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
     //Поиск проекта по наименованию
@@ -62,7 +73,7 @@ public class ProjectService {
         for (Project project: projectRepository.findByName(name)) {
             return projectRepository.findByName(name);
         }
-        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
+        throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
     //Поиск проекта по идентификатору
@@ -76,7 +87,7 @@ public class ProjectService {
             return projectRepository.findById(id);
         if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return projectRepository.findById(id);
-        throw new ProjectNotFoundException("PROJECT IS FOREIGN. FAIL.");
+        throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
     //Удаление проекта по идентификатору
@@ -88,7 +99,7 @@ public class ProjectService {
     public Project removeByIdUserId(Long id) throws ProjectNotFoundException {
         if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return projectRepository.removeById(id);
-        throw new ProjectNotFoundException("PROJECT IS FOREIGN. PROJECT NOT REMOVED. FAIL.");
+        throw new ProjectNotFoundException(PROJECT_FOREIGN +"PROJECT NOT REMOVED.");
     }
 
     //Удаление проекта по индексу
@@ -100,11 +111,11 @@ public class ProjectService {
     public Project removeByIndexUserId(int index) throws ProjectNotFoundException {
         if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return projectRepository.removeByIndex(index);
-        throw new ProjectNotFoundException("PROJECT IS FOREIGN. PROJECT NOT REMOVED. FAIL.");
+        throw new ProjectNotFoundException(PROJECT_FOREIGN +"PROJECT NOT REMOVED.");
     }
 
     //Сортировка проектов по наименованию
-    public List<Project> ProjectSortByName(List<Project> projects) {
+    public List<Project> projectSortByName(List<Project> projects) {
         Collections.sort(projects, Project.ProjectSortByName);
         return projects;
     }

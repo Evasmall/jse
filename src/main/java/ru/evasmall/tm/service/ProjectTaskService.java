@@ -16,9 +16,18 @@ public class ProjectTaskService {
 
     private final TaskRepository taskRepository;
 
-    public ProjectTaskService(ProjectRepository projectRepository, TaskRepository taskRepository) {
-        this.projectRepository = projectRepository;
-        this.taskRepository = taskRepository;
+    private static ProjectTaskService instance = null;
+
+    public ProjectTaskService() {
+        this.projectRepository = ProjectRepository.getInstance();
+        this.taskRepository = TaskRepository.getInstance();
+    }
+
+    public static ProjectTaskService getInstance() {
+        if (instance == null) {
+            instance = new ProjectTaskService();
+        }
+        return instance;
     }
 
     //Вывод всех задач проекта.

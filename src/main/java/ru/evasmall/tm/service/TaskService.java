@@ -8,12 +8,23 @@ import ru.evasmall.tm.repository.TaskRepository;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalMassage.TASK_FOREIGN;
+
 public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    private static TaskService instance = null;
+
+    public TaskService() {
+        this.taskRepository = TaskRepository.getInstance();
+    }
+
+    public static TaskService getInstance() {
+        if (instance == null) {
+            instance = new TaskService();
+        }
+        return instance;
     }
 
     public List<Task> findAll() {
@@ -59,7 +70,7 @@ public class TaskService {
             return taskRepository.findById(id);
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return taskRepository.findById(id);
-        throw new TaskNotFoundException("TASK IS FOREIGN. FAIL.");
+        throw new TaskNotFoundException(TASK_FOREIGN);
     }
 
     //Поиск задачи по индексу.
@@ -71,7 +82,7 @@ public class TaskService {
     public Task findByIndexUserId(int index) throws TaskNotFoundException {
         if (taskRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return taskRepository.findByIndex(index);
-        throw new TaskNotFoundException("TASK IS FOREIGN. FAIL.");
+        throw new TaskNotFoundException(TASK_FOREIGN);
     }
 
     //Удаление задачи по идентификатору.
@@ -83,7 +94,7 @@ public class TaskService {
     public Task removeByIdUserId(Long id) throws TaskNotFoundException {
         if (taskRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return taskRepository.removeById(id);
-        throw new TaskNotFoundException("TASK IS FOREIGN. TASK NOT REMOVED. FAIL.");
+        throw new TaskNotFoundException(TASK_FOREIGN + " TASK NOT REMOVED.");
     }
 
     //Удаление задачи по индексу.
@@ -95,7 +106,7 @@ public class TaskService {
     public Task removeByIndexUserId(int index) throws TaskNotFoundException{
         if (taskRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return taskRepository.removeByIndex(index);
-        throw new TaskNotFoundException("TASK IS FOREIGN. TASK NOT REMOVED. FAIL.");
+        throw new TaskNotFoundException(TASK_FOREIGN + " TASK NOT REMOVED.");
     }
 
     //Найти все проекты по идентификатору.
@@ -111,7 +122,7 @@ public class TaskService {
     }
 
     //Сортировка задач по наименованию
-    public List<Task> TaskSortByName(List<Task> tasks) {
+    public List<Task> taskSortByName(List<Task> tasks) {
         Collections.sort(tasks, Task.TaskSortByName);
         return tasks;
     }
