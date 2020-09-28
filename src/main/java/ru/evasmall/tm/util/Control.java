@@ -1,8 +1,8 @@
 package ru.evasmall.tm.util;
 
-import ru.evasmall.tm.controller.AbstractController;
+import ru.evasmall.tm.service.AbstractService;
 
-public class Control extends AbstractController {
+public class Control extends AbstractService {
 
     //Функция возврата значения Long
     public Long scannerIdIsLong () {

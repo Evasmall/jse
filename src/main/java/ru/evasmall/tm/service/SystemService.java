@@ -1,9 +1,8 @@
-package ru.evasmall.tm.controller;
+package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 
-public class SystemController {
-
+public class SystemService {
     public void displayWelcome() {
         System.out.println("*** WELCOME TO TASK MANAGER! ***");
         System.out.println("PLEASE ENTER [sign] OR [registration] or [help]:");

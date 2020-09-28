@@ -24,7 +24,7 @@
             <AppenderRef ref="Rolling"/>
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="ru.evasmall.tm.controller.UserController" level="TRACE" additivity="false">
+        <Logger name="ru.evasmall.tm.controller.UserService" level="TRACE" additivity="false">
             <AppenderRef ref="Rolling"/>
         </Logger>
         <Logger name="ru.evasmall.tm.Application" level="TRACE" additivity="false">

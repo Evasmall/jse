@@ -1,8 +1,8 @@
-package ru.evasmall.tm.controller;
+package ru.evasmall.tm.service;
 
 import java.util.Scanner;
 
-public class AbstractController {
+public class AbstractService {
 
     protected final Scanner scanner = new Scanner(System.in);
 
