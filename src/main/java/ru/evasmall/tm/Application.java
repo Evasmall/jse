@@ -129,7 +129,8 @@ public class Application {
             case CMD_TASK_LIST_BY_PROJECT_ID: return projectTaskService.listTaskByProjectId();
 
             case CMD_USER_REGISTRATION: return userService.createUser();
-            case CMD_USER_SIGN: return userService.exitUser();
+            case CMD_USER_SIGN: return userService.signUser();
+            case CMD_USER_EXIT: return userService.exitUser();
             case CMD_USER_LIST: return userService.listUser(1);
             case CMD_USER_LIST_BY_FIO: return userService.listUser(2);
             case CMD_USER_REMOVE_BY_LOGIN: return userService.removeUserByLogin(userIdCurrent);
