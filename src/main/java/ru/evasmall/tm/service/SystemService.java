@@ -3,29 +3,29 @@ package ru.evasmall.tm.service;
 import ru.evasmall.tm.Application;
 
 public class SystemService {
-    public void displayWelcome() {
+    public static void displayWelcome() {
         System.out.println("*** WELCOME TO TASK MANAGER! ***");
         System.out.println("PLEASE ENTER [sign] OR [registration] or [help]:");
     }
 
-    public int displayHistory() {
+    public static int displayHistory() {
         for (String str: Application.history) {
             System.out.println(str);
         }
         return 0;
     }
 
-    public int displayExit() {
+    public static int displayExit() {
         System.out.println("Terminate program. Goodbye!");
         return 0;
     }
 
-    public int displayForAdminOnly() {
+    public static int displayForAdminOnly() {
         System.out.println("THIS FUNCTIONALITY IS FOR ADMINS ONLY! FAIL.");
         return -1;
     }
 
-    public int displayHelp() {
+    public static int displayHelp() {
         System.out.println("version - Display program version.");
         System.out.println("about - Display developer info.");
         System.out.println("help - Display list of terminal commands.");
@@ -79,12 +79,12 @@ public class SystemService {
         return 0;
     }
 
-    public int  displayVersion() {
-        System.out.println("1.0.0");
+    public static int displayVersion() {
+        System.out.println("1.0.18");
         return 0;
     }
 
-    public int  displayAbout() {
+    public static int displayAbout() {
         System.out.println("Evgeniya Smolkina");
         System.out.println("smolkina_ev@nlmk.com");
         return 0;

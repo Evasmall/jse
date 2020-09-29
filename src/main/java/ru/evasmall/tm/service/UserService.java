@@ -215,7 +215,7 @@ public class UserService extends AbstractService {
         if (findByLogin(login) == null) {
             System.out.println("THIS LOGIN NOT EXISTS!");
             System.out.println("FAIL");
-            return null;
+            throw new NullPointerException("THIS LOGIN NOT EXISTS!");
         }
         //Проверка пароля
         System.out.println("PLEASE ENTER YOUR PASSWORD:");
