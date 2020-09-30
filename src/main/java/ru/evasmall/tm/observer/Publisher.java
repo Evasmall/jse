@@ -6,6 +6,6 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 public interface Publisher {
     void addListener(Listener listener);
     void deleteListener(Listener listener);
-    void notifyListener(String command) throws ProjectNotFoundException, TaskNotFoundException;
+    void notifyListener() throws ProjectNotFoundException, TaskNotFoundException;
 
 }

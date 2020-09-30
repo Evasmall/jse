@@ -11,8 +11,6 @@ import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static ru.evasmall.tm.constant.TerminalConst.*;
-
 /**
  * Приложение для обучения JAVA.
  */
@@ -46,29 +44,14 @@ public class Application {
     }
 
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {
-        final Scanner scanner = new Scanner(System.in);
         final Application application = new Application();
         SystemService.displayWelcome();
-
         Publisher publisher = new PublisherImpl();
         publisher.addListener(new ProjectListener());
         publisher.addListener(new UserListener());
         publisher.addListener(new SystemListener());
         publisher.addListener(new TaskListener());
-
-        publisher.notifyListener(args.toString());
-        String command = "";
-        while (!CMD_EXIT.equals(command)) {
-            command = scanner.nextLine();
-            history.add(command);
-            if (history.size() > 10) history.pollFirst();
-            try {
-                publisher.notifyListener(command);
-            }
-            catch (ProjectNotFoundException | TaskNotFoundException | IllegalArgumentException e) {
-                logger.error(e);
-            }
-        }
+        publisher.notifyListener();
     }
 
 }

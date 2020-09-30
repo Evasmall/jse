@@ -15,27 +15,27 @@ public class SystemListener implements Listener {
             switch (param) {
                 case CMD_HELP:
                     SystemService.displayHelp();
-                    return 0;
+                    return RETURN_OK;
                 case CMD_VERSION:
                     SystemService.displayVersion();
-                    return 0;
+                    return RETURN_OK;
                 case CMD_ABOUT:
                     SystemService.displayAbout();
-                    return 0;
+                    return RETURN_OK;
                 case CMD_HISTORY:
                     SystemService.displayHistory();
-                    return 0;
+                    return RETURN_OK;
                 case CMD_EXIT: {
                     logger.info("Exit.");
                     SystemService.displayExit();
-                    return 0;
+                    return RETURN_OK;
                 }
                 default:
-                    return -2;
+                    return RETURN_FOREIGN_COMMAND;
             }
         } catch (Exception e) {
             logger.error(e);
-            return -1;
+            return RETURN_ERROR;
         }
     }
 }

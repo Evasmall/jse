@@ -51,4 +51,8 @@ public class TerminalConst {
     public static final String CMD_PASSWORD_CHANGE = "password-change";
     public static final String CMD_USER_EXIT = "user-exit";
 
+    public static final Integer RETURN_OK = 0;
+    public static final Integer RETURN_ERROR = -1;
+    public static final Integer RETURN_FOREIGN_COMMAND = 1;
+
 }
