@@ -13,8 +13,8 @@ public class UserListener implements Listener {
     @Override
     public int update(String param) {
         try {
+            UserService u =UserService.getInstance();
             switch (param) {
-                UserService u =UserService.getInstance();
                 case CMD_USER_REGISTRATION:
                     u.createUser();
                     return RETURN_OK;
