@@ -26,21 +26,25 @@ public class Application {
 
     {
         logger.info("Begin program.");
-        UserService.getInstance().create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
+        UserService u = UserService.userServiceGetInstance;
+        ProjectService p = ProjectService.projectServiceGetInstance;
+        TaskService t = TaskService.taskServiceGetInstance;
+
+        u.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
                            "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
-        UserService.getInstance().create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
+        u.create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
                                      "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
-        UserService.getInstance().create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
+        u.create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
                 "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
 
-        ProjectService.getInstance().create("DEMO_PROJECT_3", "DESC PROJECT 3", UserService.getInstance().findByLogin("ADMIN").getUserid());
-        ProjectService.getInstance().create("DEMO_PROJECT_1", "DESC PROJECT 4", UserService.getInstance().findByLogin("TEST").getUserid());
-        ProjectService.getInstance().create("DEMO_PROJECT_1", "DESC PROJECT 1", UserService.getInstance().findByLogin("TEST").getUserid());
-        ProjectService.getInstance().create("DEMO_PROJECT_2", "DESC PROJECT 2", UserService.getInstance().findByLogin("TEST").getUserid());
+        p.create("DEMO_PROJECT_3", "DESC PROJECT 3", UserService.getInstance().findByLogin("ADMIN").getUserid());
+        p.create("DEMO_PROJECT_1", "DESC PROJECT 4", UserService.getInstance().findByLogin("TEST").getUserid());
+        p.create("DEMO_PROJECT_1", "DESC PROJECT 1", UserService.getInstance().findByLogin("TEST").getUserid());
+        p.create("DEMO_PROJECT_2", "DESC PROJECT 2", UserService.getInstance().findByLogin("TEST").getUserid());
 
-        TaskService.getInstance().create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
-        TaskService.getInstance().create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
-        TaskService.getInstance().create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
+        t.create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
+        t.create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
+        t.create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
     }
 
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {

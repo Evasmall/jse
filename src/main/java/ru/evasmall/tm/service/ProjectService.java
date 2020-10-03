@@ -36,6 +36,8 @@ public class ProjectService extends AbstractService {
         return instance;
     }
 
+    public static final ProjectService projectServiceGetInstance = ProjectService.getInstance();
+
     public List<Project> findAll() {
         return projectRepository.findAll();
     }

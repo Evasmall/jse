@@ -2,8 +2,6 @@ package ru.evasmall.tm.observer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.evasmall.tm.exeption.ProjectNotFoundException;
-import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.service.ProjectService;
 import ru.evasmall.tm.service.ProjectTaskService;
 
@@ -13,9 +11,9 @@ public class ProjectListener implements Listener {
     private static final Logger logger = LogManager.getRootLogger();
 
     @Override
-    public int update(String param) throws TaskNotFoundException {
-        ProjectService p = ProjectService.getInstance();
-        ProjectTaskService pt = ProjectTaskService.getInstance();
+    public int update(String param) {
+        ProjectService p = ProjectService.projectServiceGetInstance;
+        ProjectTaskService pt = ProjectTaskService.projectTaskServiceGetInstance;
         try {
             switch (param) {
                 case CMD_PROJECT_CREATE:
@@ -68,7 +66,7 @@ public class ProjectListener implements Listener {
                 default:
                     return RETURN_FOREIGN_COMMAND;
             }
-        } catch (ProjectNotFoundException | IllegalArgumentException e) {
+        } catch (Exception e) {
             logger.error(e);
             return RETURN_ERROR;
         }

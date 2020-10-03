@@ -32,6 +32,8 @@ public class UserService extends AbstractService {
         return instance;
     }
 
+    public static final UserService userServiceGetInstance = UserService.getInstance();
+
     //Поиск всех пользователей.
     public List<User> findAll() {
         return userRepository.findAll();

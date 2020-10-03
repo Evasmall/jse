@@ -13,7 +13,7 @@ public class UserListener implements Listener {
     @Override
     public int update(String param) {
         try {
-            UserService u =UserService.getInstance();
+            UserService u =UserService.userServiceGetInstance;
             switch (param) {
                 case CMD_USER_REGISTRATION:
                     u.createUser();
@@ -49,7 +49,7 @@ public class UserListener implements Listener {
                     return RETURN_FOREIGN_COMMAND;
             }
         }
-        catch (IllegalArgumentException e) {
+        catch (Exception e) {
                 logger.error(e);
                 return RETURN_ERROR;
             }

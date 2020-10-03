@@ -3,8 +3,6 @@ package ru.evasmall.tm.observer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.constant.TerminalConst;
-import ru.evasmall.tm.exeption.ProjectNotFoundException;
-import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.*;
 
@@ -44,7 +42,7 @@ public class PublisherImpl implements Publisher {
                 //Логирование ошибок, если команда не опознана ни одним из слушателей.
                 if (i == 4) logger.error("ERROR! Unknown program argument.");
             }
-            catch (ProjectNotFoundException | TaskNotFoundException | IllegalArgumentException e) {
+            catch (Exception e) {
                 logger.error(e);
             }
         }

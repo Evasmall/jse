@@ -36,6 +36,8 @@ public class TaskService extends AbstractService {
         return instance;
     }
 
+    public static final TaskService taskServiceGetInstance =TaskService.getInstance();
+
     public List<Task> findAll() {
         return taskRepository.findAll();
     }
