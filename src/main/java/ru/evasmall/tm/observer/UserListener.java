@@ -45,6 +45,14 @@ public class UserListener implements Listener {
                 case CMD_USER_EXIT:
                     u.exitUser();
                     return RETURN_OK;
+
+                case CMD_OBJECT_JSON:
+                    u.writeUserJson();
+                    return RETURN_OK;
+                case CMD_OBJECT_XML:
+                    u.writeUserXML();
+                    return RETURN_OK;
+
                 default:
                     return RETURN_FOREIGN_COMMAND;
             }

@@ -12,5 +12,6 @@ public class TerminalMassage {
     public static final String TASK_NAME_ENTER = "PLEASE ENTER TASK NAME:";
     public static final String TASK_DESCRIPTION_ENTER = "PLEASE ENTER TASK DESCRIPTION:";
     public static final String TASK_FOREIGN ="TASK IS FOREIGN. FAIL.";
+    public static final String DATA_WRITTEN_FILES ="DATA IS WRITTEN TO FILES. OK.";
 
 }

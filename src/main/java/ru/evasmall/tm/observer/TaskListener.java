@@ -66,6 +66,14 @@ public class TaskListener implements Listener {
                 case CMD_TASK_LIST_BY_PROJECT_ID:
                     pt.listTaskByProjectId();
                     return RETURN_OK;
+
+                case CMD_OBJECT_JSON:
+                    t.writeTaskJson();
+                    return RETURN_OK;
+                case CMD_OBJECT_XML:
+                    t.writeTaskXML();
+                    return RETURN_OK;
+
                 default:
                     return RETURN_FOREIGN_COMMAND;
             }

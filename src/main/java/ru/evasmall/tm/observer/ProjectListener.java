@@ -63,6 +63,14 @@ public class ProjectListener implements Listener {
                 case CMD_PROJECT_REMOVE_BY_INDEX_WITH_TASKS:
                     pt.removeProjectByIndexWithTasks();
                     return RETURN_OK;
+
+                case CMD_OBJECT_JSON:
+                    p.writeProjectJson();
+                    return RETURN_OK;
+                case CMD_OBJECT_XML:
+                    p.writeProjectXML();
+                    return RETURN_OK;
+
                 default:
                     return RETURN_FOREIGN_COMMAND;
             }

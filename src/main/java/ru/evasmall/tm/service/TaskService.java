@@ -1,15 +1,24 @@
 package ru.evasmall.tm.service;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
+import ru.evasmall.tm.constant.TerminalMassage;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.util.Control;
 
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalConst.*;
+import static ru.evasmall.tm.constant.FileNameConst.*;
 import static ru.evasmall.tm.constant.TerminalMassage.*;
 
 public class TaskService extends AbstractService {
@@ -34,6 +43,43 @@ public class TaskService extends AbstractService {
             instance = new TaskService();
         }
         return instance;
+    }
+
+    //Запись всех задач в файл формата JSON.
+    public int writeTaskJson() {
+        final List<Task> tasks = findAll();
+        if (tasks == null || tasks.isEmpty()) return RETURN_ERROR;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        String prettyJson = "";
+        try {
+            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(TASK_JSON));
+            prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(taskSortByName(tasks));
+            objectOutputStream.writeObject(prettyJson);
+            objectOutputStream.close();
+        } catch (JsonProcessingException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("TASKS " + TerminalMassage.DATA_WRITTEN_FILES);
+        return RETURN_OK;
+    }
+
+    //Запись всех задач в файл формата XML.
+    public int writeTaskXML() {
+        final List<Task> tasks = findAll();
+        if (tasks == null || tasks.isEmpty()) return RETURN_ERROR;
+        XmlMapper xmlMapper = new XmlMapper();
+        File file = new File(TASK_XML);
+        try {
+            xmlMapper.writeValue(file, tasks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            System.out.println("TASK " + TerminalMassage.DATA_WRITTEN_FILES);
+            return RETURN_OK;
     }
 
     public static final TaskService taskServiceGetInstance =TaskService.getInstance();

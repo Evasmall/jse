@@ -55,3 +55,5 @@
 | | task-add-to_project-by-ids - Add task to project by ids (for current user). | task-remove-from-project-by-ids - Remove task from project by ids (for current user). | 
 | project-remove-by-id-with-tasks - Remove project by id with tasks (for project of current user). |
 | project-remove-by-index-with-tasks - Remove project by index with tasks (for project of current user). | |
+| object-json - Write projects, tasks, users in json file. | |
+| object-xml - Write projects, tasks, users in xml file. | |

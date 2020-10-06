@@ -1,15 +1,26 @@
 package ru.evasmall.tm.service;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.Application;
+import ru.evasmall.tm.constant.TerminalMassage;
+import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.util.HashCode;
 
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
+
+import static ru.evasmall.tm.constant.FileNameConst.*;
+import static ru.evasmall.tm.constant.TerminalConst.*;
 
 public class UserService extends AbstractService {
 
@@ -33,6 +44,43 @@ public class UserService extends AbstractService {
     }
 
     public static final UserService userServiceGetInstance = UserService.getInstance();
+
+    //Запись всех пользователей в файл формата JSON.
+    public int writeUserJson() {
+        final List<User> users = findAll();
+        if (users == null || users.isEmpty()) return RETURN_ERROR;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        String prettyJson = "";
+        try {
+            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(USER_JSON));
+            prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userSortByFIO(users));
+            objectOutputStream.writeObject(prettyJson);
+            objectOutputStream.close();
+        } catch (JsonProcessingException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("USERS " + TerminalMassage.DATA_WRITTEN_FILES);
+        return RETURN_OK;
+    }
+
+    //Запись всех пользователей в файл формата XML.
+    public int writeUserXML() {
+        final List<User> users = findAll();
+        if (users == null || users.isEmpty()) return RETURN_ERROR;
+        XmlMapper xmlMapper = new XmlMapper();
+        File file = new File(USER_XML);
+        try {
+            xmlMapper.writeValue(file, users);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("USERS " + TerminalMassage.DATA_WRITTEN_FILES);
+        return RETURN_OK;
+    }
 
     //Поиск всех пользователей.
     public List<User> findAll() {

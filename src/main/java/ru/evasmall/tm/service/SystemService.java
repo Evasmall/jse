@@ -3,6 +3,7 @@ package ru.evasmall.tm.service;
 import ru.evasmall.tm.Application;
 
 public class SystemService {
+
     public static void displayWelcome() {
         System.out.println("*** WELCOME TO TASK MANAGER! ***");
         System.out.println("PLEASE ENTER [sign] OR [registration] or [help]:");
@@ -76,6 +77,10 @@ public class SystemService {
         System.out.println("task-list-by-project-id - Display task list by project id.");
         System.out.println("task-add-to_project-by-ids - Add task to project by ids.");
         System.out.println("task-remove-from-project-by-ids - Remove task from project by ids.");
+        System.out.println();
+        System.out.println("object-json - Write projects, tasks, users in json file.");
+        System.out.println("object-xml- Write projects, tasks, users in xml file.");
+
         return 0;
     }
 
