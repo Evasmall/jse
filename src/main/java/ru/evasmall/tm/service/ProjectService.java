@@ -2,7 +2,6 @@ package ru.evasmall.tm.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
@@ -45,8 +44,6 @@ public class ProjectService extends AbstractService {
         return instance;
     }
 
-    public static final ProjectService projectServiceGetInstance = ProjectService.getInstance();
-
     //Запись всех проектов в файл формата JSON.
     public int writeProjectJson() {
         final List<Project> projects = findAll();
@@ -59,10 +56,7 @@ public class ProjectService extends AbstractService {
             prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(projectSortByName(projects));
             objectOutputStream.writeObject(prettyJson);
             objectOutputStream.close();
-        } catch (JsonProcessingException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("PROJECTS " + TerminalMassage.DATA_WRITTEN_FILES);
@@ -236,6 +230,7 @@ public class ProjectService extends AbstractService {
 
     public void clear() {
         projectRepository.clear();
+        System.out.println("CLEAR ALL PROJECTS. OK.");
     }
 
     //Удаление всех проектов (доступно только администраторам).

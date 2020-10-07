@@ -26,9 +26,9 @@ public class Application {
 
     {
         logger.info("Begin program.");
-        UserService u = UserService.userServiceGetInstance;
-        ProjectService p = ProjectService.projectServiceGetInstance;
-        TaskService t = TaskService.taskServiceGetInstance;
+        UserService u = UserService.getInstance();
+        ProjectService p = ProjectService.getInstance();
+        TaskService t = TaskService.getInstance();
 
         u.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
                            "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);

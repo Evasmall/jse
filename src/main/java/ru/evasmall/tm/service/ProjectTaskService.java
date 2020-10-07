@@ -42,8 +42,6 @@ public class ProjectTaskService extends AbstractService {
         return instance;
     }
 
-    public static final ProjectTaskService projectTaskServiceGetInstance = ProjectTaskService.getInstance();
-
     //Вывод всех задач проекта.
     public List<Task> findAllByProjectId(final Long projectId) {
         if (projectId == null) return Collections.emptyList();

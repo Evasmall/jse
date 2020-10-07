@@ -7,11 +7,9 @@ import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
 import java.util.*;
 
-public class ProjectRepository {
+public class ProjectRepository extends AbstractRepository<Project> {
 
     private static final Logger logger = LogManager.getLogger(ProjectRepository.class);
-
-    private final List<Project> projects = new ArrayList<>();
 
     private static ProjectRepository instance = null;
 
@@ -25,63 +23,55 @@ public class ProjectRepository {
         return instance;
     }
 
-    public List<Project> findAll() {
-        System.out.println(projectsName);
-        return projects;
+    public String getObjectName(final Project project) {
+        if (project == null) return null;
+        return project.getName();
     }
-
-    private final HashMap<String, HashSet<Project>> projectsName = new HashMap<>();
 
     public Project create(final String name, String description, Long userid) {
         final Project project = new Project(name);
         project.setName(name);
         project.setDescription(description);
         project.setUserid(userid);
-        projects.add(project);
-        addProjectToMap(project);
+        objects.add(project);
+        addObjectToMap(project);
         logger.trace("PROJECT CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return project;
     }
 
     public Project update(final Long id, final String name, String description) throws ProjectNotFoundException {
         final Project project = findById(id);
-        removeProjectFromMap(project);
+        removeObjectFromMap(project);
         project.setId(id);
         project.setName(name);
         project.setDescription(description);
-        addProjectToMap(project);
+        addObjectToMap(project);
         logger.trace("PROJECT UPDATE. ID: {} NEW NAME: {} NEW DESCRIPTION: {}", id, name, description);
         return project;
     }
 
-    public void clear() {
-        projects.clear();
-        projectsName.clear();
-        logger.info("CLEAR ALL PROJECTS.");
-    }
-
     public Project findByIndex(int index) throws ProjectNotFoundException {
-        if (index < 0 || index > projects.size() - 1)
+        if (index < 0 || index > objects.size() - 1)
             throw new ProjectNotFoundException("PROJECT NOT FOUND BY INDEX: " + (index + 1) +". FAIL.");
-        return projects.get(index);
+        return objects.get(index);
     }
 
     public List<Project> findByName(final String name) throws ProjectNotFoundException {
         final List<Project> projectsNew = new ArrayList<>();
         if (name.isEmpty())
             throw new IllegalArgumentException("PROJECT NAME IS EMPTY. FAIL.");
-        if (projectsName.get(name) == null || projectsName.get(name).isEmpty())
+        if (objectsName.get(name) == null || objectsName.get(name).isEmpty())
             throw new ProjectNotFoundException("PROJECT NOT FOUND BY NAME: " + name + ". FAIL.");
-        for (final Project project: projectsName.get(name)) {
+        for (final Project project: objectsName.get(name)) {
             projectsNew.add(project);
         }
-        return projects;
+        return objects;
     }
 
     public Project findById(final Long id) throws ProjectNotFoundException {
         if (id == null)
             throw new ProjectNotFoundException("PROJECT ID IS EMPTY. FAIL.");
-        for (final Project project: projects) {
+        for (final Project project: objects) {
             if (project.getId().equals(id))
                 return project;
         }
@@ -90,44 +80,19 @@ public class ProjectRepository {
 
     public Project removeById (final Long id) throws ProjectNotFoundException {
         final Project project = findById(id);
-        removeProjectFromMap(project);
-        projects.remove(project);
-        System.out.println(projectsName);
+        removeObjectFromMap(project);
+        objects.remove(project);
+        System.out.println(objectsName);
         logger.info("PROJECT ID: {} DELETE", id);
         return project;
     }
 
     public Project removeByIndex (final int index) throws ProjectNotFoundException {
         final Project project = findByIndex(index);
-        removeProjectFromMap(project);
-        projects.remove(project);
-        logger.info("PROJECT INDEX: {} DELETE", index);
+        removeObjectFromMap(project);
+        objects.remove(project);
+        logger.info("PROJECT INDEX: {} DELETE", index + 1);
         return project;
-    }
-
-    public int size() {
-        return projects.size();
-    }
-
-    public void removeProjectFromMap(final Project project) {
-        final String name = project.getName();
-        HashSet<Project> projectsHashMap = projectsName.get(name);
-        if (projectsHashMap != null)
-            projectsHashMap.remove(project);
-        if (projectsHashMap.isEmpty())
-            projectsName.remove(name);
-    }
-
-    private void addProjectToMap(final Project project) {
-        final String name = project.getName();
-        HashSet<Project> projectsHashMap = projectsName.get(name);
-        if (projectsHashMap != null)
-            projectsHashMap.add(project);
-        else {
-            projectsHashMap = new HashSet<>();
-            projectsHashMap.add(project);
-            projectsName.put(name, projectsHashMap);
-        }
     }
 
 }

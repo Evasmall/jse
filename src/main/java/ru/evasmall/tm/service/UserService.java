@@ -2,14 +2,12 @@ package ru.evasmall.tm.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.constant.TerminalMassage;
-import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.repository.UserRepository;
@@ -43,8 +41,6 @@ public class UserService extends AbstractService {
         return instance;
     }
 
-    public static final UserService userServiceGetInstance = UserService.getInstance();
-
     //Запись всех пользователей в файл формата JSON.
     public int writeUserJson() {
         final List<User> users = findAll();
@@ -57,10 +53,7 @@ public class UserService extends AbstractService {
             prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userSortByFIO(users));
             objectOutputStream.writeObject(prettyJson);
             objectOutputStream.close();
-        } catch (JsonProcessingException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("USERS " + TerminalMassage.DATA_WRITTEN_FILES);

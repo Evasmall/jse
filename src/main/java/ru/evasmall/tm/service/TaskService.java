@@ -2,7 +2,6 @@ package ru.evasmall.tm.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
@@ -57,10 +56,7 @@ public class TaskService extends AbstractService {
             prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(taskSortByName(tasks));
             objectOutputStream.writeObject(prettyJson);
             objectOutputStream.close();
-        } catch (JsonProcessingException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("TASKS " + TerminalMassage.DATA_WRITTEN_FILES);
@@ -81,8 +77,6 @@ public class TaskService extends AbstractService {
             System.out.println("TASK " + TerminalMassage.DATA_WRITTEN_FILES);
             return RETURN_OK;
     }
-
-    public static final TaskService taskServiceGetInstance =TaskService.getInstance();
 
     public List<Task> findAll() {
         return taskRepository.findAll();
@@ -164,7 +158,7 @@ public class TaskService extends AbstractService {
         if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
             System.out.println("CLEAR TASK");
             clear();
-            System.out.println("OK");
+            System.out.println("CLEAR ALL TASKS. OK.");
             return 0;
         }
         else {

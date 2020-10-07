@@ -6,15 +6,11 @@ import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
-public class TaskRepository {
+public class TaskRepository extends AbstractRepository<Task> {
 
     private static final Logger logger = LogManager.getLogger(TaskRepository.class);
-
-    private final List<Task> tasks = new ArrayList<>();
 
     private static TaskRepository instance = null;
 
@@ -28,12 +24,10 @@ public class TaskRepository {
         return instance;
     }
 
-    public List<Task> findAll() {
-        System.out.println(tasksName);
-        return tasks;
+    public String getObjectName (Task task) {
+        if (task == null) return null;
+        return task.getName();
     }
-
-    private final HashMap<String, HashSet<Task>> tasksName = new HashMap<>();
 
     public List<Task> findAllByProjectId(final Long projectId) {
         final List<Task> result = new ArrayList<>();
@@ -49,19 +43,19 @@ public class TaskRepository {
         task.setName(name);
         task.setDescription(description);
         task.setUserid(userId);
-        tasks.add(task);
-        addTaskToMap(task);
+        objects.add(task);
+        addObjectToMap(task);
         logger.trace("TASK CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return task;
     }
 
     public Task update(final Long id, final String name, String description) throws TaskNotFoundException{
         final Task task = findById(id);
-        removeTaskFromMap(task);
+        removeObjectFromMap(task);
         task.setId(id);
         task.setName(name);
         task.setDescription(description);
-        addTaskToMap(task);
+        addObjectToMap(task);
         logger.trace("TASK UPDATE. ID: {} NEW NAME: {} NEW DESCRIPTION: {}", id, name, description);
         return task;
     }
@@ -76,28 +70,22 @@ public class TaskRepository {
         return result;
     }
 
-    public void clear() {
-        tasks.clear();
-        tasksName.clear();
-        logger.info("CLEAR ALL TASKS.");
-    }
-
     public List<Task> findByName(final String name) throws TaskNotFoundException {
         final List<Task> tasksNew = new ArrayList<>();
         if (name.isEmpty())
             throw new IllegalArgumentException("TASK NAME IS EMPTY. FAIL.");
-        if (tasksName.get(name) == null || tasksName.get(name).isEmpty())
+        if (objectsName.get(name) == null || objectsName.get(name).isEmpty())
             throw new TaskNotFoundException("TASK NOT FOUND BY NAME: " + name + ". FAIL.");
-        for (final Task task: tasksName.get(name)) {
+        for (final Task task: objectsName.get(name)) {
             tasksNew.add(task);
         }
-        return tasks;
+        return objects;
     }
 
     public Task findById(final Long id) throws TaskNotFoundException {
         if (id == null)
             throw new TaskNotFoundException("TASK ID IS EMPTY. FAIL.");
-        for (final Task task: tasks) {
+        for (final Task task: objects) {
             if(task.getId().equals(id))
                 return task;
         }
@@ -105,7 +93,7 @@ public class TaskRepository {
     }
 
     public Task findByProjectIdAndId(final Long projectId, final Long id) {
-        for (final Task task: tasks) {
+        for (final Task task: objects) {
             final Long idProject = task.getProjectId();
             if (idProject == null || !idProject.equals(projectId)) continue;
             if(task.getId().equals(id)) return task;
@@ -114,51 +102,26 @@ public class TaskRepository {
     }
 
     public Task findByIndex(final int index) throws TaskNotFoundException {
-        if (index < 0 || index > tasks.size() - 1) {
+        if (index < 0 || index > objects.size() - 1) {
             throw new TaskNotFoundException("TASK NOT FOUND BY INDEX: " + (index + 1) +".");
         }
-        return tasks.get(index);
+        return objects.get(index);
     }
 
     public Task removeById (final Long id) throws TaskNotFoundException {
         final Task task = findById(id);
-        removeTaskFromMap(task);
-        tasks.remove(task);
+        removeObjectFromMap(task);
+        objects.remove(task);
         logger.info("TASK ID: {} DELETE", id);
         return task;
     }
 
     public Task removeByIndex (final int index) throws TaskNotFoundException{
         final Task task = findByIndex(index);
-        removeTaskFromMap(task);
-        tasks.remove(task);
-        logger.info("TASK INDEX: {} DELETE", index);
+        removeObjectFromMap(task);
+        objects.remove(task);
+        logger.info("TASK INDEX: {} DELETE", index + 1);
         return task;
-    }
-
-    public int size() {
-        return tasks.size();
-    }
-
-    public void removeTaskFromMap(final Task task) {
-        final String name = task.getName();
-        HashSet<Task> tasksHashMap = tasksName.get(name);
-        if (tasksHashMap != null)
-            tasksHashMap.remove(task);
-        if (tasksHashMap.isEmpty())
-            tasksName.remove(name);
-    }
-
-    private void addTaskToMap(final Task task) {
-        final String name = task.getName();
-        HashSet<Task> tasksHashMap = tasksName.get(name);
-        if (tasksHashMap != null)
-            tasksHashMap.add(task);
-        else {
-            tasksHashMap = new HashSet<>();
-            tasksHashMap.add(task);
-            tasksName.put(name, tasksHashMap);
-        }
     }
 
 }

@@ -13,8 +13,8 @@ public class TaskListener implements Listener {
     @Override
     public int update(String param) {
         try {
-            TaskService t = TaskService.taskServiceGetInstance;
-            ProjectTaskService pt = ProjectTaskService.projectTaskServiceGetInstance;
+            TaskService t = TaskService.getInstance();
+            ProjectTaskService pt = ProjectTaskService.getInstance();
             switch (param) {
                 case CMD_TASK_CREATE:
                     t.createTask();

@@ -12,8 +12,8 @@ public class ProjectListener implements Listener {
 
     @Override
     public int update(String param) {
-        ProjectService p = ProjectService.projectServiceGetInstance;
-        ProjectTaskService pt = ProjectTaskService.projectTaskServiceGetInstance;
+        ProjectService p = ProjectService.getInstance();
+        ProjectTaskService pt = ProjectTaskService.getInstance();
         try {
             switch (param) {
                 case CMD_PROJECT_CREATE:
