@@ -44,7 +44,9 @@ public class ProjectService extends AbstractService {
         return instance;
     }
 
-    //Запись всех проектов в файл формата JSON.
+    /**
+     * Запись всех проектов в файл формата JSON.
+     */
     public int writeProjectJson() {
         final List<Project> projects = findAll();
         if (projects == null || projects.isEmpty()) return RETURN_ERROR;
@@ -63,7 +65,9 @@ public class ProjectService extends AbstractService {
         return RETURN_OK;
     }
 
-    //Запись всех проектов в файл формата XML.
+    /**
+     * Запись всех проектов в файл формата XML.
+     */
     public int writeProjectXML() {
         final List<Project> projects = findAll();
         if (projects == null || projects.isEmpty()) return RETURN_ERROR;
@@ -78,7 +82,21 @@ public class ProjectService extends AbstractService {
         return RETURN_OK;
     }
 
-        public List<Project> findAll() {
+    /**
+     * Чтение всех проектов из файла формата JSON.
+     */
+    public int readProjectJson() {
+        return RETURN_OK;
+    }
+
+    /**
+     * Чтение всех проектов из файла формата XML.
+     */
+    public int readProjectXML() {
+        return RETURN_OK;
+    }
+
+    public List<Project> findAll() {
         return projectRepository.findAll();
     }
 
@@ -90,7 +108,9 @@ public class ProjectService extends AbstractService {
         return projectRepository.create(name, description, userid);
     }
 
-    //Создание проекта
+    /**
+     * Создание проекта
+     */
     public int createProject() {
         System.out.println("CREATE PROJECT");
         System.out.println(PROJECT_NAME_ENTER);
@@ -99,9 +119,16 @@ public class ProjectService extends AbstractService {
         final String description = scanner.nextLine();
         create(name, description, Application.userIdCurrent);
         System.out.println("OK");
-        return 0;
+        return RETURN_OK;
     }
 
+    /**
+     * Изменение проекта
+     * @param id идентификатор
+     * @param name наименование
+     * @param description описание
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project update(Long id, String name, String description) throws ProjectNotFoundException {
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("PROJECT NAME IS EMPTY. PROJECT NOT UPDATED. FAIL.");
@@ -110,7 +137,10 @@ public class ProjectService extends AbstractService {
         return projectRepository.update(id, name, description);
     }
 
-    //Изменение проекта по индексу с учетом принадлежности проекта
+    /**
+     * Изменение проекта по индексу с учетом принадлежности проекта
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int updateProjectByIndex() throws ProjectNotFoundException {
         System.out.println("UPDATE PROJECT");
         System.out.println(PROJECT_INDEX_ENTER);
@@ -123,12 +153,15 @@ public class ProjectService extends AbstractService {
             final String description = scanner.nextLine();
             update(project.getId(), name, description);
             System.out.println("OK");
-            return 0;
+            return RETURN_OK;
         }
-        else return -1;
+        else return RETURN_ERROR;
     }
 
-    //Изменение проекта по идентификатору с учетом принадлежности проекта
+    /**
+     * Изменение проекта по идентификатору с учетом принадлежности проекта
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int updateProjectById() throws ProjectNotFoundException {
         System.out.println("UPDATE PROJECT");
         System.out.println(PROJECT_ID_ENTER);
@@ -141,41 +174,62 @@ public class ProjectService extends AbstractService {
             final String description = scanner.nextLine();
             update(project.getId(), name, description);
             System.out.println("OK");
-            return 0;
+            return RETURN_OK;
         }
-        else return -1;
+        else return RETURN_ERROR;
     }
 
-    //Поиск проекта по индексу
+    /**
+     * Поиск проекта по индексу
+     * @param index Индекс
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project findByIndex(int index) throws ProjectNotFoundException {
         return projectRepository.findByIndex(index);
     }
 
-    //Просмотр списка проектов по индексу
+    /**
+     * Просмотр списка проектов по индексу
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int viewProjectByIndex() throws ProjectNotFoundException {
         System.out.println(PROJECT_INDEX_ENTER);
         final Integer index = control.scannerIndexIsInteger();
         if (index != null) {
             final Project project = findByIndex(index);
             viewProject(project);
-            return 0;
+            return RETURN_OK;
         }
-        return -1;
+        return RETURN_ERROR;
     }
 
-    //Поиск проекта по индексу с учетом принадлежности пользователю текущей сессии
+    /**
+     * Поиск проекта по индексу с учетом принадлежности пользователю текущей сессии
+     * @param index Индекс
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project findByIndexUserId(int index) throws ProjectNotFoundException {
         if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return projectRepository.findByIndex(index);
         throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
-    //Поиск проекта по наименованию
+    /**
+     * Поиск проекта по наименованию
+     * @param name Наименование
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public List<Project> findByName(String name) throws ProjectNotFoundException {
         return projectRepository.findByName(name);
     }
 
-    //Просмотр списка проектов по наименованию
+    /**
+     * Просмотр списка проектов по наименованию
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int viewProjectByName() throws ProjectNotFoundException {
         System.out.println(PROJECT_NAME_ENTER);
         String name = scanner.nextLine();
@@ -183,10 +237,15 @@ public class ProjectService extends AbstractService {
         for (Project project: projects) {
             viewProject(project);
         }
-        return 0;
+        return RETURN_OK;
     }
 
-    //Поиск проекта по наименованию с учетом принадлежности пользователю текущей сессии
+    /**
+     * Поиск проекта по наименованию с учетом принадлежности пользователю текущей сессии
+     * @param name Наименование
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public List<Project> findByNameUserId(String name) throws ProjectNotFoundException {
         for (Project project: projectRepository.findByName(name)) {
             return projectRepository.findByName(name);
@@ -194,24 +253,35 @@ public class ProjectService extends AbstractService {
         throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
-    //Поиск проекта по идентификатору
+    /**
+     * Поиск проекта по идентификатору
+     * @param id идентификатор проекта
+     * @return Проект
+     * @throws ProjectNotFoundException
+     */
     public Project findById(Long id) throws ProjectNotFoundException {
         return projectRepository.findById(id);
     }
 
-    //Просмотр проекта по идентификатору
+    /**
+     * Просмотр проекта по идентификатору
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int viewProjectById() throws ProjectNotFoundException {
         System.out.println(PROJECT_ID_ENTER);
         final Long id = control.scannerIdIsLong();
         if (id != null) {
             final Project project = findById(id);
             viewProject(project);
-            return 0;
+            return RETURN_OK;
         }
-        return -1;
+        return RETURN_ERROR;
     }
 
-    //Просмотр проекта
+    /**
+     * Просмотр проекта
+     * @param project Проект
+     */
     public void viewProject(final Project project) {
         //Проверка на авторизацию польователя
         if (Application.userIdCurrent == null) {
@@ -228,45 +298,47 @@ public class ProjectService extends AbstractService {
         }
     }
 
-    public void clear() {
-        projectRepository.clear();
-        System.out.println("CLEAR ALL PROJECTS. OK.");
-    }
-
-    //Удаление всех проектов (доступно только администраторам).
+    /**
+     * Удаление всех проектов (доступно только администраторам).
+     */
     public int clearProject() {
         if (userService.findByUserId(Application.userIdCurrent) == null) {
             systemService.displayForAdminOnly();
-            return -1;
+            return RETURN_ERROR;
         }
         if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
             System.out.println("CLEAR PROJECT");
-            clear();
-            System.out.println("OK");
-            return 0;
+            projectRepository.clear();
+            System.out.println("CLEAR ALL PROJECTS. OK.");
+            return RETURN_OK;
         }
         else {
             systemService.displayForAdminOnly();
-            return -1;
+            return RETURN_ERROR;
         }
     }
 
-    //Cписок проектов.
+    /**
+     * Cписок проектов.
+     */
     public int listProject() {
         //Проверка на авторизацию пользователя
         if (Application.userIdCurrent == null) {
             System.out.println("LIST PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
-            return -1;
+            return RETURN_ERROR;
         }
         else {
             System.out.println("LIST PROJECTS");
             viewProjects(findAll());
             System.out.println("OK");
-            return 0;
+            return RETURN_OK;
         }
     }
 
-    //Просмотр списка проектов.
+    /**
+     * Просмотр списка проектов.
+     * @param projects Проекты
+     */
     public void viewProjects (final List<Project> projects) {
         int index = 1;
         projectSortByName(projects);
@@ -285,7 +357,12 @@ public class ProjectService extends AbstractService {
         }
     }
 
-    //Поиск проекта по идентификатору с учетом принадлежности пользователю текущей сессии
+    /**
+     * Поиск проекта по идентификатору с учетом принадлежности пользователю текущей сессии
+     * @param id идентификатор проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project findByIdUserId(Long id) throws ProjectNotFoundException {
         if (projectRepository.findById(id).getUserid() == null)
             return projectRepository.findById(id);
@@ -294,19 +371,32 @@ public class ProjectService extends AbstractService {
         throw new ProjectNotFoundException(PROJECT_FOREIGN);
     }
 
-    //Удаление проекта по идентификатору
+    /**
+     * Удаление проекта по идентификатору
+     * @param id идентификатор проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project removeById(Long id) throws ProjectNotFoundException {
         return projectRepository.removeById(id);
     }
 
-    //Удаление проекта по идентификатору с учетом принадлежности пользователю текущей сессии
+    /**
+     * Удаление проекта по идентификатору с учетом принадлежности пользователю текущей сессии
+     * @param id идентификатор проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project removeByIdUserId(Long id) throws ProjectNotFoundException {
         if (projectRepository.findById(id).getUserid().equals(Application.userIdCurrent))
             return projectRepository.removeById(id);
         throw new ProjectNotFoundException(PROJECT_FOREIGN +"PROJECT NOT REMOVED.");
     }
 
-    //Удаление проекта по идентификатору с учетом принадлежности проекта
+    /**
+     * Удаление проекта по идентификатору с учетом принадлежности проекта
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int removeProjectById() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT BY ID");
         System.out.println(PROJECT_ID_ENTER);
@@ -314,24 +404,37 @@ public class ProjectService extends AbstractService {
         if (id != null) {
             removeByIdUserId(id);
             System.out.println("OK");
-            return 0;
+            return RETURN_OK;
         }
-        else return -1;
+        else return RETURN_ERROR;
     }
 
-    //Удаление проекта по индексу
+    /**
+     * Удаление проекта по индексу
+     * @param index Индекс проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project removeByIndex(int index) throws ProjectNotFoundException {
         return projectRepository.removeByIndex(index);
     }
 
-    //Удаление проекта по индексу с учетом принадлежности пользователю текущей сессии
+    /**
+     * Удаление проекта по индексу с учетом принадлежности пользователю текущей сессии
+     * @param index Индекс проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project removeByIndexUserId(int index) throws ProjectNotFoundException {
         if (projectRepository.findByIndex(index).getUserid().equals(Application.userIdCurrent))
             return projectRepository.removeByIndex(index);
         throw new ProjectNotFoundException(PROJECT_FOREIGN +"PROJECT NOT REMOVED.");
     }
 
-    //Удаление проекта по индексу с учетом принадлежности проекта
+    /**
+     * Удаление проекта по индексу с учетом принадлежности проекта
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int removeProjectByIndex() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT BY INDEX");
         System.out.println(PROJECT_INDEX_ENTER);
@@ -339,32 +442,46 @@ public class ProjectService extends AbstractService {
         if (index != null) {
             removeByIndexUserId(index);
             System.out.println("OK");
-            return 0;
+            return RETURN_OK;
         }
-        else return -1;
+        else return RETURN_ERROR;
     }
 
-    //Сортировка проектов по наименованию
+    /**
+     * Сортировка проектов по наименованию
+     * @param projects проекты
+     * @return лист проектов, отсортированный по наименованию
+     */
     public List<Project> projectSortByName(List<Project> projects) {
         Collections.sort(projects, Project.ProjectSortByName);
         return projects;
     }
 
-    //Добавление проекта пользователю.
+    /**
+     * Добавление проекта пользователю.
+     * @param userId идентификатор пользователя
+     * @param projectId идентификатор проекта
+     * @return Проект
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public Project addProjectToUser(final Long userId, final Long projectId) throws ProjectNotFoundException {
         final Project project = projectRepository.findById(projectId);
         project.setUserid(userId);
         return project;
     }
 
-    //Добавление принадлежности проекта пользователю по идентификатору проекта и логину пользователя.
+    /**
+     * Добавление принадлежности проекта пользователю по идентификатору проекта и логину пользователя.
+     * @return
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int addProjectToUser() throws ProjectNotFoundException {
         System.out.println("ADD PROJECT TO USER");
         System.out.println("PLEASE ENTER LOGIN:");
         final User user1 = userService.findByLogin(scanner.nextLine());
         if (user1 == null) {
             System.out.println("LOGIN NOT EXIST!");
-            return -1;
+            return RETURN_ERROR;
         }
         else {
             final Long userId = user1.getUserid();
@@ -375,15 +492,18 @@ public class ProjectService extends AbstractService {
                     findByIdUserId(projectId);
                     addProjectToUser(userId, projectId);
                     System.out.println("OK");
-                    return 0;
+                    return RETURN_OK;
                 }
-                return -1;
+                return RETURN_ERROR;
             }
         }
-        return -1;
+        return RETURN_ERROR;
     }
 
-    //Удаление принадлежности проекта пользователю по идентификатору задачи.
+    /**
+     * Удаление принадлежности проекта пользователю по идентификатору задачи.
+     * @throws ProjectNotFoundException Проект не найден
+     */
     public int removeProjectFromUser() throws ProjectNotFoundException {
         System.out.println("REMOVE PROJECT FROM USER");
         System.out.println(PROJECT_ID_ENTER);
@@ -392,15 +512,15 @@ public class ProjectService extends AbstractService {
             final Project project = findByIdUserId(projectId);
             if (project.getUserid() == null) {
                 System.out.println("PROJECT NOT HAVE USER.");
-                return -1;
+                return RETURN_ERROR;
             }
             if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
                 project.setUserid(null);
                 System.out.println("ОК");
-                return 0;
+                return RETURN_OK;
             }
         }
-        return -1;
+        return RETURN_ERROR;
     }
 
 }

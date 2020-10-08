@@ -80,12 +80,14 @@ public class SystemService {
         System.out.println();
         System.out.println("object-json - Write projects, tasks, users in json file.");
         System.out.println("object-xml- Write projects, tasks, users in xml file.");
+        System.out.println("read-json - Read projects, tasks, users from json file.");
+        System.out.println("read-xml - Read projects, tasks, users from xml file.");
 
         return 0;
     }
 
     public static int displayVersion() {
-        System.out.println("1.0.18");
+        System.out.println("1.0.22");
         return 0;
     }
 

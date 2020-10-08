@@ -41,7 +41,9 @@ public class UserService extends AbstractService {
         return instance;
     }
 
-    //Запись всех пользователей в файл формата JSON.
+    /**
+     * Запись всех пользователей в файл формата JSON.
+     */
     public int writeUserJson() {
         final List<User> users = findAll();
         if (users == null || users.isEmpty()) return RETURN_ERROR;
@@ -60,7 +62,9 @@ public class UserService extends AbstractService {
         return RETURN_OK;
     }
 
-    //Запись всех пользователей в файл формата XML.
+    /**
+     * Запись всех пользователей в файл формата XML.
+     */
     public int writeUserXML() {
         final List<User> users = findAll();
         if (users == null || users.isEmpty()) return RETURN_ERROR;
@@ -75,30 +79,57 @@ public class UserService extends AbstractService {
         return RETURN_OK;
     }
 
-    //Поиск всех пользователей.
+    /**
+     * Поиск всех пользователей.
+     */
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    //Поиск пользователя по логину.
+    /**
+     * Поиск пользователя по логину.
+     * @param login Логин
+     * @return Пользователь
+     */
     public User findByLogin(String login) {
         if (login == null || login.isEmpty()) return null;
         return userRepository.findByLogin(login);
     }
 
-    //Поиск пользователя по идентификатору.
+    /**
+     * Поиск пользователя по идентификатору.
+     * @param userId идентификатор пользователя
+     * @return Пользователь
+     */
     public User findByUserId(Long userId) {
         if (userId == null) return null;
         return userRepository.findById(userId);
     }
 
-    //Создание пользователя.
+    /**
+     * Создание пользователя.
+     * @param login Логин
+     * @return Пользователь
+     */
     public User create(String login) {
         if (login == null || login.isEmpty()) return null;
         return userRepository.create(login);
     }
 
-    //Создание пользователя.
+    /**
+     * Создание пользователя.
+     * @param userid Идентификатор пользователя
+     * @param login Логин
+     * @param password Пароль
+     * @param firstname Имя
+     * @param lastname Фамилия
+     * @param middlname Отчество
+     * @param email Электронная почта
+     * @param role Роль
+     * @param adminTrue Признак администратора
+     * @return Пользователь
+     */
+    //
     public User create(final Long userid, String login, String password, String firstname, String lastname,
                        String middlname, String email, RoleEnum role, boolean adminTrue) {
         if (login == null || login.isEmpty()) return null;
@@ -106,49 +137,82 @@ public class UserService extends AbstractService {
         return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
     }
 
-    //Создание пользователя по логину.
+    /**
+     * Создание пользователя по логину.
+     * @param login Логин
+     * @return Пользователь
+     */
     public User removeByLogin(String login) {
         if (login == null || login.isEmpty()) return null;
         return userRepository.removeByLogin(login);
     }
 
-    //Изменение роли пользователя.
+    /**
+     * Изменение роли пользователя.
+     * @param login Логин
+     * @param role Роль
+     * @return Пользователь
+     */
     public User updateRole(String login, String role) {
         if (login == null || login.isEmpty()) return null;
         if (role == null || role.isEmpty()) return null;
         return userRepository.updateRole(login, role);
     }
 
-    //Изменение профиля пользователя.
+    /**
+     * Изменение профиля пользователя.
+     * @param userId Идентификатор пользователя
+     * @param login Логин
+     * @param firstname Имя
+     * @param middlname Отчество
+     * @param lastname Фамилия
+     * @param email Электронная почта
+     * @return Пользователь
+     */
     public User updateProfile(Long userId, String login, String firstname, String middlname, String lastname, String email) {
         if (login == null || login.isEmpty()) return null;
         return userRepository.updateProfile(userId, login, firstname, middlname, lastname, email);
     }
 
-    //Изменение пароля пользователя.
+    /**
+     * Изменение пароля пользователя.
+     * @param userId Идентификатор пользователя
+     * @param password Пароль
+     * @return Пользователь
+     */
     public User changePassword(Long userId, String password) {
         if (userId == null) return null;
         if (password == null || password.isEmpty()) return null;
         return userRepository.changePassword(userId, password);
     }
 
-    //Сортировка пользователей по логину.
+    /**
+     * Сортировка пользователей по логину.
+     * @param users Список пользователией
+     * @return Список пользователией
+     */
     public List<User> userSortByLogin(List<User> users) {
         Collections.sort(users, User.UserSortByLogin);
         return users;
     }
 
-    //Сортировка пользователей по фамилии, имени, отчеству.
+    /**
+     * Сортировка пользователей по фамилии, имени, отчеству.
+     * @param users Список пользователией
+     * @return Список пользователией
+     */
     public List<User> userSortByFIO(List<User> users) {
         Collections.sort(users, User.UserSortByFIO);
         return users;
     }
 
-    //Регистрация пользователя.
+    /**
+     * Регистрация пользователя.
+     */
     public int createUser() {
         System.out.println("USER REGISTRATION");
         final String login = isLoginExists();
-        if (login == null) { return -1; }
+        if (login == null) { return RETURN_ERROR; }
         else {
             System.out.println("PLEASE ENTER YOUR FIRSTNAME:");
             final String firstname = scanner.nextLine();
@@ -164,7 +228,7 @@ public class UserService extends AbstractService {
             if (password == null || password.isEmpty()) {
                 logger.info("PASSWORD MAST NOT BE EMPTY!");
                 logger.info("FAIL");
-                return -1;
+                return RETURN_ERROR;
             }
             //По умолчанию при регистрации присваивается роль USER. Изменить роль может только администратор.
             final RoleEnum role = RoleEnum.USER;
@@ -173,23 +237,29 @@ public class UserService extends AbstractService {
             create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
             logger.trace("USER REGISTRATION: USERID = {} LOGIN = {} FIRSTNAME = {} LASTNAME = {} MIDDLNAME = {} EMAIL = {}", userid, login, firstname, lastname, middlname, email );
             System.out.println("REGISTRATION COMPLETED SUCCESSFULLY.");
-            return 0;
+            return RETURN_OK;
         }
     }
 
-    //Просмотр пользователей.
+    /**
+     * Просмотр пользователей.
+     * @param sort 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
+     */
     public int listUser (int sort) {
         System.out.println("LIST USER");
         viewUsers(findAll(), sort);
         System.out.println("OK");
-        return 0;
+        return RETURN_OK;
     }
 
-    //Просмотр списка пользователей.
+    /**
+     * Просмотр списка пользователей.
+     * @param users Пользователи
+     * @param sort 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
+     */
     public void viewUsers (final List<User> users, int sort) {
         if (users == null || users.isEmpty()) return;
         int index = 1;
-        //Параметр 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
         if (sort == 1) userSortByLogin(users);
         if (sort == 2) userSortByFIO(users);
         for (final User user: users) {
@@ -201,7 +271,10 @@ public class UserService extends AbstractService {
         }
     }
 
-    //Удаление пользователя по логину (доступно только администраторам).
+    /**
+     * Удаление пользователя по логину (доступно только администраторам).
+     * @param userId Идентификатор пользователя текущей сессии
+     */
     public int removeUserByLogin(Long userId) {
         System.out.println("REMOVE USER BY LOGIN");
         if (findByUserId(userId).isAdminTrue()) {
@@ -212,15 +285,19 @@ public class UserService extends AbstractService {
             if (login == null) System.out.println("FAIL");
             logger.trace("USER DELETED: LOGIN = {}", login);
             System.out.println("USER DELETED.");
-            return 0;
+            return RETURN_OK;
         }
         else {
             systemService.displayForAdminOnly();
-            return -1;
+            return RETURN_ERROR;
         }
     }
 
-    //Изменение ролей пользователя по логину (доступно только администраторам).
+    /**
+     * Изменение ролей пользователя по логину (доступно только администраторам).
+     * @param userId идентификатор пользователя текущей сессии
+     * @return
+     */
     public int updateUserRole(Long userId) {
         System.out.println("[UPDATE USER DATA]");
         if (findByUserId(userId).isAdminTrue()) {
@@ -229,7 +306,7 @@ public class UserService extends AbstractService {
             final User user = findByLogin(login);
             if (user == null) {
                 System.out.println("FAIL");
-                return 0;
+                return RETURN_OK;
             }
             System.out.println("PLEASE ENTER ROLE: ADMIN OR USER");
             final String role = scanner.nextLine();
@@ -237,20 +314,23 @@ public class UserService extends AbstractService {
                 updateRole(login, role);
                 logger.trace("USER ROLE: LOGIN = {} ROLE = {}", login, role);
                 System.out.println("OK");
-                return 0;
+                return RETURN_OK;
             }
             else {
                 System.out.println("UNKNOWN ROLE!");
-                return 0;
+                return RETURN_OK;
             }
         }
         else {
             systemService.displayForAdminOnly();
-            return -1;
+            return RETURN_ERROR;
         }
     }
 
-    //Аутентификация пользователя.
+    /**
+     * Аутентификация пользователя.
+     * @return идентификатор авторизированного пользователя
+     */
     public Long authentication() {
         //Проверка на существование логина
         System.out.println("PLEASE ENTER YOUR LOGIN:");
@@ -272,7 +352,10 @@ public class UserService extends AbstractService {
         }
     }
 
-    //Просмотр профиля текущего пользователя.
+    /**
+     * Просмотр профиля текущего пользователя.
+     * @param userId Идентификатор пользоваеля
+     */
     public int userProfile(final Long userId) {
         if (userId == null) return -1;
         System.out.println("CURRENT SESSION:");
@@ -283,14 +366,17 @@ public class UserService extends AbstractService {
         System.out.println("LASTNAME:" + findByUserId(userId).getLastname());
         System.out.println("EMAIL:" + findByUserId(userId).getEmail());
         System.out.println("ROLE:" + findByUserId(userId).getRole().name());
-        return 0;
+        return RETURN_OK;
     }
 
-    //Изменение профиля текущего пользователя.
+    /**
+     * Изменение профиля текущего пользователя.
+     * @param userId идентификатор пользователя
+     */
     public int updateProfile(final Long userId) {
         final String login = isLoginExists();
         if (login == null) {
-            return -1;
+            return RETURN_ERROR;
         }
         else {
             System.out.println("PLEASE ENTER YOUR NEW FIRSTNAME:");
@@ -305,18 +391,21 @@ public class UserService extends AbstractService {
             logger.trace("PROFILE UPDATED. LOGIN = {}", login);
             System.out.println("PROFILE UPDATED.");
             userProfile(userId);
-            return 0;
+            return RETURN_OK;
         }
     }
 
-    //Изменение пароля пользователя.
+    /**
+     * Изменение пароля пользователя.
+     * @param userIdCurrent Идентификатор текущего пользователя
+     */
     public int changePassword(Long userIdCurrent) {
         System.out.println("PLEASE ENTER LOGIN:");
         final String login1 = scanner.nextLine();
         final User user1 = findByLogin(login1);
         if (user1 == null) {
             System.out.println("LOGIN NOT EXIST!");
-            return -1;
+            return RETURN_ERROR;
         }
         //Проверка логина текущего пользователя или на права администратора
         if (user1.getUserid().equals(userIdCurrent) || findByUserId(userIdCurrent).isAdminTrue()) {
@@ -326,7 +415,7 @@ public class UserService extends AbstractService {
             if (password1 == null || password1.isEmpty()) {
                 System.out.println("PASSWORD NOT BE EMPTY!");
                 System.out.println("FAIL");
-                return -1;
+                return RETURN_ERROR;
             }
             //Проверка на подтверждение пароля
             System.out.println("CONFIRM PASSWORD:");
@@ -335,18 +424,21 @@ public class UserService extends AbstractService {
                 changePassword(user1.getUserid(), password1);
                 logger.trace("PASSWORD CHANGE. LOGIN: {} ", user1.getLogin());
                 System.out.println("PASSWORD CHANGE OK.");
-                return 0;
+                return RETURN_OK;
             }
             else {
                 System.out.println("CONFIRM PASSWORD INCORRECT!");
-                return -1;
+                return RETURN_ERROR;
             }
         }
         else System.out.println("NO ACCESS FOR PASSWORD CHANGE! ERROR!.");
-        return -1;
+        return RETURN_ERROR;
     }
 
-    //Проверка на существование логина.
+    /**
+     * Проверка на существование логина.
+     * @return существующий логин
+     */
     public String isLoginExists() {
         System.out.println("PLEASE ENTER YOUR NEW LOGIN:");
         final String login = scanner.nextLine();
@@ -364,21 +456,25 @@ public class UserService extends AbstractService {
         return login;
     }
 
-    //Окончание сессии текущего пользователя.
+    /**
+     * Окончание сессии текущего пользователя.
+     */
     public int exitUser() {
         logger.trace("SESSION ENDED. LOGIN: {}", findByUserId(Application.userIdCurrent).getLogin());
         Application.userIdCurrent = null;
         Application.history.clear();
         System.out.println("YOUR SESSION ENDED.");
-        return 0;
+        return RETURN_OK;
     }
 
-    //Команда аутентификации пользователя.
+    /**
+     * Команда аутентификации пользователя.
+     */
     public int signUser() {
         Application.userIdCurrent = authentication();
         userProfile(Application.userIdCurrent);
         logger.trace("SESSION BEGIN. LOGIN: {}", findByUserId(Application.userIdCurrent).getLogin());
-        return 0;
+        return RETURN_OK;
     }
 
 }

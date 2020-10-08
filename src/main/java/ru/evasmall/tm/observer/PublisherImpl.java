@@ -36,8 +36,8 @@ public class PublisherImpl implements Publisher {
             if (history.size() > 10) history.pollFirst();
             try {
                 int i = 0;
-                for (Listener listener : listeners){
-                    i = i +listener.update(command);
+                for (Listener Listener : listeners){
+                    i = i + Listener.update(command);
                 }
                 //Логирование ошибок, если команда не опознана ни одним из слушателей.
                 if (i == 4) logger.error("ERROR! Unknown program argument.");

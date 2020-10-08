@@ -17,7 +17,7 @@
 
 | Start |
 | ------ |
-| java -jar target/ev-task-manager-1.0.18.jar |
+| java -jar target/ev-task-manager-1.0.22.jar |
 
 | Terminal commands | 
 | ------ | 
@@ -57,3 +57,5 @@
 | project-remove-by-index-with-tasks - Remove project by index with tasks (for project of current user). | |
 | object-json - Write projects, tasks, users in json file. | |
 | object-xml - Write projects, tasks, users in xml file. | |
+| read-json - Read projects, tasks, users from json file. | |
+| read-xml- Read projects, tasks, users from xml file. | |
