@@ -1,9 +1,5 @@
 package ru.evasmall.tm.service;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.Application;
@@ -13,12 +9,14 @@ import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.util.HashCode;
 
-import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.evasmall.tm.constant.FileNameConst.*;
-import static ru.evasmall.tm.constant.TerminalConst.*;
+import static ru.evasmall.tm.constant.FileNameConst.USER_JSON;
+import static ru.evasmall.tm.constant.FileNameConst.USER_XML;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
+import static ru.evasmall.tm.constant.TerminalMassage.UNAUTHORIZED_USER;
 
 public class UserService extends AbstractService {
 
@@ -45,19 +43,11 @@ public class UserService extends AbstractService {
      * Запись всех пользователей в файл формата JSON.
      */
     public int writeUserJson() {
-        final List<User> users = findAll();
-        if (users == null || users.isEmpty()) return RETURN_ERROR;
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        String prettyJson = "";
-        try {
-            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(USER_JSON));
-            prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userSortByFIO(users));
-            objectOutputStream.writeObject(prettyJson);
-            objectOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
+        userRepository.writeJson(USER_JSON);
         System.out.println("USERS " + TerminalMassage.DATA_WRITTEN_FILES);
         return RETURN_OK;
     }
@@ -66,17 +56,47 @@ public class UserService extends AbstractService {
      * Запись всех пользователей в файл формата XML.
      */
     public int writeUserXML() {
-        final List<User> users = findAll();
-        if (users == null || users.isEmpty()) return RETURN_ERROR;
-        XmlMapper xmlMapper = new XmlMapper();
-        File file = new File(USER_XML);
-        try {
-            xmlMapper.writeValue(file, users);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
+        userRepository.writeXML(USER_XML);
         System.out.println("USERS " + TerminalMassage.DATA_WRITTEN_FILES);
         return RETURN_OK;
+    }
+
+    /**
+     * Чтение и перезапись всех пользователей из файла формата JSON (только для администраторов).
+     */
+    public int readUserJson() {
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            userRepository.readJson(USER_JSON, User.class);
+            System.out.println("USERS " + TerminalMassage.DATA_READ_FILES);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
+    }
+
+    /**
+     * Чтение и перезапись всех пользователей из файла формата XML (только для администраторов).
+     */
+    public int readUserXML() {
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            userRepository.readXML(USER_XML, User.class);
+            System.out.println("USERS " + TerminalMassage.DATA_READ_FILES);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
     }
 
     /**

@@ -1,42 +1,26 @@
 package ru.evasmall.tm.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.Comparator;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@ToString
-public class Task {
-
-    private Long id = System.nanoTime();
-
-    private String name = "";
-
-    private String description = "";
+public class Task extends AbstractEntity {
 
     private Long projectId;
 
-    private Long userid = System.nanoTime();
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Task() {
+    }
 
     public Task(String name) {
-        this.name = name;
+        super(name);
     }
 
-    @Override
-    public String toString() {
-        return id + ": " + name;
+    public Task(String name, String description) {
+        super(name, description);
     }
-
-    public final static Comparator<Task> TaskSortByName = new Comparator<Task>() {
-        @Override
-        public int compare(Task t1, Task t2) {
-            return t1.getName().compareTo(t2.getName());
-        }
-    };
 
 }

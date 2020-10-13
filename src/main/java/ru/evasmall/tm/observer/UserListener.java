@@ -52,6 +52,12 @@ public class UserListener implements Listener {
                 case CMD_OBJECT_WRITE_XML:
                     u.writeUserXML();
                     return RETURN_OK;
+                case CMD_OBJECT_READ_JSON:
+                    u.readUserJson();
+                    return RETURN_OK;
+                case CMD_OBJECT_READ_XML:
+                    u.readUserXML();
+                    return RETURN_OK;
 
                 default:
                     return RETURN_FOREIGN_COMMAND;

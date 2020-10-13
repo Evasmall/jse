@@ -1,9 +1,5 @@
 package ru.evasmall.tm.service;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.constant.TerminalMassage;
 import ru.evasmall.tm.entity.Task;
@@ -12,12 +8,13 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.util.Control;
 
-import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.evasmall.tm.constant.TerminalConst.*;
-import static ru.evasmall.tm.constant.FileNameConst.*;
+import static ru.evasmall.tm.constant.FileNameConst.TASK_JSON;
+import static ru.evasmall.tm.constant.FileNameConst.TASK_XML;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
 import static ru.evasmall.tm.constant.TerminalMassage.*;
 
 public class TaskService extends AbstractService {
@@ -48,19 +45,11 @@ public class TaskService extends AbstractService {
      * Запись всех задач в файл формата JSON.
      */
     public int writeTaskJson() {
-        final List<Task> tasks = findAll();
-        if (tasks == null || tasks.isEmpty()) return RETURN_ERROR;
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        String prettyJson = "";
-        try {
-            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(TASK_JSON));
-            prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(taskSortByName(tasks));
-            objectOutputStream.writeObject(prettyJson);
-            objectOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
+        taskRepository.writeJson(TASK_JSON);
         System.out.println("TASKS " + TerminalMassage.DATA_WRITTEN_FILES);
         return RETURN_OK;
     }
@@ -69,31 +58,47 @@ public class TaskService extends AbstractService {
      * Запись всех задач в файл формата XML.
      */
     public int writeTaskXML() {
-        final List<Task> tasks = findAll();
-        if (tasks == null || tasks.isEmpty()) return RETURN_ERROR;
-        XmlMapper xmlMapper = new XmlMapper();
-        File file = new File(TASK_XML);
-        try {
-            xmlMapper.writeValue(file, tasks);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-            System.out.println("TASK " + TerminalMassage.DATA_WRITTEN_FILES);
-            return RETURN_OK;
+        taskRepository.writeXML(TASK_XML);
+        System.out.println("TASK " + TerminalMassage.DATA_WRITTEN_FILES);
+        return RETURN_OK;
     }
 
     /**
-     * Чтение всех задач из файла формата JSON.
+     * Чтение и перезапись всех задач из файла формата JSON (только для администраторов).
      */
     public int readTaskJson() {
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            taskRepository.readJson(TASK_JSON, Task.class);
+            System.out.println("TASKS " + TerminalMassage.DATA_READ_FILES);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
     }
 
     /**
-     * Чтение всех задач из файла формата XML.
+     * Чтение и перезапись всех задач из файла формата XML (только для администраторов).
      */
     public int readTaskXML() {
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            System.out.println("TASKS " + TerminalMassage.DATA_READ_FILES);
+            taskRepository.readXML(TASK_XML, Task.class);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
     }
 
     /**
@@ -196,7 +201,7 @@ public class TaskService extends AbstractService {
     public int clearTask() {
         if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
             System.out.println("CLEAR TASK");
-            taskRepository.clear();
+            taskRepository.clearObject();
             System.out.println("CLEAR ALL TASKS. OK.");
             return RETURN_OK;
         }
@@ -213,7 +218,7 @@ public class TaskService extends AbstractService {
     public void viewTask(final Task task) {
         if (task == null) return;
         if (Application.userIdCurrent == null) {
-            System.out.println("TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
+            System.out.println(UNAUTHORIZED_USER);
         }
         else {
             System.out.println("VIEW TASK");
@@ -429,7 +434,7 @@ public class TaskService extends AbstractService {
      * @return Отсортированные задачи
      */
     public List<Task> taskSortByName(List<Task> tasks) {
-        Collections.sort(tasks, Task.TaskSortByName);
+        Collections.sort(tasks, Task.ObjectSortByName);
         return tasks;
     }
 
@@ -439,7 +444,7 @@ public class TaskService extends AbstractService {
     public int listTask() {
         //Проверка на авторизацию польователя
         if (Application.userIdCurrent == null) {
-            System.out.println("LIST TASKS NOT ACCESS FOR UNAUTHORIZED USER!");
+            System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
         else {

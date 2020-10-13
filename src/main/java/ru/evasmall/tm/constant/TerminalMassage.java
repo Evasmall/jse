@@ -13,5 +13,8 @@ public class TerminalMassage {
     public static final String TASK_DESCRIPTION_ENTER = "PLEASE ENTER TASK DESCRIPTION:";
     public static final String TASK_FOREIGN ="TASK IS FOREIGN. FAIL.";
     public static final String DATA_WRITTEN_FILES ="DATA IS WRITTEN TO FILES. OK.";
+    public static final String DATA_READ_FILES ="DATA IS READ FROM FILES. OK.";
+
+    public static final String UNAUTHORIZED_USER ="LIST DATA NOT ACCESS FOR UNAUTHORIZED USER!";
 
 }

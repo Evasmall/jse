@@ -1,17 +1,32 @@
 package ru.evasmall.tm.repository;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
+
 public abstract class AbstractRepository<T> {
 
-    public final List<T> objects = new ArrayList<>();
+    public List<T> objects = new ArrayList<>();
 
-    public final HashMap<String, HashSet<T>> objectsName = new HashMap<>();
+    public HashMap<String, HashSet<T>> objectsName = new HashMap<>();
 
     public abstract String getObjectName(final T object);
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final XmlMapper xmlMapper = new XmlMapper();
 
     public List<T> findAll() {
         return objects;
@@ -42,9 +57,81 @@ public abstract class AbstractRepository<T> {
         return objects.size();
     }
 
-    public void clear() {
+    public T createObject(final T object) {
+        objects.add(object);
+        addObjectToMap(object);
+        return object;
+    }
+
+    public void clearObject() {
         objects.clear();
         objectsName.clear();
+    }
+
+    /**
+     * Запись всех объектов в файл формата JSON.
+     */
+    public int writeJson(String fileName) {
+        final List<T> objectsJson = findAll();
+        if (objectsJson == null || objectsJson.isEmpty()) return RETURN_ERROR;
+        try {
+            File file = new File(fileName);
+            objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            objectMapper.writeValue(file, objectsJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return RETURN_OK;
+    }
+
+    /**
+     * Чтение и перезапись всех объектов из файла формата JSON.
+     */
+    public int readJson(String fileName, Class clazz) {
+        try {
+            objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            List<T> objectFromJson = objectMapper.readValue(new File(fileName), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz));
+            clearObject();
+            for (T object : objectFromJson) {
+                createObject(object);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return RETURN_ERROR;
+        }
+        return RETURN_OK;
+    }
+
+    /**
+     * Запись всех объектов в файл формата XML.
+     */
+    public int writeXML(String fileName) {
+        final List<T> objectsXML = findAll();
+        if (objectsXML == null || objectsXML.isEmpty()) return RETURN_ERROR;
+        try {
+            File file = new File(fileName);
+            xmlMapper.writeValue(file, objectsXML);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return RETURN_OK;
+    }
+
+    /**
+     * Чтение и перезапись всех объектов из файла формата XML.
+     */
+    public int readXML(String fileName, Class clazz) {
+        try {
+            List<T> objectFromXML = xmlMapper.readValue(new File(fileName), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz));
+            clearObject();
+            for (T object : objectFromXML) {
+                createObject(object);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return RETURN_ERROR;
+        }
+        return RETURN_OK;
     }
 
 }

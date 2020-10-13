@@ -1,8 +1,5 @@
 package ru.evasmall.tm.service;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.constant.TerminalMassage;
@@ -12,12 +9,13 @@ import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.util.Control;
 
-import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.evasmall.tm.constant.FileNameConst.*;
-import static ru.evasmall.tm.constant.TerminalConst.*;
+import static ru.evasmall.tm.constant.FileNameConst.PROJECT_JSON;
+import static ru.evasmall.tm.constant.FileNameConst.PROJECT_XML;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
 import static ru.evasmall.tm.constant.TerminalMassage.*;
 
 public class ProjectService extends AbstractService {
@@ -29,6 +27,8 @@ public class ProjectService extends AbstractService {
     private final Control control = new Control();
 
     private final SystemService systemService = new SystemService();
+
+    private static final XmlMapper xmlMapper = new XmlMapper();
 
     private static ProjectService instance = null;
 
@@ -48,19 +48,11 @@ public class ProjectService extends AbstractService {
      * Запись всех проектов в файл формата JSON.
      */
     public int writeProjectJson() {
-        final List<Project> projects = findAll();
-        if (projects == null || projects.isEmpty()) return RETURN_ERROR;
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        String prettyJson = "";
-        try {
-            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(PROJECT_JSON));
-            prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(projectSortByName(projects));
-            objectOutputStream.writeObject(prettyJson);
-            objectOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
+        projectRepository.writeJson(PROJECT_JSON);
         System.out.println("PROJECTS " + TerminalMassage.DATA_WRITTEN_FILES);
         return RETURN_OK;
     }
@@ -69,31 +61,47 @@ public class ProjectService extends AbstractService {
      * Запись всех проектов в файл формата XML.
      */
     public int writeProjectXML() {
-        final List<Project> projects = findAll();
-        if (projects == null || projects.isEmpty()) return RETURN_ERROR;
-        XmlMapper xmlMapper = new XmlMapper();
-        File file = new File(PROJECT_XML);
-        try {
-            xmlMapper.writeValue(file, projects);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
+        projectRepository.writeXML(PROJECT_XML);
         System.out.println("PROJECTS " + TerminalMassage.DATA_WRITTEN_FILES);
         return RETURN_OK;
     }
 
     /**
-     * Чтение всех проектов из файла формата JSON.
+     * Чтение и перезапись всех проектов из файла формата JSON (только для администраторов).
      */
     public int readProjectJson() {
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            projectRepository.readJson(PROJECT_JSON, Project.class);
+            System.out.println("PROJECTS " + TerminalMassage.DATA_READ_FILES);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
     }
 
     /**
-     * Чтение всех проектов из файла формата XML.
+     * Чтение и перезапись всех проектов из файла формата XML (только для администраторов).
      */
     public int readProjectXML() {
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            projectRepository.readXML(PROJECT_XML, Project.class);
+            System.out.println("PROJECTS " + TerminalMassage.DATA_READ_FILES);
+            return RETURN_OK;
+        }
+        systemService.displayForAdminOnly();
+        return RETURN_ERROR;
     }
 
     public List<Project> findAll() {
@@ -285,7 +293,7 @@ public class ProjectService extends AbstractService {
     public void viewProject(final Project project) {
         //Проверка на авторизацию польователя
         if (Application.userIdCurrent == null) {
-            System.out.println("PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
+            System.out.println(UNAUTHORIZED_USER);
         }
         else {
             System.out.println("VIEW PROJECT");
@@ -308,7 +316,7 @@ public class ProjectService extends AbstractService {
         }
         if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
             System.out.println("CLEAR PROJECT");
-            projectRepository.clear();
+            projectRepository.clearObject();
             System.out.println("CLEAR ALL PROJECTS. OK.");
             return RETURN_OK;
         }
@@ -324,7 +332,7 @@ public class ProjectService extends AbstractService {
     public int listProject() {
         //Проверка на авторизацию пользователя
         if (Application.userIdCurrent == null) {
-            System.out.println("LIST PROJECTS NOT ACCESS FOR UNAUTHORIZED USER!");
+            System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
         else {
@@ -453,7 +461,7 @@ public class ProjectService extends AbstractService {
      * @return лист проектов, отсортированный по наименованию
      */
     public List<Project> projectSortByName(List<Project> projects) {
-        Collections.sort(projects, Project.ProjectSortByName);
+        Collections.sort(projects, Project.ObjectSortByName);
         return projects;
     }
 
