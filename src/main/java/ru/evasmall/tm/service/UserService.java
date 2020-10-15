@@ -262,7 +262,6 @@ public class UserService extends AbstractService {
         int index = 1;
         if (sort == 1) users.sort(Comparator.comparing(User::getLogin));
         if (sort == 2) users.sort(Comparator.comparing(User::getLastname).thenComparing(User::getFirstname).thenComparing(User::getMiddlname));
-       // if (sort == 2) userSortByFIO(users);
         for (final User user: users) {
             System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; LASTNAME: " + user.getLastname() +
                     "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " + user.getMiddlname() +
