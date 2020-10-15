@@ -1,6 +1,5 @@
 package ru.evasmall.tm.service;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import ru.evasmall.tm.Application;
 import ru.evasmall.tm.constant.TerminalMassage;
 import ru.evasmall.tm.entity.Project;
@@ -9,7 +8,7 @@ import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.repository.ProjectRepository;
 import ru.evasmall.tm.util.Control;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static ru.evasmall.tm.constant.FileNameConst.PROJECT_JSON;
@@ -27,8 +26,6 @@ public class ProjectService extends AbstractService {
     private final Control control = new Control();
 
     private final SystemService systemService = new SystemService();
-
-    private static final XmlMapper xmlMapper = new XmlMapper();
 
     private static ProjectService instance = null;
 
@@ -78,7 +75,7 @@ public class ProjectService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             projectRepository.readJson(PROJECT_JSON, Project.class);
             System.out.println("PROJECTS " + TerminalMassage.DATA_READ_FILES);
             return RETURN_OK;
@@ -95,7 +92,7 @@ public class ProjectService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             projectRepository.readXML(PROJECT_XML, Project.class);
             System.out.println("PROJECTS " + TerminalMassage.DATA_READ_FILES);
             return RETURN_OK;
@@ -314,7 +311,7 @@ public class ProjectService extends AbstractService {
             systemService.displayForAdminOnly();
             return RETURN_ERROR;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             System.out.println("CLEAR PROJECT");
             projectRepository.clearObject();
             System.out.println("CLEAR ALL PROJECTS. OK.");
@@ -349,7 +346,7 @@ public class ProjectService extends AbstractService {
      */
     public void viewProjects (final List<Project> projects) {
         int index = 1;
-        projectSortByName(projects);
+        projects.sort(Comparator.comparing(Project::getName));
         for (final Project project: projects) {
             final String login1;
             if (userService.findByUserId(project.getUserid()) == null) {
@@ -456,16 +453,6 @@ public class ProjectService extends AbstractService {
     }
 
     /**
-     * Сортировка проектов по наименованию
-     * @param projects проекты
-     * @return лист проектов, отсортированный по наименованию
-     */
-    public List<Project> projectSortByName(List<Project> projects) {
-        Collections.sort(projects, Project.ObjectSortByName);
-        return projects;
-    }
-
-    /**
      * Добавление проекта пользователю.
      * @param userId идентификатор пользователя
      * @param projectId идентификатор проекта
@@ -522,7 +509,7 @@ public class ProjectService extends AbstractService {
                 System.out.println("PROJECT NOT HAVE USER.");
                 return RETURN_ERROR;
             }
-            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
                 project.setUserid(null);
                 System.out.println("ОК");
                 return RETURN_OK;

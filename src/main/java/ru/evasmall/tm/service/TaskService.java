@@ -8,7 +8,7 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.util.Control;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static ru.evasmall.tm.constant.FileNameConst.TASK_JSON;
@@ -75,7 +75,7 @@ public class TaskService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             taskRepository.readJson(TASK_JSON, Task.class);
             System.out.println("TASKS " + TerminalMassage.DATA_READ_FILES);
             return RETURN_OK;
@@ -92,7 +92,7 @@ public class TaskService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             System.out.println("TASKS " + TerminalMassage.DATA_READ_FILES);
             taskRepository.readXML(TASK_XML, Task.class);
             return RETURN_OK;
@@ -199,7 +199,7 @@ public class TaskService extends AbstractService {
      * Удаление всех задач (функционал доступен только администраторам).
      */
     public int clearTask() {
-        if (userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             System.out.println("CLEAR TASK");
             taskRepository.clearObject();
             System.out.println("CLEAR ALL TASKS. OK.");
@@ -429,16 +429,6 @@ public class TaskService extends AbstractService {
     }
 
     /**
-     * Сортировка задач по наименованию
-     * @param tasks Задачи
-     * @return Отсортированные задачи
-     */
-    public List<Task> taskSortByName(List<Task> tasks) {
-        Collections.sort(tasks, Task.ObjectSortByName);
-        return tasks;
-    }
-
-    /**
      * Cписок задач.
      */
     public int listTask() {
@@ -462,7 +452,7 @@ public class TaskService extends AbstractService {
     public void viewTasks (final List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) return;
         int index = 1;
-        taskSortByName(tasks);
+        tasks.sort(Comparator.comparing(Task::getName));
         for (final Task task: tasks) {
             final String login1;
             if (userService.findByUserId(task.getUserid()) == null) {
@@ -533,7 +523,7 @@ public class TaskService extends AbstractService {
                 System.out.println("TASK NOT HAVE USER.");
                 return RETURN_ERROR;
             }
-            if (task.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdminTrue()) {
+            if (task.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
                 task.setUserid(null);
                 System.out.println("ОК");
                 return RETURN_OK;

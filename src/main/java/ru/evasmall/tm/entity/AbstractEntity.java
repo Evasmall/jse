@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Comparator;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,12 +29,5 @@ public abstract class AbstractEntity {
         this.name = name;
         this.description = description;
     }
-
-    public final static Comparator<AbstractEntity> ObjectSortByName = new Comparator<AbstractEntity>() {
-        @Override
-        public int compare(AbstractEntity a1, AbstractEntity a2) {
-            return a1.getName().compareTo(a2.getName());
-        }
-    };
 
 }

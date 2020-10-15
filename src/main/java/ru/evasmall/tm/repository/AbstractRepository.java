@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,8 @@ import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
 
 public abstract class AbstractRepository<T> {
+
+    private static final Logger logger = LogManager.getLogger(AbstractRepository.class);
 
     public List<T> objects = new ArrayList<>();
 
@@ -79,7 +83,7 @@ public abstract class AbstractRepository<T> {
             objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
             objectMapper.writeValue(file, objectsJson);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage() + "ERROR. DATA NOT WRITTEN.");
         }
         return RETURN_OK;
     }
@@ -96,7 +100,7 @@ public abstract class AbstractRepository<T> {
                 createObject(object);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage() + "ERROR. DATA NOT READ.");
             return RETURN_ERROR;
         }
         return RETURN_OK;
@@ -112,7 +116,7 @@ public abstract class AbstractRepository<T> {
             File file = new File(fileName);
             xmlMapper.writeValue(file, objectsXML);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage() + "ERROR. DATA NOT WRITTEN.");
         }
         return RETURN_OK;
     }
@@ -128,7 +132,7 @@ public abstract class AbstractRepository<T> {
                 createObject(object);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage() + "ERROR. DATA NOT READ.");
             return RETURN_ERROR;
         }
         return RETURN_OK;

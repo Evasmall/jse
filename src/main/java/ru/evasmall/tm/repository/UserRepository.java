@@ -54,7 +54,7 @@ public class UserRepository extends AbstractRepository<User> {
         user.setMiddlname(middlname);
         user.setEmail(email);
         user.setRole(role);
-        user.setAdminTrue(adminTrue);
+        user.setAdmin(adminTrue);
         objects.add(user);
         return user;
     }

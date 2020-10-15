@@ -9,7 +9,7 @@ import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.repository.UserRepository;
 import ru.evasmall.tm.util.HashCode;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static ru.evasmall.tm.constant.FileNameConst.USER_JSON;
@@ -73,7 +73,7 @@ public class UserService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (findByUserId(Application.userIdCurrent).isAdmin()) {
             userRepository.readJson(USER_JSON, User.class);
             System.out.println("USERS " + TerminalMassage.DATA_READ_FILES);
             return RETURN_OK;
@@ -90,7 +90,7 @@ public class UserService extends AbstractService {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
-        if (findByUserId(Application.userIdCurrent).isAdminTrue()) {
+        if (findByUserId(Application.userIdCurrent).isAdmin()) {
             userRepository.readXML(USER_XML, User.class);
             System.out.println("USERS " + TerminalMassage.DATA_READ_FILES);
             return RETURN_OK;
@@ -146,15 +146,15 @@ public class UserService extends AbstractService {
      * @param middlname Отчество
      * @param email Электронная почта
      * @param role Роль
-     * @param adminTrue Признак администратора
+     * @param isAdmin Признак администратора
      * @return Пользователь
      */
     //
     public User create(final Long userid, String login, String password, String firstname, String lastname,
-                       String middlname, String email, RoleEnum role, boolean adminTrue) {
+                       String middlname, String email, RoleEnum role, boolean isAdmin) {
         if (login == null || login.isEmpty()) return null;
         if (password == null || password.isEmpty()) return null;
-        return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
+        return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, isAdmin);
     }
 
     /**
@@ -207,26 +207,6 @@ public class UserService extends AbstractService {
     }
 
     /**
-     * Сортировка пользователей по логину.
-     * @param users Список пользователией
-     * @return Список пользователией
-     */
-    public List<User> userSortByLogin(List<User> users) {
-        Collections.sort(users, User.UserSortByLogin);
-        return users;
-    }
-
-    /**
-     * Сортировка пользователей по фамилии, имени, отчеству.
-     * @param users Список пользователией
-     * @return Список пользователией
-     */
-    public List<User> userSortByFIO(List<User> users) {
-        Collections.sort(users, User.UserSortByFIO);
-        return users;
-    }
-
-    /**
      * Регистрация пользователя.
      */
     public int createUser() {
@@ -253,8 +233,8 @@ public class UserService extends AbstractService {
             //По умолчанию при регистрации присваивается роль USER. Изменить роль может только администратор.
             final RoleEnum role = RoleEnum.USER;
             Long userid = System.nanoTime();
-            boolean adminTrue = false;
-            create(userid, login, password, firstname, lastname, middlname, email, role, adminTrue);
+            boolean isAdmin = false;
+            create(userid, login, password, firstname, lastname, middlname, email, role, isAdmin);
             logger.trace("USER REGISTRATION: USERID = {} LOGIN = {} FIRSTNAME = {} LASTNAME = {} MIDDLNAME = {} EMAIL = {}", userid, login, firstname, lastname, middlname, email );
             System.out.println("REGISTRATION COMPLETED SUCCESSFULLY.");
             return RETURN_OK;
@@ -280,13 +260,14 @@ public class UserService extends AbstractService {
     public void viewUsers (final List<User> users, int sort) {
         if (users == null || users.isEmpty()) return;
         int index = 1;
-        if (sort == 1) userSortByLogin(users);
-        if (sort == 2) userSortByFIO(users);
+        if (sort == 1) users.sort(Comparator.comparing(User::getLogin));
+        if (sort == 2) users.sort(Comparator.comparing(User::getLastname).thenComparing(User::getFirstname).thenComparing(User::getMiddlname));
+       // if (sort == 2) userSortByFIO(users);
         for (final User user: users) {
             System.out.println(index + ". ID: " + user.getUserid() +" LOGIN: " + user.getLogin() + "; LASTNAME: " + user.getLastname() +
                     "; FIRSTNAME: " + user.getFirstname() + "; MIDDLNAME: " + user.getMiddlname() +
                     "; EMAIL: " + user.getEmail() + "; ROLE: " + user.getRole().name() +
-                    "; PASSWORD: " + user.getPassword() + "; ADMIN: " + user.isAdminTrue());
+                    "; PASSWORD: " + user.getPassword() + "; ADMIN: " + user.isAdmin());
             index++;
         }
     }
@@ -297,8 +278,8 @@ public class UserService extends AbstractService {
      */
     public int removeUserByLogin(Long userId) {
         System.out.println("REMOVE USER BY LOGIN");
-        if (findByUserId(userId).isAdminTrue()) {
-            System.out.println(findByUserId(userId).isAdminTrue());
+        if (findByUserId(userId).isAdmin()) {
+            System.out.println(findByUserId(userId).isAdmin());
             System.out.println("PLEASE ENTER LOGIN OF REMOVE USER:");
             final String login = scanner.nextLine();
             removeByLogin(login);
@@ -320,7 +301,7 @@ public class UserService extends AbstractService {
      */
     public int updateUserRole(Long userId) {
         System.out.println("[UPDATE USER DATA]");
-        if (findByUserId(userId).isAdminTrue()) {
+        if (findByUserId(userId).isAdmin()) {
             System.out.println("ENTER UPDATE USER LOGIN:");
             final String login = scanner.nextLine();
             final User user = findByLogin(login);
@@ -428,7 +409,7 @@ public class UserService extends AbstractService {
             return RETURN_ERROR;
         }
         //Проверка логина текущего пользователя или на права администратора
-        if (user1.getUserid().equals(userIdCurrent) || findByUserId(userIdCurrent).isAdminTrue()) {
+        if (user1.getUserid().equals(userIdCurrent) || findByUserId(userIdCurrent).isAdmin()) {
             System.out.println("PLEASE ENTER NEW PASSWORD:");
             final String password1 = scanner.nextLine();
             //Проверка на пустой пароль
