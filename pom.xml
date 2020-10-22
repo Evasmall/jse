@@ -6,7 +6,7 @@
 
     <groupId>ru.evasmall.tm</groupId>
     <artifactId>ev-task-manager</artifactId>
-    <version>1.0.18</version>
+    <version>1.0.22</version>
 
     <name>ev-task-manager</name>
     <url>http://www.nlmk.com</url>
@@ -72,6 +72,11 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.11.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 

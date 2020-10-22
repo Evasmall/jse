@@ -4,12 +4,7 @@ import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.util.HashCode;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class UserRepository {
-
-    private final List<User> users = new ArrayList<>();
+public class UserRepository extends AbstractRepository<User> {
 
     private static UserRepository instance = null;
 
@@ -23,19 +18,20 @@ public class UserRepository {
         return instance;
     }
 
-    public List<User> findAll() {
-        return users;
+    public String getObjectName(final User user) {
+        if (user == null) return null;
+        return user.getLogin();
     }
 
     public User findByLogin(final String login) {
-        for (final User user: users) {
+        for (final User user: objects) {
             if(user.getLogin().equals(login)) return user;
         }
         return null;
     }
 
     public User findById(final Long userId) {
-        for (final User user: users) {
+        for (final User user: objects) {
             if(user.getUserid().equals(userId)) return user;
         }
         return null;
@@ -43,7 +39,7 @@ public class UserRepository {
 
     public User create(final String login) {
         final User user = new User(login);
-        users.add(user);
+        objects.add(user);
         return user;
     }
 
@@ -58,15 +54,15 @@ public class UserRepository {
         user.setMiddlname(middlname);
         user.setEmail(email);
         user.setRole(role);
-        user.setAdminTrue(adminTrue);
-        users.add(user);
+        user.setAdmin(adminTrue);
+        objects.add(user);
         return user;
     }
 
     public User removeByLogin (final String login) {
         final User user = findByLogin(login);
         if (user == null) return null;
-        users.remove(user);
+        objects.remove(user);
         return user;
     }
 

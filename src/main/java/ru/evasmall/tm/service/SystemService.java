@@ -2,6 +2,9 @@ package ru.evasmall.tm.service;
 
 import ru.evasmall.tm.Application;
 
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
+
 public class SystemService {
 
     public static void displayWelcome() {
@@ -13,17 +16,17 @@ public class SystemService {
         for (String str: Application.history) {
             System.out.println(str);
         }
-        return 0;
+        return RETURN_OK;
     }
 
     public static int displayExit() {
         System.out.println("Terminate program. Goodbye!");
-        return 0;
+        return RETURN_OK;
     }
 
     public static int displayForAdminOnly() {
         System.out.println("THIS FUNCTIONALITY IS FOR ADMINS ONLY! FAIL.");
-        return -1;
+        return RETURN_ERROR;
     }
 
     public static int displayHelp() {
@@ -80,19 +83,21 @@ public class SystemService {
         System.out.println();
         System.out.println("object-json - Write projects, tasks, users in json file.");
         System.out.println("object-xml- Write projects, tasks, users in xml file.");
+        System.out.println("read-json - Read projects, tasks, users from json file.");
+        System.out.println("read-xml - Read projects, tasks, users from xml file.");
 
-        return 0;
+        return RETURN_OK;
     }
 
     public static int displayVersion() {
-        System.out.println("1.0.18");
-        return 0;
+        System.out.println("1.0.22");
+        return RETURN_OK;
     }
 
     public static int displayAbout() {
         System.out.println("Evgeniya Smolkina");
         System.out.println("smolkina_ev@nlmk.com");
-        return 0;
+        return RETURN_OK;
     }
 
 }

@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.evasmall.tm.enumerated.RoleEnum;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
@@ -31,7 +30,7 @@ public class User {
 
     private RoleEnum role;
 
-    private boolean adminTrue = false;
+    private boolean isAdmin = false;
 
     public User() {}
     public User(String login) {
@@ -51,29 +50,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password);
     }
-
-    public final static Comparator<User> UserSortByLogin = new Comparator<User>() {
-        @Override
-        public int compare(User u1, User u2) {
-            return u1.getLogin().compareTo(u2.getLogin());
-        }
-    };
-
-    public final static Comparator<User> UserSortByFIO = new Comparator<User>() {
-        @Override
-        public int compare(User u1, User u2) {
-            if (u1 == null) {
-                return -1;
-            }
-            int fio = u1.getLastname().compareTo(u2.getLastname());
-            if (fio !=0) return fio;
-
-            fio = u1.getFirstname().compareTo(u2.getFirstname());
-            if (fio !=0) return fio;
-
-            fio = u1.getMiddlname().compareTo(u2.getMiddlname());
-            return fio;
-        }
-    };
 
 }
