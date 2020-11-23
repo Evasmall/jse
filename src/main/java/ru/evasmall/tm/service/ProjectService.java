@@ -117,13 +117,19 @@ public class ProjectService extends AbstractService {
      * Создание проекта
      */
     public int createProject() {
-        System.out.println("CREATE PROJECT");
-        System.out.println(PROJECT_NAME_ENTER);
-        final String name = scanner.nextLine();
-        System.out.println(PROJECT_DESCRIPTION_ENTER);
-        final String description = scanner.nextLine();
-        create(name, description, Application.userIdCurrent);
-        System.out.println("OK");
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        else {
+            System.out.println("CREATE PROJECT");
+            System.out.println(PROJECT_NAME_ENTER);
+            final String name = scanner.nextLine();
+            System.out.println(PROJECT_DESCRIPTION_ENTER);
+            final String description = scanner.nextLine();
+            create(name, description, Application.userIdCurrent);
+            System.out.println("OK");
+        }
         return RETURN_OK;
     }
 
@@ -135,10 +141,16 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public Project update(Long id, String name, String description) throws ProjectNotFoundException {
-        if (name == null || name.isEmpty())
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return null;
+        }
+        if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("PROJECT NAME IS EMPTY. PROJECT NOT UPDATED. FAIL.");
-        if (description == null || description.isEmpty())
+        }
+        if (description == null || description.isEmpty()) {
             throw new IllegalArgumentException("PROJECT DESCRIPTION IS EMPTY. PROJECT NOT UPDATED. FAIL.");
+        }
         return projectRepository.update(id, name, description);
     }
 
@@ -516,6 +528,17 @@ public class ProjectService extends AbstractService {
             }
         }
         return RETURN_ERROR;
+    }
+
+    /**
+     * Создание начальной базы данных проектов.
+     */
+    public void createBeginProjects() {
+        ProjectService p = ProjectService.getInstance();
+        p.create("DEMO_PROJECT_3", "DESC PROJECT 3", 1L);
+        p.create("DEMO_PROJECT_1", "DESC PROJECT 4", 2L);
+        p.create("DEMO_PROJECT_1", "DESC PROJECT 1", 2L);
+        p.create("DEMO_PROJECT_2", "DESC PROJECT 2", 2L);
     }
 
 }

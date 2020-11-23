@@ -532,4 +532,14 @@ public class TaskService extends AbstractService {
         return RETURN_ERROR;
     }
 
+    /**
+     * Создание начальной базы данных задач.
+     */
+    public void createBeginTasks() {
+        TaskService t = TaskService.getInstance();
+        t.create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
+        t.create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
+        t.create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
+    }
+
 }

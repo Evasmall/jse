@@ -477,4 +477,17 @@ public class UserService extends AbstractService {
         return RETURN_OK;
     }
 
+    /**
+     * Создание начальной базы данных пользователей.
+     */
+    public void createBeginUsers() {
+        UserService u = UserService.getInstance();
+        u.create(1L,"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
+                "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
+        u.create(2L,"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
+                "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
+        u.create(3L,"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
+                "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
+    }
+
 }

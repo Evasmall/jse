@@ -1,15 +1,16 @@
 package ru.evasmall.tm;
 
-import ru.evasmall.tm.enumerated.RoleEnum;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.observer.*;
-import ru.evasmall.tm.service.*;
-import ru.evasmall.tm.util.HashCode;
+import ru.evasmall.tm.service.ProjectService;
+import ru.evasmall.tm.service.SystemService;
+import ru.evasmall.tm.service.TaskService;
+import ru.evasmall.tm.service.UserService;
 
-import java.util.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.LinkedList;
 
 /**
  * Приложение для обучения JAVA.
@@ -26,25 +27,9 @@ public class Application {
 
     {
         logger.info("Begin program.");
-        UserService u = UserService.getInstance();
-        ProjectService p = ProjectService.getInstance();
-        TaskService t = TaskService.getInstance();
-
-        u.create(System.nanoTime(),"ADMIN", HashCode.getHash("POBEDA"), "Василий", "Чапаев",
-                           "Иванович", "chapaev_vi@gmail.com", RoleEnum.ADMIN, true);
-        u.create(System.nanoTime(),"TEST", HashCode.getHash("123"), "Пётр", "Исаев",
-                                     "Семёнович", "isaev_ps@gmail.com", RoleEnum.USER, false);
-        u.create(System.nanoTime(),"FF", HashCode.getHash("12345"), "Дмитрий", "Фурманов",
-                "Андреевич", "furmanov_da@gmail.com", RoleEnum.USER, false);
-
-        p.create("DEMO_PROJECT_3", "DESC PROJECT 3", UserService.getInstance().findByLogin("ADMIN").getUserid());
-        p.create("DEMO_PROJECT_1", "DESC PROJECT 4", UserService.getInstance().findByLogin("TEST").getUserid());
-        p.create("DEMO_PROJECT_1", "DESC PROJECT 1", UserService.getInstance().findByLogin("TEST").getUserid());
-        p.create("DEMO_PROJECT_2", "DESC PROJECT 2", UserService.getInstance().findByLogin("TEST").getUserid());
-
-        t.create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
-        t.create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
-        t.create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
+        UserService.getInstance().createBeginUsers();
+        ProjectService.getInstance().createBeginProjects();;
+        TaskService.getInstance().createBeginTasks();
     }
 
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {
