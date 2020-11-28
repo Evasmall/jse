@@ -127,14 +127,20 @@ public class TaskService extends AbstractService {
      * Создание задачи.
      */
     public int createTask() {
-        System.out.println("CREATE TASK");
-        System.out.println(TASK_NAME_ENTER);
-        final String name = scanner.nextLine();
-        System.out.println(TASK_DESCRIPTION_ENTER);
-        final String description = scanner.nextLine();
-        create(name, description, Application.userIdCurrent);
-        System.out.println("OK");
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        else {
+            System.out.println("CREATE TASK");
+            System.out.println(TASK_NAME_ENTER);
+            final String name = scanner.nextLine();
+            System.out.println(TASK_DESCRIPTION_ENTER);
+            final String description = scanner.nextLine();
+            create(name, description, Application.userIdCurrent);
+            System.out.println("OK");
+            return RETURN_OK;
+        }
     }
 
     /**
@@ -146,6 +152,10 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public Task update(Long id, String name, String description) throws TaskNotFoundException {
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return null;
+        }
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("TASK NAME IS EMPTY. TASK NOT UPDATED. FAIL.");
         if (description == null || description.isEmpty())
@@ -158,20 +168,26 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int updateTaskByIndex() throws TaskNotFoundException {
-        System.out.println("UPDATE TASK");
-        System.out.println(TASK_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            final Task task = findByIndexUserId(index);
-            System.out.println(TASK_NAME_ENTER);
-            final String name = scanner.nextLine();
-            System.out.println(TASK_DESCRIPTION_ENTER);
-            final String description = scanner.nextLine();
-            update(task.getId(), name, description);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("UPDATE TASK");
+            System.out.println(TASK_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                final Task task = findByIndexUserId(index);
+                System.out.println(TASK_NAME_ENTER);
+                final String name = scanner.nextLine();
+                System.out.println(TASK_DESCRIPTION_ENTER);
+                final String description = scanner.nextLine();
+                update(task.getId(), name, description);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -179,26 +195,36 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int updateTaskById() throws TaskNotFoundException {
-        System.out.println("UPDATE TASK");
-        System.out.println(TASK_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            final Task task = findByIdUserId(id);
-            System.out.println(TASK_NAME_ENTER);
-            final String name = scanner.nextLine();
-            System.out.println(TASK_DESCRIPTION_ENTER);
-            final String description = scanner.nextLine();
-            update(task.getId(), name, description);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("UPDATE TASK");
+            System.out.println(TASK_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                final Task task = findByIdUserId(id);
+                System.out.println(TASK_NAME_ENTER);
+                final String name = scanner.nextLine();
+                System.out.println(TASK_DESCRIPTION_ENTER);
+                final String description = scanner.nextLine();
+                update(task.getId(), name, description);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
      * Удаление всех задач (функционал доступен только администраторам).
      */
     public int clearTask() {
+        if (userService.findByUserId(Application.userIdCurrent) == null) {
+            systemService.displayForAdminOnly();
+            return RETURN_ERROR;
+        }
         if (userService.findByUserId(Application.userIdCurrent).isAdmin()) {
             System.out.println("CLEAR TASK");
             taskRepository.clearObject();
@@ -246,13 +272,19 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int viewTaskByName() throws TaskNotFoundException {
-        System.out.println(TASK_NAME_ENTER);
-        String name = scanner.nextLine();
-        final List <Task> tasks = findByName(name);
-        for (Task task: tasks) {
-            viewTask(task);
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_OK;
+        else {
+            System.out.println(TASK_NAME_ENTER);
+            String name = scanner.nextLine();
+            final List <Task> tasks = findByName(name);
+            for (Task task: tasks) {
+                viewTask(task);
+            }
+            return RETURN_OK;
+        }
     }
 
     /**
@@ -284,14 +316,20 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int viewTaskById() throws TaskNotFoundException {
-        System.out.println(TASK_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            final Task task = findById(id);
-            viewTask(task);
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println(TASK_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                final Task task = findById(id);
+                viewTask(task);
+                return RETURN_OK;
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**
@@ -321,14 +359,20 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int viewTaskByIndex() throws TaskNotFoundException {
-        System.out.println(TASK_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            final Task task = findByIndex(index);
-            viewTask(task);
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println(TASK_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                final Task task = findByIndex(index);
+                viewTask(task);
+                return RETURN_OK;
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**
@@ -358,15 +402,21 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int removeTaskById() throws TaskNotFoundException {
-        System.out.println("REMOVE TASK BY ID");
-        System.out.println(TASK_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            removeByIdUserId(id);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE TASK BY ID");
+            System.out.println(TASK_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                removeByIdUserId(id);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -396,15 +446,21 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int removeTaskByIndex() throws TaskNotFoundException {
-        System.out.println("REMOVE TASK BY INDEX");
-        System.out.println(TASK_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            removeByIndexUserId(index);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE TASK BY INDEX");
+            System.out.println(TASK_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                removeByIndexUserId(index);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -486,27 +542,33 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int addTaskToUser() throws TaskNotFoundException {
-        System.out.println("ADD TASK TO USER");
-        System.out.println("PLEASE ENTER LOGIN:");
-        final User user1 = userService.findByLogin(scanner.nextLine());
-        if (user1 == null) {
-            System.out.println("LOGIN NOT EXIST!");
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
         else {
-            final Long userId = user1.getUserid();
-            if (userId != null) {
-                System.out.println(TASK_ID_ENTER);
-                final Long taskId = control.scannerIdIsLong();
-                if (taskId != null) {
-                    findByIdUserId(taskId);
-                    addTaskToUser(userId, taskId);
-                    System.out.println("OK");
-                    return RETURN_OK;
-                }
-                return RETURN_ERROR;
+            System.out.println("ADD TASK TO USER");
+            System.out.println("PLEASE ENTER LOGIN:");
+            final User user1 = userService.findByLogin(scanner.nextLine());
+            if (user1 == null) {
+                System.out.println("LOGIN NOT EXIST!");
             }
+            else {
+                final Long userId = user1.getUserid();
+                if (userId != null) {
+                    System.out.println(TASK_ID_ENTER);
+                    final Long taskId = control.scannerIdIsLong();
+                    if (taskId != null) {
+                        findByIdUserId(taskId);
+                        addTaskToUser(userId, taskId);
+                        System.out.println("OK");
+                        return RETURN_OK;
+                    }
+                    return RETURN_ERROR;
+                }
+            }
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
     }
 
     /**
@@ -514,22 +576,28 @@ public class TaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдена
      */
     public int removeTaskFromUser() throws TaskNotFoundException {
-        System.out.println("REMOVE TASK FROM USER");
-        System.out.println(TASK_ID_ENTER);
-        final Long taskId = control.scannerIdIsLong();
-        if (taskId != null) {
-            final Task task = findByIdUserId(taskId);
-            if (task.getUserid() == null) {
-                System.out.println("TASK NOT HAVE USER.");
-                return RETURN_ERROR;
-            }
-            if (task.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
-                task.setUserid(null);
-                System.out.println("ОК");
-                return RETURN_OK;
-            }
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE TASK FROM USER");
+            System.out.println(TASK_ID_ENTER);
+            final Long taskId = control.scannerIdIsLong();
+            if (taskId != null) {
+                final Task task = findByIdUserId(taskId);
+                if (task.getUserid() == null) {
+                    System.out.println("TASK NOT HAVE USER.");
+                    return RETURN_ERROR;
+                }
+                if (task.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
+                    task.setUserid(null);
+                    System.out.println("ОК");
+                    return RETURN_OK;
+                }
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**

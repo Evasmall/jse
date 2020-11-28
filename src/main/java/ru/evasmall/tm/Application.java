@@ -11,6 +11,7 @@ import ru.evasmall.tm.service.TaskService;
 import ru.evasmall.tm.service.UserService;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 /**
  * Приложение для обучения JAVA.
@@ -28,7 +29,7 @@ public class Application {
     {
         logger.info("Begin program.");
         UserService.getInstance().createBeginUsers();
-        ProjectService.getInstance().createBeginProjects();;
+        ProjectService.getInstance().createBeginProjects();
         TaskService.getInstance().createBeginTasks();
     }
 
@@ -40,7 +41,7 @@ public class Application {
         publisher.addListener(new UserListener());
         publisher.addListener(new SystemListener());
         publisher.addListener(new TaskListener());
-        publisher.notifyListener();
+        publisher.notifyListener(new Scanner(System.in));
     }
 
 }

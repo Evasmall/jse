@@ -152,9 +152,21 @@ public class UserService extends AbstractService {
     //
     public User create(final Long userid, String login, String password, String firstname, String lastname,
                        String middlname, String email, RoleEnum role, boolean isAdmin) {
-        if (login == null || login.isEmpty()) return null;
-        if (password == null || password.isEmpty()) return null;
-        return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, isAdmin);
+        try {
+            userRepository.findById(userid).getUserid();
+            logger.error("LOGIN WITH THIS ID EXISTS. ERROR. ");
+            return null;
+        } catch (Exception e) {
+            try {
+                userRepository.findByLogin(login).getLogin();
+                logger.error("LOGIN WITH THIS NAME EXISTS. ERROR. ");
+                return null;
+            } catch (Exception e1) {
+                if (login == null || login.isEmpty()) return null;
+                if (password == null || password.isEmpty()) return null;
+                return userRepository.create(userid, login, password, firstname, lastname, middlname, email, role, isAdmin);
+            }
+        }
     }
 
     /**
@@ -246,10 +258,16 @@ public class UserService extends AbstractService {
      * @param sort 1 - сортировка по логинам, 2 - сортировка по Фамилии, имени, отчеству.
      */
     public int listUser (int sort) {
-        System.out.println("LIST USER");
-        viewUsers(findAll(), sort);
-        System.out.println("OK");
-        return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        else {
+            System.out.println("LIST USER");
+            viewUsers(findAll(), sort);
+            System.out.println("OK");
+            return RETURN_OK;
+        }
     }
 
     /**
@@ -276,20 +294,26 @@ public class UserService extends AbstractService {
      * @param userId Идентификатор пользователя текущей сессии
      */
     public int removeUserByLogin(Long userId) {
-        System.out.println("REMOVE USER BY LOGIN");
-        if (findByUserId(userId).isAdmin()) {
-            System.out.println(findByUserId(userId).isAdmin());
-            System.out.println("PLEASE ENTER LOGIN OF REMOVE USER:");
-            final String login = scanner.nextLine();
-            removeByLogin(login);
-            if (login == null) System.out.println("FAIL");
-            logger.trace("USER DELETED: LOGIN = {}", login);
-            System.out.println("USER DELETED.");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
         else {
-            systemService.displayForAdminOnly();
-            return RETURN_ERROR;
+            System.out.println("REMOVE USER BY LOGIN");
+            if (findByUserId(userId).isAdmin()) {
+                System.out.println(findByUserId(userId).isAdmin());
+                System.out.println("PLEASE ENTER LOGIN OF REMOVE USER:");
+                final String login = scanner.nextLine();
+                removeByLogin(login);
+                if (login == null) System.out.println("FAIL");
+                logger.trace("USER DELETED: LOGIN = {}", login);
+                System.out.println("USER DELETED.");
+                return RETURN_OK;
+            }
+            else {
+                systemService.displayForAdminOnly();
+                return RETURN_ERROR;
+            }
         }
     }
 
@@ -299,31 +323,37 @@ public class UserService extends AbstractService {
      * @return
      */
     public int updateUserRole(Long userId) {
-        System.out.println("[UPDATE USER DATA]");
-        if (findByUserId(userId).isAdmin()) {
-            System.out.println("ENTER UPDATE USER LOGIN:");
-            final String login = scanner.nextLine();
-            final User user = findByLogin(login);
-            if (user == null) {
-                System.out.println("FAIL");
-                return RETURN_OK;
-            }
-            System.out.println("PLEASE ENTER ROLE: ADMIN OR USER");
-            final String role = scanner.nextLine();
-            if (role.equals("ADMIN") || role.equals("USER")) {
-                updateRole(login, role);
-                logger.trace("USER ROLE: LOGIN = {} ROLE = {}", login, role);
-                System.out.println("OK");
-                return RETURN_OK;
-            }
-            else {
-                System.out.println("UNKNOWN ROLE!");
-                return RETURN_OK;
-            }
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
         else {
-            systemService.displayForAdminOnly();
-            return RETURN_ERROR;
+            System.out.println("UPDATE USER DATA");
+            if (findByUserId(userId).isAdmin()) {
+                System.out.println("ENTER UPDATE USER LOGIN:");
+                final String login = scanner.nextLine();
+                final User user = findByLogin(login);
+                if (user == null) {
+                    System.out.println("FAIL");
+                    return RETURN_ERROR;
+                }
+                System.out.println("PLEASE ENTER ROLE: ADMIN OR USER");
+                final String role = scanner.nextLine();
+                if (role.equals("ADMIN") || role.equals("USER")) {
+                    updateRole(login, role);
+                    logger.trace("USER ROLE: LOGIN = {} ROLE = {}", login, role);
+                    System.out.println("OK");
+                    return RETURN_OK;
+                }
+                else {
+                    System.out.println("UNKNOWN ROLE!");
+                    return RETURN_ERROR;
+                }
+            }
+            else {
+                systemService.displayForAdminOnly();
+                return RETURN_ERROR;
+            }
         }
     }
 
@@ -357,7 +387,7 @@ public class UserService extends AbstractService {
      * @param userId Идентификатор пользоваеля
      */
     public int userProfile(final Long userId) {
-        if (userId == null) return -1;
+        if (userId == null) return RETURN_ERROR;
         System.out.println("CURRENT SESSION:");
         System.out.println("ID:" + userId.toString());
         System.out.println("LOGIN: " + findByUserId(userId).getLogin());

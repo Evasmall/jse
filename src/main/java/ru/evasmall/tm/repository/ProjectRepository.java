@@ -5,7 +5,8 @@ import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.Project;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectRepository extends AbstractRepository<Project> {
 
@@ -65,7 +66,7 @@ public class ProjectRepository extends AbstractRepository<Project> {
         for (final Project project: objectsName.get(name)) {
             projectsNew.add(project);
         }
-        return objects;
+        return projectsNew;
     }
 
     public Project findById(final Long id) throws ProjectNotFoundException {

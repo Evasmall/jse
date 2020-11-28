@@ -3,9 +3,12 @@ package ru.evasmall.tm.observer;
 import ru.evasmall.tm.exeption.ProjectNotFoundException;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 
+import java.util.Scanner;
+
 public interface Publisher {
-    void addListener(Listener listener);
-    void deleteListener(Listener listener);
-    void notifyListener() throws ProjectNotFoundException, TaskNotFoundException;
+    int addListener(Listener listener);
+    int deleteListener(Listener listener);
+    void notifyListener(Scanner scanner) throws ProjectNotFoundException, TaskNotFoundException;
+    int updateListener(String command, Scanner scanner);
 
 }

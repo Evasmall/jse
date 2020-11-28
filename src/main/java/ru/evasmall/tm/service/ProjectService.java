@@ -159,20 +159,27 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int updateProjectByIndex() throws ProjectNotFoundException {
-        System.out.println("UPDATE PROJECT");
-        System.out.println(PROJECT_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            final Project project = findByIndexUserId(index);
-            System.out.println(PROJECT_NAME_ENTER);
-            final String name = scanner.nextLine();
-            System.out.println(PROJECT_DESCRIPTION_ENTER);
-            final String description = scanner.nextLine();
-            update(project.getId(), name, description);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("UPDATE PROJECT");
+            System.out.println(PROJECT_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                final Project project = findByIndexUserId(index);
+                System.out.println(PROJECT_NAME_ENTER);
+                final String name = scanner.nextLine();
+                System.out.println(PROJECT_DESCRIPTION_ENTER);
+                final String description = scanner.nextLine();
+                update(project.getId(), name, description);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
+
     }
 
     /**
@@ -180,20 +187,26 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int updateProjectById() throws ProjectNotFoundException {
-        System.out.println("UPDATE PROJECT");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            final Project project = findByIdUserId(id);
-            System.out.println(PROJECT_NAME_ENTER);
-            final String name = scanner.nextLine();
-            System.out.println(PROJECT_DESCRIPTION_ENTER);
-            final String description = scanner.nextLine();
-            update(project.getId(), name, description);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("UPDATE PROJECT");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                final Project project = findByIdUserId(id);
+                System.out.println(PROJECT_NAME_ENTER);
+                final String name = scanner.nextLine();
+                System.out.println(PROJECT_DESCRIPTION_ENTER);
+                final String description = scanner.nextLine();
+                update(project.getId(), name, description);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -248,13 +261,19 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int viewProjectByName() throws ProjectNotFoundException {
-        System.out.println(PROJECT_NAME_ENTER);
-        String name = scanner.nextLine();
-        final List <Project> projects = findByName(name);
-        for (Project project: projects) {
-            viewProject(project);
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_OK;
+        else {
+            System.out.println(PROJECT_NAME_ENTER);
+            String name = scanner.nextLine();
+            final List <Project> projects = findByName(name);
+            for (Project project: projects) {
+                viewProject(project);
+            }
+            return RETURN_OK;
+        }
     }
 
     /**
@@ -285,14 +304,20 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int viewProjectById() throws ProjectNotFoundException {
-        System.out.println(PROJECT_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            final Project project = findById(id);
-            viewProject(project);
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println(PROJECT_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                final Project project = findById(id);
+                viewProject(project);
+                return RETURN_OK;
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**
@@ -415,15 +440,21 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int removeProjectById() throws ProjectNotFoundException {
-        System.out.println("REMOVE PROJECT BY ID");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long id = control.scannerIdIsLong();
-        if (id != null) {
-            removeByIdUserId(id);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE PROJECT BY ID");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long id = control.scannerIdIsLong();
+            if (id != null) {
+                removeByIdUserId(id);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -453,15 +484,21 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int removeProjectByIndex() throws ProjectNotFoundException {
-        System.out.println("REMOVE PROJECT BY INDEX");
-        System.out.println(PROJECT_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            removeByIndexUserId(index);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE PROJECT BY INDEX");
+            System.out.println(PROJECT_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                removeByIndexUserId(index);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return RETURN_ERROR;
+        }
     }
 
     /**
@@ -483,28 +520,34 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int addProjectToUser() throws ProjectNotFoundException {
-        System.out.println("ADD PROJECT TO USER");
-        System.out.println("PLEASE ENTER LOGIN:");
-        final User user1 = userService.findByLogin(scanner.nextLine());
-        if (user1 == null) {
-            System.out.println("LOGIN NOT EXIST!");
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
         else {
-            final Long userId = user1.getUserid();
-            if (userId != null) {
-                System.out.println(PROJECT_ID_ENTER);
-                final Long projectId = control.scannerIdIsLong();
-                if (projectId != null) {
-                    findByIdUserId(projectId);
-                    addProjectToUser(userId, projectId);
-                    System.out.println("OK");
-                    return RETURN_OK;
-                }
+            System.out.println("ADD PROJECT TO USER");
+            System.out.println("PLEASE ENTER LOGIN:");
+            final User user1 = userService.findByLogin(scanner.nextLine());
+            if (user1 == null) {
+                System.out.println("LOGIN NOT EXIST!");
                 return RETURN_ERROR;
             }
+            else {
+                final Long userId = user1.getUserid();
+                if (userId != null) {
+                    System.out.println(PROJECT_ID_ENTER);
+                    final Long projectId = control.scannerIdIsLong();
+                    if (projectId != null) {
+                        findByIdUserId(projectId);
+                        addProjectToUser(userId, projectId);
+                        System.out.println("OK");
+                        return RETURN_OK;
+                    }
+                    return RETURN_ERROR;
+                }
+            }
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
     }
 
     /**
@@ -512,22 +555,28 @@ public class ProjectService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      */
     public int removeProjectFromUser() throws ProjectNotFoundException {
-        System.out.println("REMOVE PROJECT FROM USER");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long projectId = control.scannerIdIsLong();
-        if (projectId != null) {
-            final Project project = findByIdUserId(projectId);
-            if (project.getUserid() == null) {
-                System.out.println("PROJECT NOT HAVE USER.");
-                return RETURN_ERROR;
-            }
-            if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
-                project.setUserid(null);
-                System.out.println("ОК");
-                return RETURN_OK;
-            }
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE PROJECT FROM USER");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long projectId = control.scannerIdIsLong();
+            if (projectId != null) {
+                final Project project = findByIdUserId(projectId);
+                if (project.getUserid() == null) {
+                    System.out.println("PROJECT NOT HAVE USER.");
+                    return RETURN_ERROR;
+                }
+                if (project.getUserid().equals(Application.userIdCurrent) || userService.findByUserId(Application.userIdCurrent).isAdmin()) {
+                    project.setUserid(null);
+                    System.out.println("ОК");
+                    return RETURN_OK;
+                }
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**

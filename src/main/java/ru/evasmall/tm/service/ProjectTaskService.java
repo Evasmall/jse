@@ -12,8 +12,9 @@ import ru.evasmall.tm.util.Control;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
+import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
 import static ru.evasmall.tm.constant.TerminalMassage.*;
-import static ru.evasmall.tm.constant.TerminalConst.*;
 
 public class ProjectTaskService extends AbstractService {
 
@@ -91,26 +92,32 @@ public class ProjectTaskService extends AbstractService {
 
     /**
      * Удаление задачи из проекта по идентификаторам.
-     * @throws ProjectNotFoundException Проект не найдент
+     * @throws ProjectNotFoundException Проект не найден
      * @throws TaskNotFoundException Задача не найдены
      */
     public int removeTaskFromProjectByIds() throws ProjectNotFoundException, TaskNotFoundException {
-        System.out.println("REMOVE TASK FROM PROJECT BY IDS");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long projectId = control.scannerIdIsLong();
-        if (projectId != null) {
-            projectService.findByIdUserId(projectId);
-            System.out.println(TASK_ID_ENTER);
-            final Long taskId = control.scannerIdIsLong();
-            if (taskId != null) {
-                taskService.findById(taskId);
-                removeTaskFromProject(projectId, taskId);
-                System.out.println("OK");
-                return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        else {
+            System.out.println("REMOVE TASK FROM PROJECT BY IDS");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long projectId = control.scannerIdIsLong();
+            if (projectId != null) {
+                projectService.findByIdUserId(projectId);
+                System.out.println(TASK_ID_ENTER);
+                final Long taskId = control.scannerIdIsLong();
+                if (taskId != null) {
+                    taskService.findById(taskId);
+                    removeTaskFromProject(projectId, taskId);
+                    System.out.println("OK");
+                    return RETURN_OK;
+                }
+                return RETURN_ERROR;
             }
             return RETURN_ERROR;
         }
-        return RETURN_ERROR;
     }
 
     /**
@@ -136,22 +143,28 @@ public class ProjectTaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдены
      */
     public int addTaskToProjectByIds() throws ProjectNotFoundException, TaskNotFoundException {
-        System.out.println("ADD TASK TO PROJECT BY IDS");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long projectId = control.scannerIdIsLong();
-        if (projectId != null) {
-            projectService.findByIdUserId(projectId);
-            System.out.println(TASK_ID_ENTER);
-            final Long taskId = control.scannerIdIsLong();
-            if (taskId != null) {
-                taskService.findByIdUserId(taskId);
-                addTaskToProject(projectId, taskId, Application.userIdCurrent);
-                System.out.println("OK");
-                return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
+        }
+        else {
+            System.out.println("ADD TASK TO PROJECT BY IDS");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long projectId = control.scannerIdIsLong();
+            if (projectId != null) {
+                projectService.findByIdUserId(projectId);
+                System.out.println(TASK_ID_ENTER);
+                final Long taskId = control.scannerIdIsLong();
+                if (taskId != null) {
+                    taskService.findByIdUserId(taskId);
+                    addTaskToProject(projectId, taskId, Application.userIdCurrent);
+                    System.out.println("OK");
+                    return RETURN_OK;
+                }
+                return RETURN_ERROR;
             }
             return RETURN_ERROR;
         }
-        return RETURN_ERROR;
     }
 
     /**
@@ -178,15 +191,21 @@ public class ProjectTaskService extends AbstractService {
      * @throws TaskNotFoundException Задача не найдены
      */
     public int removeProjectByIdWithTasks() throws ProjectNotFoundException, TaskNotFoundException {
-        System.out.println("REMOVE PROJECT WITH BY ID");
-        System.out.println(PROJECT_ID_ENTER);
-        final Long projectId = control.scannerIdIsLong();
-        if (projectId != null) {
-            removeProjectByIdWithTask(projectId);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        return RETURN_ERROR;
+        else {
+            System.out.println("REMOVE PROJECT WITH BY ID");
+            System.out.println(PROJECT_ID_ENTER);
+            final Long projectId = control.scannerIdIsLong();
+            if (projectId != null) {
+                removeProjectByIdWithTask(projectId);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            return RETURN_ERROR;
+        }
     }
 
     /**
@@ -213,15 +232,21 @@ public class ProjectTaskService extends AbstractService {
      * @throws TaskNotFoundException Задачи не найдены
      */
     public int removeProjectByIndexWithTasks() throws ProjectNotFoundException, TaskNotFoundException {
-        System.out.println("REMOVE PROJECT WITH BY INDEX");
-        System.out.println(PROJECT_INDEX_ENTER);
-        final Integer index = control.scannerIndexIsInteger();
-        if (index != null) {
-            removeProjectByIndexWithTask(index);
-            System.out.println("OK");
-            return RETURN_OK;
+        if (Application.userIdCurrent == null) {
+            System.out.println(UNAUTHORIZED_USER);
+            return RETURN_ERROR;
         }
-        else return  RETURN_ERROR;
+        else {
+            System.out.println("REMOVE PROJECT WITH BY INDEX");
+            System.out.println(PROJECT_INDEX_ENTER);
+            final Integer index = control.scannerIndexIsInteger();
+            if (index != null) {
+                removeProjectByIndexWithTask(index);
+                System.out.println("OK");
+                return RETURN_OK;
+            }
+            else return  RETURN_ERROR;
+        }
     }
 
 }

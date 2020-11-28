@@ -79,7 +79,7 @@ public class TaskRepository extends AbstractRepository<Task> {
         for (final Task task: objectsName.get(name)) {
             tasksNew.add(task);
         }
-        return objects;
+        return tasksNew;
     }
 
     public Task findById(final Long id) throws TaskNotFoundException {
