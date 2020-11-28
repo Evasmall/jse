@@ -985,3 +985,4 @@
 2020-11-28 18:54:23,904 INFO r.e.t.r.ProjectRepository [main] PROJECT INDEX: 1 DELETE
 2020-11-28 18:54:29,686 ERROR  [main] ru.evasmall.tm.exeption.ProjectNotFoundException: PROJECT NOT FOUND BY INDEX: 8. FAIL.
 2020-11-28 19:24:56,075 INFO r.e.t.Application [main] Begin program.
+2020-11-28 20:13:35,060 INFO r.e.t.Application [main] Begin program.
