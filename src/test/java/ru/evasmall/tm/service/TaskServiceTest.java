@@ -325,4 +325,9 @@ class TaskServiceTest {
         assertTrue(!taskService.findAll().isEmpty());
     }
 
+    @Test
+    void removeTaskDeadlineException() {
+        assertThrows(TaskNotFoundException.class,() -> taskService.removeTaskDeadline(id));
+    }
+
 }

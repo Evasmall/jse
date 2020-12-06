@@ -30,7 +30,9 @@ public class Application {
         logger.info("Begin program.");
         UserService.getInstance().createBeginUsers();
         ProjectService.getInstance().createBeginProjects();
-        TaskService.getInstance().createBeginTasks();
+        TaskService taskService = TaskService.getInstance();
+        taskService.createBeginTasks();
+        taskService.notifyTaskDeadline();
     }
 
     public static void main(final String[] args) throws ProjectNotFoundException, TaskNotFoundException {

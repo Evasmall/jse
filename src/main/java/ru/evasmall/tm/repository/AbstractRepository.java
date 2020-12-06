@@ -11,9 +11,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
@@ -24,7 +25,7 @@ public abstract class AbstractRepository<T> {
 
     public List<T> objects = new ArrayList<>();
 
-    public HashMap<String, HashSet<T>> objectsName = new HashMap<>();
+    public ConcurrentMap<String, HashSet<T>> objectsName = new ConcurrentHashMap<>();
 
     public abstract String getObjectName(final T object);
 
@@ -36,7 +37,7 @@ public abstract class AbstractRepository<T> {
         return objects;
     }
 
-    public void addObjectToMap(final T object) {
+    public synchronized void addObjectToMap(final T object) {
         final String name = getObjectName(object);
         HashSet<T> objectsHashMap = objectsName.get(name);
         if (objectsHashMap != null)
@@ -48,7 +49,7 @@ public abstract class AbstractRepository<T> {
         }
     }
 
-    public void removeObjectFromMap(final T object) {
+    public synchronized void removeObjectFromMap(final T object) {
         final String name = getObjectName(object);
         HashSet<T> objectsHashMap = objectsName.get(name);
         if (objectsHashMap != null)
@@ -67,7 +68,7 @@ public abstract class AbstractRepository<T> {
         return object;
     }
 
-    public void clearObject() {
+    public synchronized void clearObject() {
         objects.clear();
         objectsName.clear();
     }

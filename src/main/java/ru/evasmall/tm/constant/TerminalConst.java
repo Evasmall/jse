@@ -60,4 +60,11 @@ public class TerminalConst {
     public static final Integer RETURN_ERROR = -1;
     public static final Integer RETURN_FOREIGN_COMMAND = 1;
 
+    public static final String DEADLINE_8_HOURS = "8 HOURS";
+    public static final String DEADLINE_4_HOURS = "4 HOURS";
+    public static final String DEADLINE_1_HOURS = "1 HOURS";
+    public static final String DEADLINE_30_MINUTES = "30 MINUTES";
+    public static final String DEADLINE_15_MINUTES = "15 MINUTES";
+    public static final String DEADLINE_5_MINUTES = "5 MINUTES";
+
 }

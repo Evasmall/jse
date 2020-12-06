@@ -5,8 +5,11 @@ import org.apache.logging.log4j.Logger;
 import ru.evasmall.tm.entity.Task;
 import ru.evasmall.tm.exeption.TaskNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.evasmall.tm.constant.TerminalConst.DEADLINE_8_HOURS;
 
 public class TaskRepository extends AbstractRepository<Task> {
 
@@ -43,13 +46,15 @@ public class TaskRepository extends AbstractRepository<Task> {
         task.setName(name);
         task.setDescription(description);
         task.setUserid(userId);
+        task.setDeadline(LocalDateTime.now().plusHours(8));
+        task.setNotifyDeadline(DEADLINE_8_HOURS);
         objects.add(task);
         addObjectToMap(task);
         logger.trace("TASK CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return task;
     }
 
-    public Task update(final Long id, final String name, String description) throws TaskNotFoundException{
+    public synchronized Task update(final Long id, final String name, String description) throws TaskNotFoundException{
         final Task task = findById(id);
         removeObjectFromMap(task);
         task.setId(id);
@@ -108,7 +113,7 @@ public class TaskRepository extends AbstractRepository<Task> {
         return objects.get(index);
     }
 
-    public Task removeById (final Long id) throws TaskNotFoundException {
+    public synchronized Task removeById (final Long id) throws TaskNotFoundException {
         final Task task = findById(id);
         removeObjectFromMap(task);
         objects.remove(task);
@@ -116,7 +121,7 @@ public class TaskRepository extends AbstractRepository<Task> {
         return task;
     }
 
-    public Task removeByIndex (final int index) throws TaskNotFoundException{
+    public synchronized Task removeByIndex (final int index) throws TaskNotFoundException{
         final Task task = findByIndex(index);
         removeObjectFromMap(task);
         objects.remove(task);

@@ -8,13 +8,15 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 import ru.evasmall.tm.repository.TaskRepository;
 import ru.evasmall.tm.util.Control;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static ru.evasmall.tm.constant.FileNameConst.TASK_JSON;
 import static ru.evasmall.tm.constant.FileNameConst.TASK_XML;
-import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
-import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
+import static ru.evasmall.tm.constant.TerminalConst.*;
 import static ru.evasmall.tm.constant.TerminalMassage.*;
 
 public class TaskService extends AbstractService {
@@ -127,11 +129,17 @@ public class TaskService extends AbstractService {
      * Создание задачи.
      */
     public int createTask() {
+        boolean taskFlag;
         if (Application.userIdCurrent == null) {
             System.out.println(UNAUTHORIZED_USER);
             return RETURN_ERROR;
         }
         else {
+            if (findAll().isEmpty() || findAll() == null) {
+                taskFlag = false;
+            } else {
+                taskFlag = true;
+            }
             System.out.println("CREATE TASK");
             System.out.println(TASK_NAME_ENTER);
             final String name = scanner.nextLine();
@@ -139,6 +147,9 @@ public class TaskService extends AbstractService {
             final String description = scanner.nextLine();
             create(name, description, Application.userIdCurrent);
             System.out.println("OK");
+            if(!taskFlag) {
+                notifyTaskDeadline();
+            }
             return RETURN_OK;
         }
     }
@@ -253,6 +264,7 @@ public class TaskService extends AbstractService {
             System.out.println("DESCRIPTION: " + task.getDescription());
             System.out.println("PROJECT ID: " + task.getProjectId());
             System.out.println("USER LOGIN: " + userService.findByUserId(task.getUserid()).getLogin());
+            System.out.println("DEADLINE: " + task.getDeadline());
             System.out.println("_____");
         }
     }
@@ -519,7 +531,7 @@ public class TaskService extends AbstractService {
             }
             System.out.println(index + ". TASKID: " + task.getId() + "; NAME: " + task.getName() + "; DESCRIPTION: "
                     + task.getDescription() + "; PROJECTID: " + task.getProjectId()
-                    + "; USER LOGIN: " + login1);
+                    + "; USER LOGIN: " + login1 + "; DEADLINE: " + task.getDeadline());
             index++;
         }
     }
@@ -608,6 +620,72 @@ public class TaskService extends AbstractService {
         t.create("TEST_TASK_3", "DESC TASK 3", UserService.getInstance().findByLogin("ADMIN").getUserid() );
         t.create("TEST_TASK_2", "DESC TASK 2", UserService.getInstance().findByLogin("TEST").getUserid());
         t.create("TEST_TASK_1", "DESC TASK 1", UserService.getInstance().findByLogin("TEST").getUserid());
+    }
+
+    /**
+     * Запуск фоновых процессов предупреждений о дедлайнах задач и запуска процедуры удаления просроченных задач.
+     */
+    public int notifyTaskDeadline() {
+        CompletableFuture.runAsync(() -> {
+            try {
+                List<Task> taskList = findAll();
+                Thread.sleep(3000);
+                while (taskList != null || !taskList.isEmpty()) {
+                    if (taskList == null || taskList.isEmpty()) {
+                        continue;
+                    }
+                    for (Task task : taskList) {
+                        long interval = ChronoUnit.SECONDS.between(LocalDateTime.now(), task.getDeadline());
+                        if (interval < 0) {
+                            removeTaskDeadline(task.getId());
+                        } else
+                        if (interval < 300L) {
+                            if (task.getNotifyDeadline() != DEADLINE_5_MINUTES) {
+                                System.out.println("DEADLINE TASK " + task.getName() + " ID = " + task.getId() + ": " + DEADLINE_5_MINUTES);
+                                task.setNotifyDeadline(DEADLINE_5_MINUTES);
+                            }
+                        } else if (interval < 900L) {
+                            if (task.getNotifyDeadline() != DEADLINE_15_MINUTES) {
+                                System.out.println("DEADLINE TASK " + task.getName() + " ID = " + task.getId() + ": " + DEADLINE_15_MINUTES);
+                                task.setNotifyDeadline(DEADLINE_15_MINUTES);
+                            }
+
+                        } else if (interval < 1800L) {
+                            if (task.getNotifyDeadline() != DEADLINE_30_MINUTES) {
+                                System.out.println("DEADLINE TASK " + task.getName() + " ID = " + task.getId() + ": " + DEADLINE_30_MINUTES);
+                                task.setNotifyDeadline(DEADLINE_30_MINUTES);
+                            }
+
+                        } else if (interval < 3600L) {
+                            if (task.getNotifyDeadline() != DEADLINE_1_HOURS) {
+                                System.out.println("DEADLINE TASK " + task.getName() + " ID = " + task.getId() + ": " + DEADLINE_1_HOURS);
+                                task.setNotifyDeadline(DEADLINE_1_HOURS);
+                            }
+
+                        } else if (interval < 14400L) {
+                            if (task.getNotifyDeadline() != DEADLINE_4_HOURS) {
+                                System.out.println("DEADLINE TASK " + task.getName() + " ID = " + task.getId() + ": " + DEADLINE_4_HOURS);
+                                task.setNotifyDeadline(DEADLINE_4_HOURS);
+                            }
+                        }
+                    }
+                }
+            } catch (InterruptedException | TaskNotFoundException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+        });
+        return RETURN_OK;
+    }
+
+    /**
+     * Удаление просроченных задач
+     * @param id Идентификатор задачи
+     * @throws TaskNotFoundException
+     */
+    public void removeTaskDeadline(Long id) throws TaskNotFoundException {
+        removeById(id);
+        notifyTaskDeadline();
     }
 
 }

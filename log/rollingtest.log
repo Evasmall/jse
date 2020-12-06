@@ -986,3 +986,246 @@
 2020-11-28 18:54:29,686 ERROR  [main] ru.evasmall.tm.exeption.ProjectNotFoundException: PROJECT NOT FOUND BY INDEX: 8. FAIL.
 2020-11-28 19:24:56,075 INFO r.e.t.Application [main] Begin program.
 2020-11-28 20:13:35,060 INFO r.e.t.Application [main] Begin program.
+2020-11-28 21:18:59,072 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:10:59,890 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:29:02,151 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:39:08,715 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:44:04,171 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:44:11,193 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-11-30 11:46:54,534 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:47:02,962 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-11-30 11:48:23,980 INFO r.e.t.Application [main] Begin program.
+2020-11-30 11:48:31,113 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-11-30 12:24:03,785 INFO r.e.t.Application [main] Begin program.
+2020-11-30 13:17:25,282 INFO r.e.t.Application [main] Begin program.
+2020-11-30 13:18:22,886 INFO r.e.t.Application [main] Begin program.
+2020-11-30 14:01:42,392 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:04:06,576 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:10:36,634 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:28:13,900 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:29:01,620 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:36:15,446 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:40:28,170 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:42:20,989 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:44:33,218 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:45:58,639 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:53:31,492 INFO r.e.t.Application [main] Begin program.
+2020-12-05 23:57:49,861 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:03:02,422 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:34:49,052 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:36:11,240 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:36:59,777 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:37:53,221 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:45:36,952 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:47:38,362 INFO r.e.t.Application [main] Begin program.
+2020-12-06 00:49:04,038 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:22:31,232 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:24:35,466 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:30:19,833 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:32:34,725 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:33:08,164 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 15721942627100 DELETE
+2020-12-06 01:34:12,266 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 01:35:31,280 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:36:33,207 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:37:06,661 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 15960445568800 DELETE
+2020-12-06 01:40:41,094 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:41:14,495 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 16208288969500 DELETE
+2020-12-06 01:41:51,952 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:42:25,364 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 16279169881100 DELETE
+2020-12-06 01:47:46,482 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:48:19,897 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 16633690480599 DELETE
+2020-12-06 01:50:12,327 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:53:42,734 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:54:16,158 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 16989959296699 DELETE
+2020-12-06 01:59:17,886 INFO r.e.t.Application [main] Begin program.
+2020-12-06 01:59:51,288 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 17325098489900 DELETE
+2020-12-06 02:00:28,820 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:01:02,190 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 17396014940100 DELETE
+2020-12-06 02:04:38,514 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:05:11,935 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 17645743567400 DELETE
+2020-12-06 02:08:55,718 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:10:09,580 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:10:43,010 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 17976828560400 DELETE
+2020-12-06 02:11:48,251 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:12:21,647 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 18075476688100 DELETE
+2020-12-06 02:14:23,502 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:14:56,939 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 18230752057600 DELETE
+2020-12-06 02:18:23,606 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:18:57,046 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 18470877889900 DELETE
+2020-12-06 02:21:23,753 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:21:57,174 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 18650982214800 DELETE
+2020-12-06 02:23:55,978 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:24:29,389 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 18803203408200 DELETE
+2020-12-06 02:24:44,026 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:26:06,484 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:27:32,120 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:28:05,505 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19019328205800 DELETE
+2020-12-06 02:28:30,161 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:29:03,562 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19077379801300 DELETE
+2020-12-06 02:30:34,876 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:31:06,188 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19202094382200 DELETE
+2020-12-06 02:31:22,166 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:31:53,482 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19249375879500 DELETE
+2020-12-06 02:32:15,168 ERROR  [main] java.lang.IllegalArgumentException: THIS LOGIN NOT EXISTS!
+2020-12-06 02:32:18,290 ERROR  [main] ERROR! Unknown program argument.
+2020-12-06 02:32:27,168 ERROR  [main] java.lang.IllegalArgumentException: THIS LOGIN NOT EXISTS!
+2020-12-06 02:36:21,346 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:36:54,762 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19548574404500 DELETE
+2020-12-06 02:39:11,406 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:39:44,830 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19718619730300 DELETE
+2020-12-06 02:39:55,966 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 02:43:04,702 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:43:38,145 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 19951923335200 DELETE
+2020-12-06 02:44:33,260 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:45:06,701 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 20040474957800 DELETE
+2020-12-06 02:45:58,032 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:46:31,448 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 20125270158300 DELETE
+2020-12-06 02:46:56,680 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:47:30,059 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 20183894677400 DELETE
+2020-12-06 02:47:53,572 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:48:26,995 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 20240818742600 DELETE
+2020-12-06 02:49:30,389 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:50:03,771 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 20337601568700 DELETE
+2020-12-06 02:52:21,324 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:53:56,325 INFO r.e.t.Application [main] Begin program.
+2020-12-06 02:55:30,825 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 11:17:07,241 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:17:40,939 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 50797660540200 DELETE
+2020-12-06 11:18:02,692 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:18:36,161 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 50852845257800 DELETE
+2020-12-06 11:23:59,780 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:24:33,340 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 51210052503400 DELETE
+2020-12-06 11:29:27,030 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:30:00,542 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 51537231142500 DELETE
+2020-12-06 11:34:20,330 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:34:53,766 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 51830473841700 DELETE
+2020-12-06 11:36:59,856 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:37:33,314 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 51990008006700 DELETE
+2020-12-06 11:41:04,774 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:41:38,228 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 52234926896700 DELETE
+2020-12-06 11:45:50,993 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:46:24,421 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 52521140031000 DELETE
+2020-12-06 11:57:29,402 INFO r.e.t.Application [main] Begin program.
+2020-12-06 11:58:02,886 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 53219583007300 DELETE
+2020-12-06 12:15:37,577 INFO r.e.t.Application [main] Begin program.
+2020-12-06 12:16:11,021 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 54307714335400 DELETE
+2020-12-06 12:17:01,633 INFO r.e.t.Application [main] Begin program.
+2020-12-06 12:17:35,189 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 54391865216700 DELETE
+2020-12-06 13:00:14,904 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:00:48,341 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 56985044079500 DELETE
+2020-12-06 13:02:46,153 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:03:19,668 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 57136357693300 DELETE
+2020-12-06 13:07:10,008 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:07:43,436 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 57400136870500 DELETE
+2020-12-06 13:09:19,354 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:09:52,939 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 57529582396900 DELETE
+2020-12-06 13:12:24,242 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:15:22,905 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:15:56,361 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 57893057732200 DELETE
+2020-12-06 13:22:34,062 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:23:07,523 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 58324205792600 DELETE
+2020-12-06 13:24:24,098 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:24:57,626 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 58434277814700 DELETE
+2020-12-06 13:27:01,285 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:27:34,773 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 58591463357800 DELETE
+2020-12-06 13:29:34,050 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:30:07,493 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 58744212060400 DELETE
+2020-12-06 13:33:34,306 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:34:07,822 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 58984465181100 DELETE
+2020-12-06 13:34:07,826 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 58984452857700 DELETE
+2020-12-06 13:34:07,829 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 58984465147800 DELETE
+2020-12-06 13:34:41,899 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 13:35:26,051 ERROR  [main] ERROR! Unknown program argument.
+2020-12-06 13:40:51,930 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:41:25,408 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 59422074269500 DELETE
+2020-12-06 13:41:25,410 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 59422061372400 DELETE
+2020-12-06 13:41:25,411 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 59422074231200 DELETE
+2020-12-06 13:41:38,917 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 13:44:16,712 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:44:50,216 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 59626882275800 DELETE
+2020-12-06 13:44:50,220 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 59626869599600 DELETE
+2020-12-06 13:44:50,223 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 59626882240500 DELETE
+2020-12-06 13:45:03,028 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 13:45:56,019 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 59692707743500 DELETE
+2020-12-06 13:50:54,539 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:51:28,052 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60024712493400 DELETE
+2020-12-06 13:51:28,055 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 60024699927900 DELETE
+2020-12-06 13:51:28,058 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 60024712452800 DELETE
+2020-12-06 13:51:39,512 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 13:51:49,410 ERROR  [main] ERROR! Unknown program argument.
+2020-12-06 13:52:31,283 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60088020863200 DELETE
+2020-12-06 13:57:01,451 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:58:30,688 INFO r.e.t.Application [main] Begin program.
+2020-12-06 13:59:04,154 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60480821234200 DELETE
+2020-12-06 13:59:04,155 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 60480807134400 DELETE
+2020-12-06 13:59:04,156 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 60480821199700 DELETE
+2020-12-06 14:05:56,559 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:06:27,888 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60926692785500 DELETE
+2020-12-06 14:06:30,906 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60926705780700 DELETE
+2020-12-06 14:06:30,907 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 60926705819600 DELETE
+2020-12-06 14:07:42,667 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:08:31,099 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 61049929206500 DELETE
+2020-12-06 14:10:02,866 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:10:34,220 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61173048436900 DELETE
+2020-12-06 14:10:34,222 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61173028280500 DELETE
+2020-12-06 14:10:34,223 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61173048478000 DELETE
+2020-12-06 14:10:50,061 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:11:36,560 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61235389302800 DELETE
+2020-12-06 14:15:17,718 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:17:19,183 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:17:49,734 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:18:21,045 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61639860753800 DELETE
+2020-12-06 14:18:24,057 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 61639872651500 DELETE
+2020-12-06 14:18:24,059 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 61639872689100 DELETE
+2020-12-06 14:18:40,128 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:19:27,155 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:19:58,483 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 61737311292200 DELETE
+2020-12-06 14:20:01,494 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 61737297544400 DELETE
+2020-12-06 14:20:01,496 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 61737311257600 DELETE
+2020-12-06 14:20:20,886 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:21:01,704 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 61800533134600 DELETE
+2020-12-06 14:32:58,295 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:35:49,112 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:36:20,437 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 62719255076200 DELETE
+2020-12-06 14:36:23,449 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 62719265793200 DELETE
+2020-12-06 14:36:23,450 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 62719265823500 DELETE
+2020-12-06 14:41:08,097 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:41:39,410 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 63038238255300 DELETE
+2020-12-06 14:41:39,412 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 63038227058600 DELETE
+2020-12-06 14:41:39,412 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 63038238292600 DELETE
+2020-12-06 14:49:25,966 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:50:15,181 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 63554009982100 DELETE
+2020-12-06 14:52:34,560 ERROR  [main] ERROR! Unknown program argument.
+2020-12-06 14:53:20,894 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-11] TASK ID: 63739723722600 DELETE
+2020-12-06 14:54:23,003 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:54:54,310 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 63833124761500 DELETE
+2020-12-06 14:54:57,315 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 63833138110400 DELETE
+2020-12-06 14:54:57,317 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 63833138142200 DELETE
+2020-12-06 14:55:06,280 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:56:13,408 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 63912237588700 DELETE
+2020-12-06 14:57:18,807 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:57:42,313 INFO r.e.t.Application [main] Begin program.
+2020-12-06 14:58:13,739 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 64032553824400 DELETE
+2020-12-06 14:58:16,748 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64032566891400 DELETE
+2020-12-06 14:58:16,750 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64032566929900 DELETE
+2020-12-06 14:58:58,279 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 14:59:35,458 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 64114287450900 DELETE
+2020-12-06 15:01:09,360 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:01:40,674 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 64239501624000 DELETE
+2020-12-06 15:01:43,681 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64239487446100 DELETE
+2020-12-06 15:01:43,683 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64239501587800 DELETE
+2020-12-06 15:01:52,844 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 15:02:32,363 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 64291194073900 DELETE
+2020-12-06 15:03:15,572 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:03:46,911 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-3] TASK ID: 64365738848500 DELETE
+2020-12-06 15:03:49,925 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64365724800300 DELETE
+2020-12-06 15:03:49,928 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-5] TASK ID: 64365738814600 DELETE
+2020-12-06 15:04:01,953 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 15:04:40,253 INFO r.e.t.r.TaskRepository [ForkJoinPool.commonPool-worker-7] TASK ID: 64419083177500 DELETE
+2020-12-06 15:11:44,799 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:12:30,021 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:36:32,465 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:45:43,953 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:48:40,969 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:48:58,937 INFO r.e.t.Application [main] Begin program.
+2020-12-06 15:49:03,854 INFO r.e.t.Application [main] Begin program.
