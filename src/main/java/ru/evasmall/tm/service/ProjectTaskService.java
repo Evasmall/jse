@@ -11,6 +11,7 @@ import ru.evasmall.tm.util.Control;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
@@ -84,10 +85,10 @@ public class ProjectTaskService extends AbstractService {
      * @param taskId Идентификатор задачи
      * @return Задача
      */
-    public Task removeTaskFromProject(final Long projectId, final Long taskId) {
+    public Optional<Task> removeTaskFromProject(final Long projectId, final Long taskId) {
         final Task task = taskRepository.findByProjectIdAndId(projectId, taskId);
         task.setProjectId(null);
-        return task;
+        return Optional.ofNullable(task);
     }
 
     /**
@@ -129,12 +130,12 @@ public class ProjectTaskService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найдент
      * @throws TaskNotFoundException Задача не найдены
      */
-    public Task addTaskToProject(final Long projectId, final Long taskId, final Long userId) throws ProjectNotFoundException, TaskNotFoundException  {
+    public Optional<Task> addTaskToProject(final Long projectId, final Long taskId, final Long userId) throws ProjectNotFoundException, TaskNotFoundException  {
         projectRepository.findById(projectId);
         final Task task = taskRepository.findById(taskId);
         task.setProjectId(projectId);
         task.setUserid(userId);
-        return task;
+        return Optional.ofNullable(task);
     }
 
     /**
@@ -174,15 +175,17 @@ public class ProjectTaskService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      * @throws TaskNotFoundException Задача не найдены
      */
-    public Project removeProjectByIdWithTask(final Long projectId) throws ProjectNotFoundException, TaskNotFoundException  {
-        final Project project = projectRepository.findById(projectId);
+    public Optional<Project> removeProjectByIdWithTask(final Long projectId) throws ProjectNotFoundException, TaskNotFoundException  {
+        final Project project = projectRepository.findById(projectId).get();
         final List<Task> tasks = findAllByProjectId(projectId);
-        if (tasks == null) return project;
+        if (tasks == null) {
+            return Optional.empty();
+        }
         for (Task task: tasks) {
             taskRepository.removeById(task.getId());
         }
         projectRepository.removeById(projectId);
-        return project;
+        return Optional.ofNullable(project);
     }
 
     /**
@@ -215,15 +218,18 @@ public class ProjectTaskService extends AbstractService {
      * @throws ProjectNotFoundException Проект не найден
      * @throws TaskNotFoundException Задача не найдены
      */
-    public Project removeProjectByIndexWithTask(final int index) throws ProjectNotFoundException, TaskNotFoundException {
-        final Project project = projectRepository.findByIndex(index);
-        final List<Task> tasks = findAllByProjectId(project.getId());
-        if (tasks == null) return project;
+    public Optional<Project> removeProjectByIndexWithTask(final int index) throws ProjectNotFoundException, TaskNotFoundException {
+        final Optional<Project> project = projectRepository.findByIndex(index);
+        final List<Task> tasks = findAllByProjectId(project.get().getId());
+        if (tasks == null) {
+            return Optional.empty();
+        }
         for (Task task: tasks) {
             taskRepository.removeById(task.getId());
         }
-        projectRepository.removeById(project.getId());
-        return project;
+        projectRepository.removeById(project.get().getId());
+        return Optional.ofNullable(project.get());
+
     }
 
     /**

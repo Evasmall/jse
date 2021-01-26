@@ -8,6 +8,7 @@ import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
@@ -87,16 +88,16 @@ class ProjectServiceTest {
         application.userIdCurrent = userIdAdmin;
         projectService.clearProject();
         List<Project> projects = new ArrayList<>();
-        projects.add(projectService.create(name, description, user_id));
-        projects.add(projectService.create("name2", "description2", user_id));
+        projects.add(projectService.create(name, description, user_id).get());
+        projects.add(projectService.create("name2", "description2", user_id).get());
         assertEquals(projects, projectService.findAll());
     }
 
     @Test
     void createCorrect() {
-        Project project = projectService.create(name, description, user_id);
-        assertEquals(name, project.getName());
-        assertEquals(description, project.getDescription());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        assertEquals(name, project.get().getName());
+        assertEquals(description, project.get().getDescription());
     }
 
     @Test
@@ -115,22 +116,22 @@ class ProjectServiceTest {
     @Test
     void updateCorrect() throws ProjectNotFoundException {
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
-        projectService.update(project.getId(), "new_name", "new_description");
-        assertEquals("new_name", project.getName());
-        assertEquals("new_description", project.getDescription());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        projectService.update(project.get().getId(), "new_name", "new_description");
+        assertEquals("new_name", project.get().getName());
+        assertEquals("new_description", project.get().getDescription());
     }
 
     @Test
     void updateException() throws ProjectNotFoundException {
-        Project project = projectService.create(name, description, user_id);
-        projectService.update(project.getId(), "new_name", "new_description");
-        assertEquals(name, project.getName());
-        assertEquals(description, project.getDescription());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        projectService.update(project.get().getId(), "new_name", "new_description");
+        assertEquals(name, project.get().getName());
+        assertEquals(description, project.get().getDescription());
 
         application.userIdCurrent = user_id;
-        assertThrows(IllegalArgumentException.class, () -> projectService.update(project.getId(), null, "new_description"));
-        assertThrows(IllegalArgumentException.class, () -> projectService.update(project.getId(), "new_name", null));
+        assertThrows(IllegalArgumentException.class, () -> projectService.update(project.get().getId(), null, "new_description"));
+        assertThrows(IllegalArgumentException.class, () -> projectService.update(project.get().getId(), "new_name", null));
         assertThrows(ProjectNotFoundException.class, () -> projectService.update(3L, "new_name", "new_description"));
     }
 
@@ -148,7 +149,7 @@ class ProjectServiceTest {
     void findByIndexCorrect() throws ProjectNotFoundException {
         application.userIdCurrent = userIdAdmin;
         projectService.clearProject();
-        Project project = projectService.create(name, description, user_id);
+        Optional<Project> project = projectService.create(name, description, user_id);
         assertEquals(project, projectService.findByIndex(0));
     }
 
@@ -162,8 +163,8 @@ class ProjectServiceTest {
     @Test
     void findByIndexUserIdCorrect() throws ProjectNotFoundException {
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
-        assertEquals(project, projectService.findById(project.getId()));
+        Optional<Project> project = projectService.create(name, description, user_id);
+        assertEquals(project, projectService.findById(project.get().getId()));
     }
 
     @Test
@@ -175,9 +176,9 @@ class ProjectServiceTest {
     @Test
     void findByNameCorrect() throws ProjectNotFoundException {
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
+        Optional<Project> project = projectService.create(name, description, user_id);
         List<Project> projectsNew = new ArrayList<>();
-        projectsNew.add(project);
+        projectsNew.add(project.get());
         assertEquals(projectsNew, projectService.findByName(name));
     }
 
@@ -242,8 +243,8 @@ class ProjectServiceTest {
     @Test
     void findByIdUserIdCorrect() throws ProjectNotFoundException {
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
-        assertEquals(project, projectService.findByIdUserId(project.getId()));
+        Optional<Project> project = projectService.create(name, description, user_id);
+        assertEquals(project, projectService.findByIdUserId(project.get().getId()));
     }
     @Test
     void findByIdUserIdException() {
@@ -287,9 +288,9 @@ class ProjectServiceTest {
     void addProjectToUserException() throws ProjectNotFoundException {
         assertEquals(RETURN_ERROR, projectService.addProjectToUser());
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
-        projectService.addProjectToUser(3L, project.getId());
-        assertEquals(3L, project.getUserid());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        projectService.addProjectToUser(3L, project.get().getId());
+        assertEquals(3L, project.get().getUserid());
     }
 
     @Test

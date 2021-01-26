@@ -53,8 +53,8 @@ public class PublisherImpl implements Publisher {
     @Override
     public int updateListener(String command, Scanner scanner) {
         int i = 0;
-        for (Listener Listener : listeners){
-            i = i + Listener.update(command);
+        for (Listener listener : listeners){
+            i = i + listener.update(command);
         }
         return i;
     }

@@ -7,6 +7,8 @@ import ru.evasmall.tm.entity.User;
 import ru.evasmall.tm.enumerated.RoleEnum;
 import ru.evasmall.tm.util.HashCode;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_OK;
@@ -96,7 +98,7 @@ class UserServiceTest {
 
     @Test
     void findByLoginCorrect() {
-        assertEquals("TEST", userService.findByLogin("TEST").getLogin());
+        assertEquals("TEST", userService.findByLogin("TEST").get().getLogin());
     }
 
     @Test
@@ -107,7 +109,7 @@ class UserServiceTest {
 
     @Test
     void findByUserIdCorrect() {
-        assertEquals(2L, userService.findByUserId(2L).getUserid());
+        assertEquals(2L, userService.findByUserId(2L).get().getUserid());
     }
 
     @Test
@@ -118,10 +120,10 @@ class UserServiceTest {
 
     @Test
     void createCorrect() {
-        User user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
+        Optional<User> user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
                 "Отчество", "mail@gmail.com", RoleEnum.USER, false);
-        assertEquals(login, user.getLogin());
-        User user2 = userService.create("LOGIN2");
+        assertEquals(login, user.get().getLogin());
+        User user2 = userService.create("LOGIN2").get();
         assertEquals("LOGIN2", user2.getLogin());
     }
 
@@ -144,15 +146,15 @@ class UserServiceTest {
 
     @Test
     void updateRoleCorrect() {
-        User user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
+        Optional<User> user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
                 "Отчество", "mail@gmail.com", RoleEnum.ADMIN, true);
         userService.updateRole(login, "USER");
-        assertEquals(RoleEnum.USER, user.getRole());
+        assertEquals(RoleEnum.USER, user.get().getRole());
     }
 
     @Test
     void updateRoleException() {
-        User user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
+        Optional<User> user = userService.create(10L,login, HashCode.getHash("PASSWORD"), "Имя", "Фамилия",
                 "Отчество", "mail@gmail.com", RoleEnum.ADMIN, true);
         assertNull(userService.updateRole(null, "USER"));
         assertNull(userService.updateRole(login, null));
@@ -160,16 +162,16 @@ class UserServiceTest {
 
     @Test
     void updateProfileCorrect() {
-        User user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD"), "Имя1", "Фамилия1",
+        Optional<User> user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD"), "Имя1", "Фамилия1",
                 "Отчество1", "mail1@gmail.com", RoleEnum.ADMIN, true);
         userService.updateProfile(10L, "LOGIN2", "Имя2", "Фамилия2",
                 "Отчество2", "mail2@gmail.com");
-        assertEquals("LOGIN2", user.getLogin());
+        assertEquals("LOGIN2", user.get().getLogin());
     }
 
     @Test
     void updateProfileException() {
-        User user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD"), "Имя1", "Фамилия1",
+        Optional<User> user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD"), "Имя1", "Фамилия1",
                 "Отчество1", "mail1@gmail.com", RoleEnum.ADMIN, true);
         assertNull(userService.updateProfile(10L, null, "Имя2", "Фамилия2",
                 "Отчество2", "mail2@gmail.com"));
@@ -177,17 +179,17 @@ class UserServiceTest {
 
     @Test
     void changePasswordCorrect() {
-        User user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD1"), "Имя1", "Фамилия1",
+        Optional<User> user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD1"), "Имя1", "Фамилия1",
                 "Отчество1", "mail1@gmail.com", RoleEnum.ADMIN, true);
-        userService.changePassword(user.getUserid(), "PASSWORD2");
-        assertEquals(HashCode.getHash("PASSWORD2"), user.getPassword());
+        userService.changePassword(user.get().getUserid(), "PASSWORD2");
+        assertEquals(HashCode.getHash("PASSWORD2"), user.get().getPassword());
     }
 
     @Test
     void changePasswordException() {
-        User user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD1"), "Имя1", "Фамилия1",
+        Optional<User> user = userService.create(10L,"LOGIN1", HashCode.getHash("PASSWORD1"), "Имя1", "Фамилия1",
                 "Отчество1", "mail1@gmail.com", RoleEnum.ADMIN, true);
-        assertNull(userService.changePassword(user.getUserid(), null));
+        assertNull(userService.changePassword(user.get().getUserid(), null));
         assertNull(userService.changePassword(null, "PASSWORD2"));
     }
 

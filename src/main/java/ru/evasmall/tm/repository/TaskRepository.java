@@ -8,6 +8,7 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.evasmall.tm.constant.TerminalConst.DEADLINE_8_HOURS;
 
@@ -34,22 +35,22 @@ public class TaskRepository extends AbstractRepository<Task> {
 
     public List<Task> findAllByProjectId(final Long projectId) {
         final List<Task> result = new ArrayList<>();
-        for (final Task task: findAll()) {
+        for (final Task task: findAll().get()) {
             if (task.getProjectId() == null) continue;
             if (task.getProjectId().equals(projectId)) result.add(task);
         }
         return result;
     }
 
-    public Task create(final String name, final String description, final Long userId) {
-        final Task task = new Task(name);
-        task.setName(name);
-        task.setDescription(description);
-        task.setUserid(userId);
-        task.setDeadline(LocalDateTime.now().plusHours(8));
-        task.setNotifyDeadline(DEADLINE_8_HOURS);
-        objects.add(task);
-        addObjectToMap(task);
+    public Optional<Task> create(final String name, final String description, final Long userId) {
+        final Optional<Task> task = Optional.of(new Task(name));
+        task.ifPresent(t -> t.setName(name));
+        task.ifPresent(t -> t.setDescription(description));
+        task.ifPresent(t -> t.setUserid(userId));
+        task.ifPresent(t -> t.setDeadline(LocalDateTime.now().plusHours(8)));
+        task.ifPresent(t -> t.setNotifyDeadline(DEADLINE_8_HOURS));
+        objects.add(task.get());
+        addObjectToMap(task.get());
         logger.trace("TASK CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return task;
     }
@@ -67,7 +68,7 @@ public class TaskRepository extends AbstractRepository<Task> {
 
     public List<Task> findAddByProjectId(final Long projectId) {
         final List<Task> result = new ArrayList<>();
-        for (final Task task: findAll()) {
+        for (final Task task: findAll().get()) {
             final Long idProject = task.getProjectId();
             if (idProject == null) continue;
             if (idProject.equals(projectId)) result.add(task);

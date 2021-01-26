@@ -10,6 +10,7 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,15 +45,15 @@ class ProjectTaskServiceTest {
 
     @Test
     void findAllByProjectIdCorrect() throws ProjectNotFoundException, TaskNotFoundException {
-        Project project = projectService.create(name, description, userIdAdmin);
+        Optional<Project> project = projectService.create(name, description, userIdAdmin);
         List<Task> tasks = new ArrayList<>();
-        Task task1 = taskService.create("name1", "description1", userIdAdmin);
-        Task task2 = taskService.create("name2", "description2", userIdAdmin);
-        tasks.add(task1);
-        tasks.add(task2);
-        projectTaskService.addTaskToProject(project.getId(), task1.getId(), userIdAdmin);
-        projectTaskService.addTaskToProject(project.getId(), task2.getId(), userIdAdmin);
-        assertEquals(tasks, projectTaskService.findAllByProjectId(project.getId()));
+        Optional<Task> task1 = taskService.create("name1", "description1", userIdAdmin);
+        Optional<Task> task2 = taskService.create("name2", "description2", userIdAdmin);
+        tasks.add(task1.get());
+        tasks.add(task2.get());
+        projectTaskService.addTaskToProject(project.get().getId(), task1.get().getId(), userIdAdmin);
+        projectTaskService.addTaskToProject(project.get().getId(), task2.get().getId(), userIdAdmin);
+        assertEquals(tasks, projectTaskService.findAllByProjectId(project.get().getId()));
     }
 
     @Test
@@ -62,12 +63,12 @@ class ProjectTaskServiceTest {
 
     @Test
     void removeTaskFromProjectCorrect() throws ProjectNotFoundException, TaskNotFoundException {
-        Project project = projectService.create(name, description, user_id);
-        Task task = taskService.create(name, description, user_id);
-        projectTaskService.addTaskToProject(project.getId(), task.getId(), user_id);
-        assertEquals(project.getId(), task.getProjectId());
-        projectTaskService.removeTaskFromProject(project.getId(), task.getId());
-        assertEquals(null, task.getProjectId());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        Optional<Task> task = taskService.create(name, description, user_id);
+        projectTaskService.addTaskToProject(project.get().getId(), task.get().getId(), user_id);
+        assertEquals(project.get().getId(), task.get().getProjectId());
+        projectTaskService.removeTaskFromProject(project.get().getId(), task.get().getId());
+        assertEquals(null, task.get().getProjectId());
     }
 
     @Test
@@ -77,10 +78,10 @@ class ProjectTaskServiceTest {
 
     @Test
     void addTaskToProjectCorrect() throws ProjectNotFoundException, TaskNotFoundException {
-        Project project = projectService.create(name, description, user_id);
-        Task task = taskService.create(name, description, user_id);
-        projectTaskService.addTaskToProject(project.getId(), task.getId(), user_id);
-        assertEquals(project.getId(), task.getProjectId());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        Optional<Task> task = taskService.create(name, description, user_id);
+        projectTaskService.addTaskToProject(project.get().getId(), task.get().getId(), user_id);
+        assertEquals(project.get().getId(), task.get().getProjectId());
     }
 
     @Test
@@ -91,11 +92,11 @@ class ProjectTaskServiceTest {
     @Test
     void removeProjectByIdWithTaskCorrect() throws ProjectNotFoundException, TaskNotFoundException {
         application.userIdCurrent = user_id;
-        Project project = projectService.create(name, description, user_id);
-        Task task = taskService.create(name, description, user_id);
-        long task_id = task.getId();
-        projectTaskService.addTaskToProject(project.getId(), task.getId(), user_id);
-        projectTaskService.removeProjectByIdWithTask(project.getId());
+        Optional<Project> project = projectService.create(name, description, user_id);
+        Optional<Task> task = taskService.create(name, description, user_id);
+        long task_id = task.get().getId();
+        projectTaskService.addTaskToProject(project.get().getId(), task.get().getId(), user_id);
+        projectTaskService.removeProjectByIdWithTask(project.get().getId());
         assertThrows(TaskNotFoundException.class,() -> taskService.findById(task_id));
     }
 
@@ -108,10 +109,10 @@ class ProjectTaskServiceTest {
     void removeProjectByIndexWithTaskCorrect() throws ProjectNotFoundException, TaskNotFoundException {
         application.userIdCurrent = userIdAdmin;
         projectService.clearProject();
-        Project project = projectService.create(name, description, userIdAdmin);
-        Task task = taskService.create(name, description, userIdAdmin);
-        long task_id = task.getId();
-        projectTaskService.addTaskToProject(project.getId(), task.getId(), userIdAdmin);
+        Optional<Project> project = projectService.create(name, description, userIdAdmin);
+        Optional<Task> task = taskService.create(name, description, userIdAdmin);
+        long task_id = task.get().getId();
+        projectTaskService.addTaskToProject(project.get().getId(), task.get().getId(), userIdAdmin);
         projectTaskService.removeProjectByIndexWithTask(0);
         assertThrows(TaskNotFoundException.class,() -> taskService.findById(task_id));
     }

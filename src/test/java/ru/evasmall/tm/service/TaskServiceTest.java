@@ -10,6 +10,7 @@ import ru.evasmall.tm.exeption.TaskNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.evasmall.tm.constant.TerminalConst.RETURN_ERROR;
@@ -95,14 +96,14 @@ class TaskServiceTest {
         application.userIdCurrent = userIdAdmin;
         taskService.clearTask();
         List<Task> tasks = new ArrayList<>();
-        tasks.add(taskService.create(name, description, user_id));
-        tasks.add(taskService.create("name2", "description2", user_id));
+        tasks.add(taskService.create(name, description, user_id).get());
+        tasks.add(taskService.create("name2", "description2", user_id).get());
         assertEquals(tasks, taskService.findAll());
     }
 
     @Test
     void createCorrect() {
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         assertEquals(name, task.getName());
         assertEquals(description, task.getDescription());
     }
@@ -123,7 +124,7 @@ class TaskServiceTest {
     @Test
     void updateCorrect() throws TaskNotFoundException {
         application.userIdCurrent = user_id;
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         taskService.update(task.getId(), "new_name", "new_description");
         assertEquals("new_name", task.getName());
         assertEquals("new_description", task.getDescription());
@@ -131,7 +132,7 @@ class TaskServiceTest {
 
     @Test
     void updateException() throws TaskNotFoundException {
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         taskService.update(task.getId(), "new_name", "new_description");
         assertEquals(name, task.getName());
         assertEquals(description, task.getDescription());
@@ -172,7 +173,7 @@ class TaskServiceTest {
     @Test
     void findByNameCorrect() throws TaskNotFoundException {
         application.userIdCurrent = user_id;
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         List<Task> tasksNew = new ArrayList<>();
         tasksNew.add(task);
         assertEquals(tasksNew, taskService.findByName(name));
@@ -199,7 +200,7 @@ class TaskServiceTest {
     @Test
     void findByIdUserIdCorrect() throws TaskNotFoundException {
         application.userIdCurrent = user_id;
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         assertEquals(task, taskService.findByIdUserId(task.getId()));
     }
     @Test
@@ -217,7 +218,7 @@ class TaskServiceTest {
     void findByIndexCorrect() throws TaskNotFoundException {
         application.userIdCurrent = userIdAdmin;
         taskService.clearTask();
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         assertEquals(task, taskService.findByIndex(0));
     }
 
@@ -231,7 +232,7 @@ class TaskServiceTest {
     @Test
     void findByIndexUserIdCorrect() throws TaskNotFoundException {
         application.userIdCurrent = user_id;
-        Task task = taskService.create(name, description, user_id);
+        Task task = taskService.create(name, description, user_id).get();
         assertEquals(task, taskService.findById(task.getId()));
     }
 
@@ -280,15 +281,15 @@ class TaskServiceTest {
 
     @Test
     void findAllByProjectIdCorrect() throws ProjectNotFoundException, TaskNotFoundException, NullPointerException {
-        Project project = projectService.create(name, description, userIdAdmin);
+        Optional<Project> project = projectService.create(name, description, userIdAdmin);
         List<Task> tasks = new ArrayList<>();
-        Task task1 = taskService.create("name1", "description1", userIdAdmin);
-        Task task2 = taskService.create("name2", "description2", userIdAdmin);
+        Task task1 = taskService.create("name1", "description1", userIdAdmin).get();
+        Task task2 = taskService.create("name2", "description2", userIdAdmin).get();
         tasks.add(task1);
         tasks.add(task2);
-        projectTaskService.addTaskToProject(project.getId(), task1.getId(), userIdAdmin);
-        projectTaskService.addTaskToProject(project.getId(), task2.getId(), userIdAdmin);
-        assertEquals(tasks, taskService.findAllByProjectId(project.getId()));
+        projectTaskService.addTaskToProject(project.get().getId(), task1.getId(), userIdAdmin);
+        projectTaskService.addTaskToProject(project.get().getId(), task2.getId(), userIdAdmin);
+        assertEquals(tasks, taskService.findAllByProjectId(project.get().getId()));
     }
 
     @Test
@@ -304,7 +305,7 @@ class TaskServiceTest {
 
     @Test
     void addTaskToUserCorrect() throws TaskNotFoundException {
-        Task task = taskService.create(name, description, null);
+        Task task = taskService.create(name, description, null).get();
         taskService.addTaskToUser(user_id, task.getId());
         assertEquals(user_id, task.getUserid());
     }

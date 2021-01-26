@@ -7,6 +7,7 @@ import ru.evasmall.tm.exeption.ProjectNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProjectRepository extends AbstractRepository<Project> {
 
@@ -29,32 +30,32 @@ public class ProjectRepository extends AbstractRepository<Project> {
         return project.getName();
     }
 
-    public Project create(final String name, String description, Long userid) {
-        final Project project = new Project(name);
-        project.setName(name);
-        project.setDescription(description);
-        project.setUserid(userid);
-        objects.add(project);
-        addObjectToMap(project);
+    public Optional<Project> create(final String name, String description, Long userid) {
+        final Optional<Project> project = Optional.of(new Project(name));
+        project.ifPresent(p -> p.setName(name));
+        project.ifPresent(p -> p.setDescription(description));
+        project.ifPresent(p -> p.setUserid(userid));
+        project.ifPresent(objects::add);
+        addObjectToMap(project.get());
         logger.trace("PROJECT CREATED: NEW NAME: {} NEW DESCRIPTION: {}", name, description);
         return project;
     }
 
-    public Project update(final Long id, final String name, String description) throws ProjectNotFoundException {
-        final Project project = findById(id);
-        removeObjectFromMap(project);
-        project.setId(id);
-        project.setName(name);
-        project.setDescription(description);
-        addObjectToMap(project);
+    public Optional<Project> update(final Long id, final String name, String description) throws ProjectNotFoundException {
+        final Optional<Project> project = findById(id);
+        removeObjectFromMap(project.get());
+        project.ifPresent(p -> p.setId(id));
+        project.ifPresent(p -> p.setName(name));
+        project.ifPresent(p -> p.setDescription(description));
+        addObjectToMap(project.get());
         logger.trace("PROJECT UPDATE. ID: {} NEW NAME: {} NEW DESCRIPTION: {}", id, name, description);
         return project;
     }
 
-    public Project findByIndex(int index) throws ProjectNotFoundException {
+    public Optional<Project> findByIndex(int index) throws ProjectNotFoundException {
         if (index < 0 || index > objects.size() - 1)
             throw new ProjectNotFoundException("PROJECT NOT FOUND BY INDEX: " + (index + 1) +". FAIL.");
-        return objects.get(index);
+        return Optional.ofNullable(objects.get(index));
     }
 
     public List<Project> findByName(final String name) throws ProjectNotFoundException {
@@ -69,29 +70,29 @@ public class ProjectRepository extends AbstractRepository<Project> {
         return projectsNew;
     }
 
-    public Project findById(final Long id) throws ProjectNotFoundException {
+    public Optional<Project> findById(final Long id) throws ProjectNotFoundException {
         if (id == null)
             throw new ProjectNotFoundException("PROJECT ID IS EMPTY. FAIL.");
         for (final Project project: objects) {
             if (project.getId().equals(id))
-                return project;
+                return Optional.ofNullable(project);
         }
         throw new ProjectNotFoundException("PROJECT NOT FOUND BY ID: " + id + ". FAIL.");
     }
 
-    public Project removeById (final Long id) throws ProjectNotFoundException {
-        final Project project = findById(id);
-        removeObjectFromMap(project);
-        objects.remove(project);
+    public Optional<Project> removeById (final Long id) throws ProjectNotFoundException {
+        final Optional<Project> project = findById(id);
+        removeObjectFromMap(project.get());
+        project.ifPresent(objects::remove);
         System.out.println(objectsName);
         logger.info("PROJECT ID: {} DELETE", id);
         return project;
     }
 
-    public Project removeByIndex (final int index) throws ProjectNotFoundException {
-        final Project project = findByIndex(index);
-        removeObjectFromMap(project);
-        objects.remove(project);
+    public Optional<Project> removeByIndex (final int index) throws ProjectNotFoundException {
+        final Optional<Project> project = findByIndex(index);
+        removeObjectFromMap(project.get());
+        project.ifPresent(objects::remove);
         logger.info("PROJECT INDEX: {} DELETE", index + 1);
         return project;
     }

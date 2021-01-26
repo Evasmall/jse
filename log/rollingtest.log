@@ -1229,3 +1229,70 @@
 2020-12-06 15:48:40,969 INFO r.e.t.Application [main] Begin program.
 2020-12-06 15:48:58,937 INFO r.e.t.Application [main] Begin program.
 2020-12-06 15:49:03,854 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:27:11,439 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:31:47,075 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:33:38,617 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:38:27,105 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:45:31,896 INFO r.e.t.Application [main] Begin program.
+2020-12-06 18:52:01,035 INFO r.e.t.Application [main] Begin program.
+2020-12-06 19:11:54,997 INFO r.e.t.Application [main] Begin program.
+2020-12-06 19:13:21,732 INFO r.e.t.Application [main] Begin program.
+2020-12-06 19:26:35,238 INFO r.e.t.Application [main] Begin program.
+2020-12-06 20:10:00,479 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 20:21:05,810 INFO r.e.t.Application [main] Begin program.
+2020-12-06 20:24:29,656 INFO r.e.t.Application [main] Begin program.
+2020-12-06 20:29:50,183 INFO r.e.t.Application [main] Begin program.
+2020-12-06 20:30:04,015 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: ADMIN
+2020-12-06 20:32:27,023 ERROR r.e.t.r.AbstractRepository [main] Cannot construct instance of `java.time.LocalDateTime` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: (File); line: 1, column: 112] (through reference chain: java.util.ArrayList[0]->ru.evasmall.tm.entity.Task["deadline"])ERROR. DATA NOT READ.
+2020-12-06 20:33:59,502 INFO r.e.t.Application [main] Begin program.
+2020-12-06 20:35:26,363 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: ADMIN
+2020-12-06 20:36:04,629 ERROR r.e.t.r.AbstractRepository [main] Cannot construct instance of `java.time.LocalDateTime` (no Creators, like default constructor, exist): cannot deserialize from Object value (no delegate- or property-based Creator)
+ at [Source: (File); line: 1, column: 143] (through reference chain: java.util.ArrayList[0]->ru.evasmall.tm.entity.Task["deadline"])ERROR. DATA NOT READ.
+2020-12-06 20:39:01,660 INFO r.e.t.Application [main] Begin program.
+2020-12-06 21:18:07,800 INFO r.e.t.Application [main] Begin program.
+2020-12-06 21:18:17,649 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-06 21:18:35,739 INFO r.e.t.r.ProjectRepository [main] PROJECT ID: 86857994422700 DELETE
+2020-12-08 09:51:08,912 INFO r.e.t.Application [main] Begin program.
+2020-12-08 09:51:18,097 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-08 09:51:54,072 ERROR  [main] java.lang.IllegalArgumentException: ID IS EMPTY. FAIL.
+2020-12-08 09:52:02,380 ERROR  [main] ru.evasmall.tm.exeption.ProjectNotFoundException: PROJECT NOT FOUND BY ID: 456456464645646546. FAIL.
+2020-12-08 10:35:19,037 INFO r.e.t.Application [main] Begin program.
+2020-12-08 10:42:39,804 ERROR  [main] ERROR! Unknown program argument.
+2020-12-08 10:42:42,443 ERROR  [main] ERROR! Unknown program argument.
+2020-12-08 10:42:49,888 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2020-12-08 11:20:41,915 INFO r.e.t.Application [main] Begin program.
+2020-12-08 20:14:19,393 INFO r.e.t.Application [main] Begin program.
+2021-01-14 19:24:33,516 INFO r.e.t.Application [main] Begin program.
+2021-01-14 19:29:09,027 INFO r.e.t.Application [main] Begin program.
+2021-01-14 19:33:56,965 INFO r.e.t.Application [main] Begin program.
+2021-01-14 19:59:21,055 INFO r.e.t.Application [main] Begin program.
+2021-01-14 20:33:13,818 INFO r.e.t.Application [main] Begin program.
+2021-01-20 19:50:09,137 INFO r.e.t.Application [main] Begin program.
+2021-01-20 19:50:22,644 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-20 19:50:56,095 INFO r.e.t.r.ProjectRepository [main] PROJECT ID: 593889200135100 DELETE
+2021-01-20 19:52:05,856 INFO r.e.t.Application [main] Begin program.
+2021-01-20 19:52:14,798 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-20 19:52:29,615 ERROR  [main] ERROR! Unknown program argument.
+2021-01-20 19:52:45,027 INFO r.e.t.r.ProjectRepository [main] PROJECT ID: 594005835512300 DELETE
+2021-01-20 19:54:07,175 INFO r.e.t.r.ProjectRepository [main] PROJECT ID: 594005835496800 DELETE
+2021-01-20 19:55:44,771 INFO r.e.t.r.TaskRepository [main] TASK ID: 594005860129200 DELETE
+2021-01-20 19:57:24,392 ERROR  [main] java.lang.NullPointerException
+2021-01-20 19:58:30,043 ERROR  [main] java.lang.NullPointerException
+2021-01-20 21:59:48,249 INFO r.e.t.Application [main] Begin program.
+2021-01-20 21:59:58,085 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-20 22:00:26,732 INFO r.e.t.r.ProjectRepository [main] PROJECT ID: 601668269861500 DELETE
+2021-01-20 22:01:48,170 INFO r.e.t.Application [main] Begin program.
+2021-01-20 22:01:55,820 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-20 22:02:25,442 INFO r.e.t.r.ProjectRepository [main] PROJECT INDEX: 2 DELETE
+2021-01-20 22:03:59,229 ERROR  [main] ERROR! Unknown program argument.
+2021-01-20 22:08:09,507 INFO r.e.t.Application [main] Begin program.
+2021-01-20 22:08:23,190 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-20 22:09:42,060 INFO r.e.t.Application [main] Begin program.
+2021-01-20 22:23:00,202 INFO r.e.t.Application [main] Begin program.
+2021-01-25 13:18:01,854 INFO r.e.t.Application [main] Begin program.
+2021-01-25 14:23:37,367 INFO r.e.t.Application [main] Begin program.
+2021-01-25 14:23:43,669 TRACE r.e.t.s.UserService [main] SESSION BEGIN. LOGIN: TEST
+2021-01-25 14:24:10,443 ERROR  [main] ru.evasmall.tm.exeption.TaskNotFoundException: TASK NOT FOUND BY NAME: ролд. FAIL.
+2021-01-25 14:24:21,271 ERROR  [main] ERROR! Unknown program argument.
+2021-01-25 14:24:59,010 INFO r.e.t.Application [main] Begin program.

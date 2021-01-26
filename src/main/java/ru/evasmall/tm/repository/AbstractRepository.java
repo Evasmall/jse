@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -33,8 +34,8 @@ public abstract class AbstractRepository<T> {
 
     private static final XmlMapper xmlMapper = new XmlMapper();
 
-    public List<T> findAll() {
-        return objects;
+    public Optional<List<T>> findAll() {
+        return Optional.of(objects);
     }
 
     public synchronized void addObjectToMap(final T object) {
@@ -77,7 +78,7 @@ public abstract class AbstractRepository<T> {
      * Запись всех объектов в файл формата JSON.
      */
     public int writeJson(String fileName) {
-        final List<T> objectsJson = findAll();
+        final Optional<List<T>> objectsJson = findAll();
         if (objectsJson == null || objectsJson.isEmpty()) return RETURN_ERROR;
         try {
             File file = new File(fileName);
@@ -97,9 +98,7 @@ public abstract class AbstractRepository<T> {
             objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
             List<T> objectFromJson = objectMapper.readValue(new File(fileName), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz));
             clearObject();
-            for (T object : objectFromJson) {
-                createObject(object);
-            }
+            objectFromJson.forEach(this::createObject);
         } catch (IOException e) {
             logger.error(e.getMessage() + "ERROR. DATA NOT READ.");
             return RETURN_ERROR;
@@ -111,7 +110,7 @@ public abstract class AbstractRepository<T> {
      * Запись всех объектов в файл формата XML.
      */
     public int writeXML(String fileName) {
-        final List<T> objectsXML = findAll();
+        final Optional<List<T>> objectsXML = findAll();
         if (objectsXML == null || objectsXML.isEmpty()) return RETURN_ERROR;
         try {
             File file = new File(fileName);
@@ -129,9 +128,7 @@ public abstract class AbstractRepository<T> {
         try {
             List<T> objectFromXML = xmlMapper.readValue(new File(fileName), TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz));
             clearObject();
-            for (T object : objectFromXML) {
-                createObject(object);
-            }
+            objectFromXML.forEach(this::createObject);
         } catch (IOException e) {
             logger.error(e.getMessage() + "ERROR. DATA NOT READ.");
             return RETURN_ERROR;
